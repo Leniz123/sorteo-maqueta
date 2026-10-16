@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>body{margin:0}[hidden]{display:none!important}</style>
-<title>Sorteo Brutal V4</title>
+<title>Sorteo V4</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -102,7 +102,7 @@ nav.menu a:hover{color:#fff}
 .visor .ant{left:12px}.visor .sig{right:12px}
 .visor .cont{position:absolute;top:12px;right:12px;background:rgba(15,18,24,.78);color:#fff;font-size:.8rem;font-weight:600;padding:5px 10px;border-radius:8px}
 .visor .chip-op{position:absolute;top:12px;left:12px;background:var(--blanco);font-family:var(--f-titulo);font-weight:700;font-size:.85rem;letter-spacing:.08em;padding:6px 10px;border-radius:8px;text-transform:uppercase}
-.miniaturas{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.miniaturas{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .miniaturas button{border:2px solid transparent;border-radius:10px;overflow:hidden;padding:0;background:var(--blanco);aspect-ratio:4/3;max-width:100%;transition:border-color .2s}
 .miniaturas button[aria-current="true"]{border-color:var(--cobalto)}
 .miniaturas img{width:100%;height:100%;object-fit:cover}
@@ -302,6 +302,61 @@ form.datos{display:grid;gap:12px}
 .error{color:#C62828;font-weight:600;font-size:.9rem}
 .ok-ic{width:56px;height:56px;border-radius:50%;background:#E3F6EC;color:var(--verde);display:grid;place-items:center}
 .ok-ic svg{width:28px;height:28px}
+/* descubre los premios */
+.rp-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media (max-width:680px){.rp-grid{grid-template-columns:1fr}}
+.rp{background:var(--blanco);border:1px solid var(--linea);border-radius:18px;padding:14px;display:grid;gap:12px;box-shadow:0 16px 36px rgba(15,18,24,.08);min-width:0;transition:box-shadow .3s}
+.rp:hover{box-shadow:0 22px 44px rgba(15,18,24,.12)}
+.rp-zona{position:relative;aspect-ratio:16/10;max-width:100%;border-radius:12px;overflow:hidden;background:#fff;touch-action:none;user-select:none}
+.rp-zona img{width:100%;height:100%;object-fit:cover}
+.rp-zona img.contener{object-fit:contain;padding:5% 8%}
+.rp-zona canvas{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair}
+.rp.listo .rp-zona img{animation:revela .8s cubic-bezier(.2,1.2,.3,1)}
+@keyframes revela{0%{transform:scale(1.15);filter:blur(6px)}100%{transform:none;filter:none}}
+.rp-info{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.rp-info small{display:block;font-size:.78rem;font-weight:700;color:var(--cobalto);text-transform:uppercase;letter-spacing:.1em}
+.rp-info b{font-family:var(--f-titulo);font-weight:800;font-size:1.5rem;text-transform:uppercase;line-height:1.1}
+.rp-chip{font-size:.8rem;font-weight:700;background:var(--fondo);border-radius:999px;padding:5px 10px;color:var(--tinta-2);opacity:0;transform:translateY(6px);transition:all .4s}
+.rp.listo .rp-chip{opacity:1;transform:none}
+.dedo{position:absolute;left:50%;top:66%;width:46px;height:46px;margin:-23px 0 0 -23px;pointer-events:none;animation:barre 2.4s ease-in-out infinite}
+.dedo::before{content:"";position:absolute;inset:0;border-radius:50%;background:rgba(255,255,255,.95);box-shadow:0 0 0 7px rgba(255,255,255,.3),0 6px 16px rgba(0,0,0,.25)}
+.dedo::after{content:"";position:absolute;inset:14px;border-radius:50%;background:var(--cobalto)}
+@keyframes barre{0%{transform:translateX(-70px)}50%{transform:translateX(70px)}100%{transform:translateX(-70px)}}
+.rp.tocada .dedo,.rp.listo .dedo{display:none}
+.rp-final{margin-top:20px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:var(--oscuro);color:#fff;border-radius:16px;padding:18px 22px;animation:entra .5s both}
+.rp-final b{display:block;font-family:var(--f-titulo);font-size:1.6rem;text-transform:uppercase}
+.rp-final span{color:#B9BECA}
+/* movimiento */
+.pulso{animation:pulso 2.2s infinite}
+@keyframes pulso{0%{box-shadow:0 0 0 0 rgba(31,69,242,.45)}70%{box-shadow:0 0 0 14px rgba(31,69,242,0)}100%{box-shadow:0 0 0 0 rgba(31,69,242,0)}}
+.viendo svg{width:14px;height:14px}
+.viendo b{color:var(--tinta)}
+#quedan.tick{animation:tick .5s ease;color:#C62828}
+.rv{transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.rv.abajo{transform:translateY(34px)}
+.toast{position:fixed;left:calc(16px + env(safe-area-inset-left,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:44;background:var(--blanco);border:1px solid var(--linea);border-radius:14px;padding:10px 14px 10px 10px;display:flex;gap:10px;align-items:center;max-width:min(330px,calc(100vw - 32px));box-shadow:0 16px 36px rgba(15,18,24,.16);transform:translateY(180%);transition:transform .5s cubic-bezier(.3,1.3,.5,1)}
+.toast.ver{transform:none}
+.toast .av{width:36px;height:36px;border-radius:50%;background:var(--cobalto);color:#fff;display:grid;place-items:center;font-family:var(--f-titulo);font-weight:800;flex:none}
+.toast b{display:block;font-size:.88rem;line-height:1.3}
+.toast small{color:var(--tinta-3);font-size:.76rem}
+@media (max-width:760px){
+  .toast{bottom:calc(88px + env(safe-area-inset-bottom,0px))}
+  .confianza span:nth-child(n+3){display:none}
+  .ficha{padding-block:16px 40px}
+  .panel h1{font-size:2rem}
+  .digitos{gap:6px}.digitos b{font-size:2rem}
+  .caja{padding:16px}
+  .cantidad input{width:96px;height:52px}
+  section.bloque{padding-block:48px}
+  .tombola{padding:20px}
+  .rp-final{padding:16px}
+  .barra-movil small{font-size:.74rem}
+  .toast{padding:7px 12px 7px 7px;gap:8px}
+  .toast .av{width:28px;height:28px;font-size:.85rem}
+  .toast b{font-size:.8rem}
+  .toast small{font-size:.7rem}
+}
+@media (prefers-reduced-motion:reduce){.rv.abajo{transform:none}.dedo{display:none}}
 #chispas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:70}
 
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
@@ -317,14 +372,14 @@ form.datos{display:grid;gap:12px}
 
 <header class="top">
   <div class="wrap">
-    <a class="logo" href="#" aria-label="Sorteo Brutal, inicio"><span class="logo-ic" aria-hidden="true">SB</span><b>Sorteo <span>Brutal</span></b></a>
+    <a class="logo" href="#" aria-label="Sorteo, inicio"><span class="logo-ic" aria-hidden="true">S</span><b>Sorteo</b></a>
     <nav class="menu" aria-label="Principal"><a href="#resumen">Sorteo actual</a><a href="#como">Cómo funciona</a><a href="#ganadores">Ganadores</a><a href="#preguntas">Preguntas</a></nav>
     <a class="mis-btn" href="#mis-tickets"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 8a2 2 0 0 0 2-2h14a2 2 0 0 0 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 0-2 2H5a2 2 0 0 0-2-2v-2a2 2 0 0 0 0-4z"/><path d="M13 6v12" stroke-dasharray="2 2"/></svg><span>Mis tickets</span></a>
   </div>
 </header>
 
 <nav class="subnav" aria-label="Secciones del sorteo"><div class="wrap">
-  <a href="#resumen" class="act">Resumen</a><a href="#premios">Opciones de premio</a><a href="#suerte">Prueba tu suerte</a><a href="#como">Cómo se sortea</a><a href="#ganadores">Ganadores</a><a href="#mis-tickets">Mis tickets</a><a href="#preguntas">Preguntas</a>
+  <a href="#resumen" class="act">Resumen</a><a href="#descubre">Descubre los premios</a><a href="#premios">Opciones de premio</a><a href="#como">Cómo se sortea</a><a href="#ganadores">Ganadores</a><a href="#mis-tickets">Mis tickets</a><a href="#preguntas">Preguntas</a>
 </div></nav>
 
 <main>
@@ -335,9 +390,8 @@ form.datos{display:grid;gap:12px}
         <img src="img/moto.jpg" alt="Kawasaki Ninja 500 SE verde, vista lateral" class="on contener" width="900" height="581">
         <img src="img/buzios.jpg" alt="Playa de Búzios, Brasil, con cuatro amigos" width="1000" height="741">
         <img src="img/buzios-afiche.jpg" alt="Afiche del viaje a Búzios: 5 días, 4 noches, 4 personas, todo incluido" class="contener" width="800" height="1200">
-        <img src="img/flyer.jpg" alt="Afiche del sorteo: tú eliges el premio" class="contener" width="900" height="900">
         <span class="chip-op" id="chip-op">Opción A · Moto</span>
-        <span class="cont" id="cont">1 / 4</span>
+        <span class="cont" id="cont">1 / 3</span>
         <button class="ctl ant" type="button" id="ant" aria-label="Foto anterior">‹</button>
         <button class="ctl sig" type="button" id="sig" aria-label="Foto siguiente">›</button>
       </div>
@@ -345,12 +399,11 @@ form.datos{display:grid;gap:12px}
         <button type="button" aria-current="true" aria-label="Foto 1: moto"><img src="img/moto.jpg" alt="" class="contener"></button>
         <button type="button" aria-current="false" aria-label="Foto 2: Búzios"><img src="img/buzios.jpg" alt=""></button>
         <button type="button" aria-current="false" aria-label="Foto 3: afiche del viaje"><img src="img/buzios-afiche.jpg" alt=""></button>
-        <button type="button" aria-current="false" aria-label="Foto 4: afiche del sorteo"><img src="img/flyer.jpg" alt=""></button>
       </div>
     </div>
 
     <div class="panel">
-      <div class="estado"><span class="pill vivo"><i aria-hidden="true"></i>En venta</span><span class="pill gris">Sorteo N°1</span><span class="pill gris">Tú eliges el premio</span></div>
+      <div class="estado"><span class="pill vivo"><i aria-hidden="true"></i>En venta</span><span class="pill gris">Sorteo N°1</span><span class="pill gris viendo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><b class="num" id="viendo">37</b> viendo ahora</span></div>
       <h1 id="titulo">Gana una Kawasaki Ninja 500 SE <span>o un viaje a Búzios para 4</span></h1>
       <p class="sub">Un solo ticket te hace participar por los dos. Si sale tu número, <b>tú eliges cuál te llevas</b>.</p>
 
@@ -392,7 +445,7 @@ form.datos{display:grid;gap:12px}
           <div class="tot"><span>Total</span><b class="num" id="c-total">$16.000</b></div>
         </div>
         <div class="prob"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg><span>Con <b id="p-cant">10</b> tickets tienes <b id="p-prob">1 en 1.000</b> de probabilidad de ganar.</span></div>
-        <button class="btn btn-azul btn-full" type="button" id="comprar">Comprar <span id="b-cant">10</span> tickets · <span id="b-total">$16.000</span></button>
+        <button class="btn btn-azul btn-full pulso" type="button" id="comprar">Comprar <span id="b-cant">10</span> tickets · <span id="b-total">$16.000</span></button>
         <div class="pagos"><span>Webpay</span><span>Mercado Pago</span><span>Débito</span><span>Crédito</span><span>Transferencia</span></div>
         <p class="letra">Al comprar aceptas las bases legales. Solo mayores de 18 años.</p>
       </div>
@@ -400,18 +453,35 @@ form.datos{display:grid;gap:12px}
   </div>
 </section>
 
+<section class="bloque descubre" id="descubre" aria-labelledby="desc-t">
+  <div class="wrap">
+    <div class="cab-sec rv"><span class="etq">Descubre los premios</span><h2 id="desc-t">Raspa y mira lo que te puedes llevar</h2><p class="lead">Pasa el dedo o el mouse por cada tarjeta. <b id="rp-cuenta">0 de 2</b> premios descubiertos.</p></div>
+    <div class="rp-grid">
+      <div class="rp rv" data-i="0">
+        <div class="rp-zona"><img src="img/moto.jpg" alt="Kawasaki Ninja 500 SE" class="contener" width="900" height="581"><canvas role="img" aria-label="Tarjeta para raspar: premio A"></canvas><span class="dedo" aria-hidden="true"></span></div>
+        <div class="rp-info"><div><small>Opción A</small><b data-nombre="Kawasaki Ninja 500 SE">? ? ?</b></div><span class="rp-chip">0 km + casco</span></div>
+      </div>
+      <div class="rp rv" data-i="1">
+        <div class="rp-zona"><img src="img/buzios.jpg" alt="Búzios, Brasil" width="1000" height="741"><canvas role="img" aria-label="Tarjeta para raspar: premio B"></canvas><span class="dedo" aria-hidden="true"></span></div>
+        <div class="rp-info"><div><small>Opción B</small><b data-nombre="Viaje a Búzios para 4">? ? ?</b></div><span class="rp-chip">5 días · todo incluido</span></div>
+      </div>
+    </div>
+    <div class="rp-final" id="rp-final" hidden><div><b>Los dos pueden ser tuyos.</b><span>Con un solo ticket participas y, si ganas, eliges cuál te llevas.</span></div><a class="btn btn-azul pulso" href="#selector">Quiero participar</a></div>
+  </div>
+</section>
+
 <section class="bloque blanco" id="premios" aria-labelledby="premios-t">
   <div class="wrap">
     <div class="cab-sec"><span class="etq">Opciones de premio</span><h2 id="premios-t">El ganador elige una</h2><p class="lead">Lo que aparece en ámbar lo confirma la organización antes de abrir la venta.</p></div>
     <div class="opciones">
-      <article class="op">
+      <article class="rv op">
         <div class="tope"><span class="letra-op">A</span>Moto 0 km + casco de regalo</div>
         <div class="img"><img src="img/moto.jpg" alt="Kawasaki Ninja 500 SE" class="contener" width="900" height="581"></div>
         <div class="cuerpo"><h3>Kawasaki Ninja 500 SE</h3>
           <div class="specs"><div class="spec"><b>0 km</b><span>Nueva</span></div><div class="spec"><b>Y.100R</b><span>Casco de regalo</span></div><div class="spec"><b class="pend" style="font-size:1rem">[Por definir]</b><span>Lugar de entrega</span></div></div>
         </div>
       </article>
-      <article class="op">
+      <article class="rv op">
         <div class="tope"><span class="letra-op">B</span>Viaje todo incluido para 4</div>
         <div class="img"><img src="img/buzios.jpg" alt="Búzios, Brasil" width="1000" height="741"></div>
         <div class="cuerpo"><h3>Búzios, Brasil</h3>
@@ -422,30 +492,15 @@ form.datos{display:grid;gap:12px}
   </div>
 </section>
 
-<section class="bloque suerte" id="suerte" aria-labelledby="suerte-t">
-  <div class="wrap">
-    <div class="txt">
-      <span class="etq">Prueba tu suerte</span>
-      <h2 id="suerte-t">Raspa y mira qué número te tocaría</h2>
-      <p class="lead">Cada tarjeta muestra un número disponible del sorteo. Si te gusta, lo compras y es tuyo.</p>
-    </div>
-    <div class="tarjeta">
-      <div class="t-cab">Sorteo Brutal · N°1<span>Raspa aquí</span></div>
-      <div class="zona" id="zona"><div class="n"><small>TU NÚMERO</small><b id="num-r" class="num">000 000</b></div><canvas id="capa" role="img" aria-label="Capa para raspar"></canvas></div>
-      <div class="t-pie"><p id="r-msg" aria-live="polite">Pasa el dedo o el mouse.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-azul" type="button" id="quiero" hidden style="font-size:1rem;padding:11px 18px">Quiero este número</button><button class="btn btn-borde" type="button" id="otra" style="font-size:1rem">Otra tarjeta</button></div></div>
-    </div>
-  </div>
-</section>
-
 <section class="bloque blanco" id="como" aria-labelledby="como-t">
   <div class="wrap">
     <div class="cab-sec"><span class="etq">Cómo funciona</span><h2 id="como-t">Participa en 3 pasos</h2></div>
     <div class="pasos">
-      <article class="paso"><span class="nro">1</span><h3>Elige tus tickets</h3><p>Usa el selector o un pack con descuento. Pagas con Webpay, Mercado Pago o transferencia.</p></article>
-      <article class="paso"><span class="nro">2</span><h3>Recibe tus números</h3><p>Llegan a tu correo al instante, asociados a tu RUT. También los ves en «Mis tickets».</p></article>
-      <article class="paso"><span class="nro">3</span><h3>Mira el sorteo en vivo</h3><p>Si sale tu número te contactamos el mismo día y eliges: la moto o el viaje.</p></article>
+      <article class="rv paso"><span class="nro">1</span><h3>Elige tus tickets</h3><p>Usa el selector o un pack con descuento. Pagas con Webpay, Mercado Pago o transferencia.</p></article>
+      <article class="rv paso"><span class="nro">2</span><h3>Recibe tus números</h3><p>Llegan a tu correo al instante, asociados a tu RUT. También los ves en «Mis tickets».</p></article>
+      <article class="rv paso"><span class="nro">3</span><h3>Mira el sorteo en vivo</h3><p>Si sale tu número te contactamos el mismo día y eliges: la moto o el viaje.</p></article>
     </div>
-    <div class="tombola">
+    <div class="rv tombola">
       <div style="display:grid;gap:12px"><span class="etq" style="color:#8FA5FF">Cómo se elige al ganador</span><h3>Tómbola digital ante notario</h3><p>Cada ticket es un número asociado al RUT del comprador. El día del sorteo una tómbola digital elige el número ganador en vivo, frente a un notario, y el resultado se publica aquí mismo.</p></div>
       <ul class="garantias">
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12l4 4 10-10"/></svg><span>Bases legales publicadas antes de vender. <span class="pend" style="color:#FFC65C">[Notaría por confirmar]</span></span></li>
@@ -460,9 +515,9 @@ form.datos{display:grid;gap:12px}
   <div class="wrap">
     <div class="cab-sec"><span class="etq">Ganadores</span><h2 id="gan-t">Aquí aparecerá el primer ganador</h2><p class="lead">Cada ganador se publica con su foto, el premio que eligió y el video del sorteo.</p></div>
     <div class="ganadores">
-      <div class="gan"><span class="av">1</span><b>Sorteo N°1</b><span>Sábado 28 de noviembre</span></div>
-      <div class="gan"><span class="av">2</span><b>Sorteo N°2</b><span>Próximamente</span></div>
-      <div class="gan"><span class="av">3</span><b>Sorteo N°3</b><span>Próximamente</span></div>
+      <div class="rv gan"><span class="av">1</span><b>Sorteo N°1</b><span>Sábado 28 de noviembre</span></div>
+      <div class="rv gan"><span class="av">2</span><b>Sorteo N°2</b><span>Próximamente</span></div>
+      <div class="rv gan"><span class="av">3</span><b>Sorteo N°3</b><span>Próximamente</span></div>
     </div>
   </div>
 </section>
@@ -493,7 +548,7 @@ form.datos{display:grid;gap:12px}
 <footer>
   <div class="wrap">
     <div class="pie-fila">
-      <a class="logo" href="#" style="color:#fff"><span class="logo-ic" aria-hidden="true">SB</span><b>Sorteo <span>Brutal</span></b></a>
+      <a class="logo" href="#" style="color:#fff"><span class="logo-ic" aria-hidden="true">S</span><b>Sorteo</b></a>
       <span>Bases legales · Términos · Privacidad · Contacto</span>
     </div>
     <div class="pie-fila"><span><span class="pend" style="color:#FFC65C">[Razón social y RUT de la empresa]</span></span><span>Webpay · Mercado Pago · Transferencia</span></div>
@@ -501,7 +556,7 @@ form.datos{display:grid;gap:12px}
   </div>
 </footer>
 
-<div class="barra-movil"><div><small id="bm-cant">10 tickets</small><b class="num" id="bm-total">$16.000</b></div><button class="btn btn-azul" type="button" id="bm-btn">Comprar</button></div>
+<div class="barra-movil"><div><small><span id="bm-cant">10 tickets</span> · cierra en <span id="bm-cd" class="num">43d</span></small><b class="num" id="bm-total">$16.000</b></div><button class="btn btn-azul pulso" type="button" id="bm-btn">Comprar</button></div>
 
 <div class="velo" id="velo" hidden>
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="m-t">
@@ -530,6 +585,7 @@ form.datos{display:grid;gap:12px}
     </div>
   </div>
 </div>
+<div class="toast" id="toast" role="status" aria-live="polite"><span class="av" id="t-ini">C</span><div><b id="t-txt"></b><small id="t-sub"></small></div></div>
 <canvas id="chispas" aria-hidden="true"></canvas>
 
 <script>
@@ -581,12 +637,12 @@ form.datos{display:grid;gap:12px}
   /* ---------- cuenta regresiva (fecha de ejemplo) ---------- */
   var META = new Date(2026,10,28,21,0,0), prev = {}, dos = function(v){ return String(v).padStart(2,"0") };
   function tic(){ var s = Math.max(0,Math.floor((META-new Date())/1000)), v = {d:Math.floor(s/86400),h:Math.floor(s%86400/3600),m:Math.floor(s%3600/60),s:s%60};
-    for(var k in v){ var t = dos(v[k]); if(prev[k]!==t){ $("cd-"+k).textContent = t; if(prev[k]!==undefined) golpe($("cd-"+k)); prev[k] = t } } }
+    for(var k in v){ var t = dos(v[k]); if(prev[k]!==t){ $("cd-"+k).textContent = t; if(prev[k]!==undefined) golpe($("cd-"+k)); prev[k] = t } } $("bm-cd").textContent = v.d + "d " + dos(v.h) + "h " + dos(v.m) + "m" }
   tic(); setInterval(tic,1000);
 
   /* ---------- galería ---------- */
   var fotos = [].slice.call(document.querySelectorAll("#visor img")), minis = [].slice.call(document.querySelectorAll("#minis button"));
-  var CHIP = ["Opción A · Moto","Opción B · Viaje","Opción B · Viaje","Sorteo N°1"], gi = 0, auto;
+  var CHIP = ["Opción A · Moto","Opción B · Viaje","Opción B · Viaje"], gi = 0, auto;
   function ver(i){ gi = (i+fotos.length)%fotos.length; fotos.forEach(function(f,j){ f.classList.toggle("on", j===gi) }); minis.forEach(function(m,j){ m.setAttribute("aria-current", j===gi ? "true":"false") }); $("cont").textContent = (gi+1) + " / " + fotos.length; $("chip-op").textContent = CHIP[gi] }
   $("ant").onclick = function(){ ver(gi-1); reiniciar() }; $("sig").onclick = function(){ ver(gi+1); reiniciar() };
   minis.forEach(function(m,j){ m.onclick = function(){ ver(j); reiniciar() } });
@@ -600,39 +656,67 @@ form.datos{display:grid;gap:12px}
   function activa(){ var y = scrollY + 140, act = 0; secs.forEach(function(s,i){ if(s && s.getBoundingClientRect().top + scrollY <= y) act = i }); links.forEach(function(a,i){ a.classList.toggle("act", i===act) }) }
   addEventListener("scroll", activa, {passive:true}); activa();
 
-  /* ---------- raspa ---------- */
-  var zona = $("zona"), capa = $("capa"), cx = capa.getContext("2d"), raspando = false, listo = false, ultimo = "", mov = 0, previo = null;
-  function numero(){ var n = String(Math.floor(Math.random()*TOTAL_T)).padStart(4,"0"); n = String(Math.floor(Math.random()*900000)+100000); ultimo = n.slice(0,3)+" "+n.slice(3); $("num-r").textContent = ultimo }
-  function cubrir(){
-    var r = zona.getBoundingClientRect(), d = devicePixelRatio||1, w = r.width, h = r.height;
-    capa.width = w*d; capa.height = h*d; cx.setTransform(d,0,0,d,0,0); cx.globalCompositeOperation = "source-over";
-    var g = cx.createLinearGradient(0,0,w,h); g.addColorStop(0,"#AEB3BD"); g.addColorStop(.4,"#E6E8EC"); g.addColorStop(.6,"#C7CBD3"); g.addColorStop(1,"#9CA2AD");
-    cx.fillStyle = g; cx.fillRect(0,0,w,h);
-    for(var i=0;i<900;i++){ cx.fillStyle = "rgba(" + (Math.random()<.5?"255,255,255":"40,46,60") + "," + (Math.random()*.14) + ")"; cx.fillRect(Math.random()*w, Math.random()*h, 1.2, 1.2) }
-    cx.fillStyle = "rgba(15,18,24,.6)"; cx.textAlign = "center"; cx.textBaseline = "middle";
-    cx.font = "700 " + Math.max(15, w/18) + "px 'Barlow Condensed', Arial Narrow, sans-serif"; cx.fillText("RASPA AQUÍ", w/2, h/2);
-    capa.style.transition = "none"; capa.style.opacity = 1; capa.hidden = false; listo = false; mov = 0;
-    zona.classList.remove("listo"); $("quiero").hidden = true; $("r-msg").textContent = "Pasa el dedo o el mouse.";
+  var COLORES_RASPA = ["#A7ADB8","#E8EAEE","#C3C8D0","#9AA1AD"], TINTA_RASPA = "rgba(15,18,24,.62)", FUENTE_RASPA = "'Barlow Condensed', Arial Narrow, sans-serif";
+  /* ---------- raspa para descubrir premios ---------- */
+  function raspable(zona, colores, texto, alListo){
+    var capa = zona.querySelector("canvas"), cx = capa.getContext("2d"), on = false, listo = false, prev = null, mov = 0, ancho = 0;
+    function cubrir(){
+      var r = zona.getBoundingClientRect(), d = devicePixelRatio||1, w = r.width, h = r.height; ancho = w;
+      capa.width = w*d; capa.height = h*d; cx.setTransform(d,0,0,d,0,0); cx.globalCompositeOperation = "source-over";
+      var g = cx.createLinearGradient(0,0,w,h); colores.forEach(function(c,i){ g.addColorStop(i/(colores.length-1), c) });
+      cx.fillStyle = g; cx.fillRect(0,0,w,h);
+      for(var i=0;i<900;i++){ cx.fillStyle = "rgba(" + (Math.random()<.5?"255,255,255":"20,24,34") + "," + (Math.random()*.14) + ")"; cx.fillRect(Math.random()*w, Math.random()*h, 1.3, 1.3) }
+      var tam = Math.max(22, w/9);
+      cx.fillStyle = texto[1]; cx.textAlign = "center"; cx.textBaseline = "middle";
+      cx.font = texto[2] + " " + tam + "px " + texto[3]; cx.fillText(texto[0], w/2, h/2 - tam*.3);
+      cx.font = "600 " + Math.max(12, w/28) + "px system-ui, sans-serif"; cx.fillText("Raspa para descubrir", w/2, h/2 + tam*.55);
+      capa.style.transition = "none"; capa.style.opacity = 1; capa.hidden = false;
+    }
+    function raspar(e){
+      if(!on || listo) return; zona.parentNode.classList.add("tocada");
+      var r = capa.getBoundingClientRect(), x = e.clientX-r.left, y = e.clientY-r.top, rad = Math.max(18, r.width/13);
+      cx.globalCompositeOperation = "destination-out"; cx.strokeStyle = cx.fillStyle = "#000";
+      if(prev){ cx.lineWidth = rad*1.8; cx.lineCap = "round"; cx.beginPath(); cx.moveTo(prev[0],prev[1]); cx.lineTo(x,y); cx.stroke() } else { cx.beginPath(); cx.arc(x,y,rad*.9,0,7); cx.fill() }
+      prev = [x,y]; if(++mov % 4 === 0) medir();
+    }
+    function medir(){ var d = cx.getImageData(0,0,capa.width,capa.height).data, v = 0, t = 0; for(var i=3;i<d.length;i+=80){ t++; if(d[i]<40) v++ } if(v/t > .45) revelar() }
+    function revelar(){ listo = true; capa.style.transition = "opacity .5s"; capa.style.opacity = 0; setTimeout(function(){ capa.hidden = true }, 500); zona.parentNode.classList.add("listo"); alListo(zona) }
+    capa.addEventListener("pointerdown", function(e){ on = true; prev = null; try{ capa.setPointerCapture(e.pointerId) }catch(_){} raspar(e) });
+    capa.addEventListener("pointermove", raspar);
+    capa.addEventListener("pointerup", function(){ on = false; prev = null; if(!listo) medir() });
+    capa.addEventListener("pointercancel", function(){ on = false; prev = null });
+    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(cubrir);
+    addEventListener("resize", function(){ if(!listo && zona.offsetWidth !== ancho) cubrir() });
   }
-  function raspar(e){
-    if(!raspando || listo) return;
-    var r = capa.getBoundingClientRect(), x = e.clientX-r.left, y = e.clientY-r.top, rad = Math.max(16, r.width/15);
-    cx.globalCompositeOperation = "destination-out"; cx.strokeStyle = cx.fillStyle = "#000";
-    if(previo){ cx.lineWidth = rad*1.8; cx.lineCap = "round"; cx.beginPath(); cx.moveTo(previo[0],previo[1]); cx.lineTo(x,y); cx.stroke() } else { cx.beginPath(); cx.arc(x,y,rad*.9,0,7); cx.fill() }
-    previo = [x,y]; if(++mov % 4 === 0) medir();
+  var descubiertos = 0;
+  document.querySelectorAll(".rp").forEach(function(rp){
+    raspable(rp.querySelector(".rp-zona"), COLORES_RASPA, [rp.dataset.i==="0" ? "PREMIO A" : "PREMIO B", TINTA_RASPA, "800", FUENTE_RASPA], function(z){
+      var b = rp.querySelector("[data-nombre]"); b.textContent = b.dataset.nombre;
+      var r = z.getBoundingClientRect(); chispas(r.left+r.width/2, r.top+r.height/2, 80);
+      descubiertos++; $("rp-cuenta").textContent = descubiertos + " de 2";
+      if(descubiertos === 2){ var f = $("rp-final"); f.hidden = false; f.style.display = "flex" }
+    });
+  });
+
+  /* ---------- ventas en vivo (ejemplo) ---------- */
+  var COMPRADORES = [["C","Camila","Viña del Mar"],["M","Matías","Santiago"],["J","Javiera","Concepción"],["F","Felipe","La Serena"],["V","Valentina","Rancagua"],["B","Benjamín","Temuco"],["A","Antonia","Antofagasta"]], ci = 0;
+  function pintarVend(){ var pct = VENDIDOS/TOTAL_T*100; $("riel").style.width = pct+"%"; $("burbuja").style.left = pct+"%"; $("burbuja").textContent = Math.round(pct)+"%"; $("vend").textContent = mil(VENDIDOS); $("quedan").textContent = mil(TOTAL_T-VENDIDOS); golpe($("quedan")) }
+  function venta(){
+    var n = [1,5,10,10,25,5][Math.floor(Math.random()*6)], c = COMPRADORES[ci++ % COMPRADORES.length];
+    VENDIDOS = Math.min(TOTAL_T-50, VENDIDOS+n); pintarVend();
+    if($("velo").hidden){ $("t-ini").textContent = c[0]; $("t-txt").textContent = c[1] + " de " + c[2] + " compró " + n + (n===1?" ticket":" tickets"); $("t-sub").textContent = "Hace un momento · ejemplo";
+      var t = $("toast"); t.classList.add("ver"); setTimeout(function(){ t.classList.remove("ver") }, 4200) }
+    setTimeout(venta, 8000 + Math.random()*7000);
   }
-  function medir(){ var d = cx.getImageData(0,0,capa.width,capa.height).data, v = 0, t = 0; for(var i=3;i<d.length;i+=80){ t++; if(d[i]<40) v++ } if(v/t > .5) revelar() }
-  function revelar(){ listo = true; capa.style.transition = "opacity .5s"; capa.style.opacity = 0; setTimeout(function(){ capa.hidden = true }, 500);
-    zona.classList.add("listo"); $("quiero").hidden = false; $("r-msg").textContent = "Salió el N° " + ultimo + ". Está disponible.";
-    var r = zona.getBoundingClientRect(); chispas(r.left+r.width/2, r.top+r.height/2, 70) }
-  capa.addEventListener("pointerdown", function(e){ raspando = true; previo = null; try{ capa.setPointerCapture(e.pointerId) }catch(_){} raspar(e) });
-  capa.addEventListener("pointermove", raspar);
-  capa.addEventListener("pointerup", function(){ raspando = false; previo = null; if(!listo) medir() });
-  capa.addEventListener("pointercancel", function(){ raspando = false; previo = null });
-  $("otra").onclick = function(){ numero(); cubrir() };
-  $("quiero").onclick = function(){ poner(1); abrir(); $("r-cant").textContent = "1 ticket · N° " + ultimo };
-  numero(); (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(cubrir);
-  var anchoZ = 0; addEventListener("resize", function(){ var w = zona.offsetWidth; if(w!==anchoZ && !listo){ anchoZ = w; cubrir() } });
+  if(!quieto) setTimeout(venta, 5000);
+  var viendo = 37; setInterval(function(){ viendo = Math.max(18, Math.min(80, viendo + Math.round((Math.random()-.45)*4))); $("viendo").textContent = viendo }, 3500);
+
+  /* ---------- aparecer al hacer scroll ---------- */
+  if("IntersectionObserver" in window && !quieto){
+    var rvs = [].slice.call(document.querySelectorAll(".rv")); rvs.forEach(function(el){ if(el.getBoundingClientRect().top > innerHeight) el.classList.add("abajo") });
+    var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.remove("abajo"); io.unobserve(e.target) } }) }, {rootMargin:"0px 0px -6% 0px"});
+    rvs.forEach(function(el){ io.observe(el) });
+  }
 
   /* ---------- mis tickets (ejemplo) ---------- */
   $("f-consulta").addEventListener("submit", function(e){

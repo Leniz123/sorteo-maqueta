@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>body{margin:0}[hidden]{display:none!important}</style>
-<title>Sorteo Brutal V2</title>
+<title>Sorteo V2</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -306,6 +306,63 @@ form.datos{display:grid;gap:12px}
 .mis{display:grid;gap:8px}
 .mini{display:flex;justify-content:space-between;align-items:center;background:var(--crema);color:var(--oscuro);border-radius:12px;padding:11px 14px;font-family:var(--f-display);font-weight:800;animation:sube .5s cubic-bezier(.2,1.4,.4,1) both}
 .mini small{font-family:var(--f-body);font-weight:700;font-size:.72rem;color:#6A5A40}
+
+/* descubre los premios */
+.descubre{padding-top:30px}
+.rp-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media (max-width:680px){.rp-grid{grid-template-columns:1fr}}
+.rp{background:var(--selva-2);border:1px solid var(--selva-3);border-radius:24px;padding:14px;display:grid;gap:12px;min-width:0;transition:border-color .3s,transform .3s}
+.rp:hover{border-color:var(--agua)}
+.rp-zona{position:relative;aspect-ratio:16/10;max-width:100%;border-radius:16px;overflow:hidden;touch-action:none;user-select:none;background:var(--crema)}
+.rp.moto .rp-zona{background:radial-gradient(80% 70% at 50% 55%,#fff,#F1F7DE 60%,#D9EFA7)}
+.rp-zona img{width:100%;height:100%;object-fit:cover}
+.rp-zona img.contener{object-fit:contain;mix-blend-mode:multiply;padding:5% 8%}
+.rp-zona canvas{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair}
+.rp.listo .rp-zona img{animation:revela .8s cubic-bezier(.2,1.2,.3,1)}
+@keyframes revela{0%{transform:scale(1.15);filter:blur(6px)}100%{transform:none;filter:none}}
+.rp-info{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding-inline:4px}
+.rp-info small{display:block;font-family:var(--f-display);font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--limon)}
+.rp-info b{font-family:var(--f-display);font-weight:800;font-size:1.2rem;line-height:1.2}
+.rp-chip{font-size:.8rem;font-weight:800;border-radius:999px;padding:6px 11px;background:var(--limon);color:var(--oscuro);opacity:0;transform:translateY(6px) scale(.9);transition:all .4s cubic-bezier(.3,1.6,.5,1)}
+.rp.listo .rp-chip{opacity:1;transform:none}
+.dedo{position:absolute;left:50%;top:66%;width:46px;height:46px;margin:-23px 0 0 -23px;pointer-events:none;animation:barre 2.4s ease-in-out infinite}
+.dedo::before{content:"";position:absolute;inset:0;border-radius:50%;background:rgba(255,255,255,.95);box-shadow:0 0 0 7px rgba(255,255,255,.3),0 6px 16px rgba(0,0,0,.3)}
+.dedo::after{content:"";position:absolute;inset:14px;border-radius:50%;background:var(--mandarina)}
+@keyframes barre{0%{transform:translateX(-70px)}50%{transform:translateX(70px)}100%{transform:translateX(-70px)}}
+.rp.tocada .dedo,.rp.listo .dedo{display:none}
+.rp-final{margin-top:20px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:linear-gradient(120deg,var(--mandarina),var(--fucsia));color:#fff;border-radius:22px;padding:18px 22px;animation:entra .5s cubic-bezier(.3,1.4,.5,1) both}
+.rp-final b{display:block;font-family:var(--f-display);font-weight:900;font-size:1.3rem}
+.rp-final .btn-m{background:var(--oscuro);color:var(--crema);box-shadow:0 6px 0 #000}
+.pulso{animation:pulso 2.2s infinite}
+.btn.pulso::after{animation:none}
+@keyframes pulso{0%{box-shadow:0 6px 0 var(--mandarina-h),0 0 0 0 rgba(255,122,26,.55)}70%{box-shadow:0 6px 0 var(--mandarina-h),0 0 0 16px rgba(255,122,26,0)}100%{box-shadow:0 6px 0 var(--mandarina-h),0 0 0 0 rgba(255,122,26,0)}}
+#quedan.tick{animation:tick .45s cubic-bezier(.3,1.6,.5,1);color:var(--fucsia)}
+@media (max-width:760px){
+  .hero{padding-block:26px 20px}
+  .hero .wrap{gap:26px}
+  .hero h1{font-size:2.5rem}
+  .hero-txt{gap:16px}
+  .stats{gap:18px}
+  .stat b{font-size:1.3rem}
+  .tarjeta{aspect-ratio:1/1}
+  .estampa{width:84px;height:84px;font-size:.56rem;top:-12px;right:-4px}
+  .selector button{padding:10px 12px}
+  .cinta{padding-block:10px}
+  .cintas{padding-block:10px 26px}
+  .flip b{font-size:.85rem;padding:4px 5px}
+  .flip small{font-size:.5rem}
+  .topbar .wrap{gap:10px}
+  .compra{padding:16px}
+  .total b{font-size:1.4rem}
+  .barra-movil small{font-size:.72rem}
+  .vivo{font-size:.78rem}
+  .blob{display:none}
+  .aviso{padding:8px 12px 8px 8px;gap:8px;max-width:calc(100vw - 32px);border-radius:14px}
+  .aviso .av{width:30px;height:30px;border-radius:9px;font-size:.8rem}
+  .aviso b{font-size:.8rem}
+  .aviso small{font-size:.7rem}
+}
+@media (prefers-reduced-motion:reduce){.dedo{display:none}}
 #confeti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:70}
 
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}html{scroll-behavior:auto}.js .rv.abajo{transform:none}}
@@ -315,9 +372,9 @@ form.datos{display:grid;gap:12px}
 
 <div class="topbar">
   <div class="wrap">
-    <a class="logo" href="#" aria-label="Sorteo Brutal, inicio"><span class="logo-ic" aria-hidden="true"><span>SB</span></span><b>Sorteo Brutal</b></a>
+    <a class="logo" href="#" aria-label="Sorteo, inicio"><span class="logo-ic" aria-hidden="true"><span>S</span></span><b>Sorteo</b></a>
     <nav class="menu" aria-label="Secciones">
-      <a href="#raspa">Prueba tu suerte</a><a href="#como">Cómo funciona</a><a href="#tickets">Tickets</a><a href="#premios">Premios</a><a href="#bases">Bases</a>
+      <a href="#descubre">Descubre los premios</a><a href="#como">Cómo funciona</a><a href="#tickets">Tickets</a><a href="#premios">Premios</a><a href="#bases">Bases</a>
     </nav>
     <div class="reloj" aria-label="Tiempo para el sorteo">
       <span>Sorteo en</span>
@@ -336,12 +393,12 @@ form.datos{display:grid;gap:12px}
   <span class="blob b1" aria-hidden="true"></span><span class="blob b2" aria-hidden="true"></span><span class="blob b3" aria-hidden="true"></span>
   <div class="wrap">
     <div class="hero-txt">
-      <span class="vivo"><i aria-hidden="true"></i>Sorteo N°1 abierto · Ganador elige el premio</span>
+      <span class="vivo"><i aria-hidden="true"></i>Sorteo N°1 abierto · <b id="viendo">37</b>&nbsp;viendo ahora</span>
       <h1 id="titulo">Gánate<br><span class="cambia" id="cambia"><span>la moto</span></span><br>con un <span class="tachado">ticket.<svg viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true"><path d="M4 22 C 80 6, 170 6, 296 18"/></svg></span></h1>
       <p class="lead">Un ticket, dos premios: una Kawasaki Ninja 500 SE 0 km o un viaje todo incluido a Búzios para 4 personas. Si sale tu número, eliges con cuál te quedas.</p>
       <div class="hero-cta">
-        <a class="btn btn-m" href="#tickets">Comprar tickets</a>
-        <a class="btn btn-o" href="#raspa">Prueba tu suerte</a>
+        <a class="btn btn-m pulso" href="#tickets">Comprar tickets</a>
+        <a class="btn btn-o" href="#descubre">Descubre los premios</a>
       </div>
       <div class="stats">
         <div class="stat"><b data-cuenta="2">0</b><small>premios para elegir</small></div>
@@ -372,32 +429,27 @@ form.datos{display:grid;gap:12px}
   </div>
 </section>
 
+<section id="descubre" class="descubre" aria-labelledby="desc-t">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="eyebrow">Descubre los premios</span><h2 id="desc-t">Raspa y mira lo que te puedes llevar</h2><p class="lead">Pasa el dedo o el mouse por cada tarjeta. <b id="rp-cuenta" style="color:var(--limon)">0 de 2</b> premios descubiertos.</p></div>
+    <div class="rp-grid">
+      <div class="rp moto rv" data-i="0">
+        <div class="rp-zona"><img src="img/moto.jpg" alt="Kawasaki Ninja 500 SE" class="contener" width="900" height="581"><canvas role="img" aria-label="Tarjeta para raspar: premio 1"></canvas><span class="dedo" aria-hidden="true"></span></div>
+        <div class="rp-info"><div><small>Opción 1</small><b data-nombre="Kawasaki Ninja 500 SE">? ? ?</b></div><span class="rp-chip">0 km + casco</span></div>
+      </div>
+      <div class="rp viaje rv" data-i="1">
+        <div class="rp-zona"><img src="img/buzios.jpg" alt="Búzios, Brasil" width="1000" height="741"><canvas role="img" aria-label="Tarjeta para raspar: premio 2"></canvas><span class="dedo" aria-hidden="true"></span></div>
+        <div class="rp-info"><div><small>Opción 2</small><b data-nombre="Viaje a Búzios para 4">? ? ?</b></div><span class="rp-chip">5 días · todo incluido</span></div>
+      </div>
+    </div>
+    <div class="rp-final" id="rp-final" hidden><div><b>¡Los dos pueden ser tuyos!</b><span>Con un ticket participas y, si ganas, eliges cuál te llevas.</span></div><a class="btn btn-m pulso" href="#tickets">Quiero participar</a></div>
+  </div>
+</section>
+
 <div class="cintas" aria-hidden="true">
   <div class="cinta"><div class="pista"><span>MOTO 0 KM ✦ VIAJE A BÚZIOS ✦ TÚ ELIGES ✦ SORTEO EN VIVO ✦</span><span>MOTO 0 KM ✦ VIAJE A BÚZIOS ✦ TÚ ELIGES ✦ SORTEO EN VIVO ✦</span></div></div>
   <div class="cinta dos"><div class="pista"><span>UN TICKET, DOS PREMIOS ✦ 4 PERSONAS TODO INCLUIDO ✦ KAWASAKI NINJA 500 SE ✦</span><span>UN TICKET, DOS PREMIOS ✦ 4 PERSONAS TODO INCLUIDO ✦ KAWASAKI NINJA 500 SE ✦</span></div></div>
 </div>
-
-<section id="raspa" class="raspa-sec" aria-labelledby="raspa-t">
-  <div class="wrap">
-    <div class="sec-head rv" style="margin:0">
-      <span class="eyebrow">Prueba tu suerte</span>
-      <h2 id="raspa-t">Raspa y descubre tu número</h2>
-      <p class="lead">Pasa el dedo o el mouse por la tarjeta. Aparece un número disponible del sorteo y, si te gusta, te lo quedas.</p>
-    </div>
-    <div class="raspa-card rv">
-      <header><span>SORTEO BRUTAL · N°1</span><em>RASPA AQUÍ</em></header>
-      <div class="zona" id="zona">
-        <div class="num"><small>TU NÚMERO</small><b id="num-raspa">000 000</b></div>
-        <canvas id="capa" aria-label="Capa para raspar" role="img"></canvas>
-      </div>
-      <div class="acc">
-        <button class="btn btn-m" type="button" id="quiero" hidden>Quiero este número</button>
-        <button class="btn btn-o" type="button" id="otra">Otra tarjeta</button>
-      </div>
-      <p class="nota" id="raspa-msg" aria-live="polite">Raspa más de la mitad para descubrirlo.</p>
-    </div>
-  </div>
-</section>
 
 <section id="como" aria-labelledby="como-t">
   <div class="wrap">
@@ -424,11 +476,11 @@ form.datos{display:grid;gap:12px}
         <div class="stepper" aria-label="Cantidad de tickets"><button type="button" id="menos" aria-label="Quitar un ticket">−</button><output id="cant" aria-live="polite">10</output><button type="button" id="mas" aria-label="Agregar un ticket">+</button></div>
         <div class="total"><small>Total a pagar</small><b id="total">$0</b></div>
       </div>
-      <button class="btn btn-m" type="button" id="abrir">Continuar al pago</button>
+      <button class="btn btn-m pulso" type="button" id="abrir">Continuar al pago</button>
     </div>
     <div class="pagos"><span>Pago seguro</span><span>Webpay</span><span>Mercado Pago</span><span>Transferencia</span></div>
     <div class="avance">
-      <div class="row"><span>Tickets vendidos <span style="color:var(--tinta-2);font-weight:500">(ejemplo)</span></span><b id="pct">64%</b></div>
+      <div class="row"><span>Tickets vendidos <span style="color:var(--tinta-2);font-weight:500">(ejemplo)</span> · quedan <b id="quedan" style="font-family:var(--f-display)">3.580</b></span><b id="pct">64%</b></div>
       <div class="barra"><i id="barra"></i></div>
     </div>
   </div>
@@ -469,11 +521,11 @@ form.datos{display:grid;gap:12px}
   </div>
 </section>
 
-<footer><div class="wrap"><b style="font-family:var(--f-display)">Sorteo Brutal</b><span>Contacto: <span class="pend">[WhatsApp y correo de la organización]</span></span><span>Maqueta de diseño V2 · 2026</span></div></footer>
+<footer><div class="wrap"><b style="font-family:var(--f-display)">Sorteo</b><span>Contacto: <span class="pend">[WhatsApp y correo de la organización]</span></span><span>Maqueta de diseño V2 · 2026</span></div></footer>
 
 <div class="aviso" id="aviso" role="status" aria-live="polite"><span class="av" id="av-ini">C</span><div><b id="av-txt"></b><small id="av-sub"></small></div></div>
 
-<div class="barra-movil"><div><small id="bm-cant">10 tickets</small><b id="bm-total">$0</b></div><button class="btn btn-m" type="button" id="bm-btn">Comprar</button></div>
+<div class="barra-movil"><div><small><span id="bm-cant">10 tickets</span> · cierra en <span id="bm-cd">43d</span></small><b id="bm-total">$0</b></div><button class="btn btn-m pulso" type="button" id="bm-btn">Comprar</button></div>
 
 <div class="velo" id="velo" hidden>
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="m-t">
@@ -544,7 +596,7 @@ document.documentElement.classList.add("js");
   function tic(){
     var s = Math.max(0, Math.floor((META-new Date())/1000));
     var v = {d:Math.floor(s/86400), h:Math.floor(s%86400/3600), m:Math.floor(s%3600/60), s:s%60};
-    for(var k in v){ var el = $("cd-"+k), t = dos(v[k]); if(prev[k]!==t){ el.textContent = t; if(prev[k]!==undefined) golpe(el); prev[k] = t } }
+    for(var k in v){ var el = $("cd-"+k), t = dos(v[k]); if(prev[k]!==t){ el.textContent = t; if(prev[k]!==undefined) golpe(el); prev[k] = t } } $("bm-cd").textContent = v.d + "d " + dos(v.h) + "h " + dos(v.m) + "m";
   }
   tic(); setInterval(tic,1000);
 
@@ -587,51 +639,51 @@ document.documentElement.classList.add("js");
   var barra = $("barra");
   if("IntersectionObserver" in window){ new IntersectionObserver(function(es,o){ if(es[0].isIntersecting){ barra.style.width = "64%"; o.disconnect() } }).observe(barra) } else barra.style.width = "64%";
 
-  /* ---------- raspa ---------- */
-  var zona = $("zona"), capa = $("capa"), cx = capa.getContext("2d"), raspando = false, descubierto = false, ultimo = "", mov = 0;
-  function nuevoNumero(){ var n = String(Math.floor(Math.random()*900000)+100000); ultimo = n.slice(0,3)+" "+n.slice(3); $("num-raspa").textContent = ultimo }
-  function cubrir(){
-    var r = zona.getBoundingClientRect(), d = devicePixelRatio||1;
-    capa.width = r.width*d; capa.height = r.height*d; cx.setTransform(d,0,0,d,0,0);
-    cx.globalCompositeOperation = "source-over";
-    var g = cx.createLinearGradient(0,0,r.width,r.height);
-    g.addColorStop(0,"#B9C3C2"); g.addColorStop(.45,"#EEF3F2"); g.addColorStop(.55,"#D5DCDB"); g.addColorStop(1,"#9EAAA9");
-    cx.fillStyle = g; cx.fillRect(0,0,r.width,r.height);
-    cx.fillStyle = "rgba(6,38,37,.55)";
-    for(var i=0;i<70;i++){ cx.beginPath(); cx.arc(Math.random()*r.width, Math.random()*r.height, Math.random()*1.6+.4, 0, 7); cx.fill() }
-    cx.fillStyle = "#062625"; cx.font = "800 " + Math.max(16, r.width/14) + "px Unbounded, Arial Black, sans-serif"; cx.textAlign = "center"; cx.textBaseline = "middle";
-    cx.fillText("RASPA AQUÍ", r.width/2, r.height/2);
-    capa.style.transition = "none"; capa.style.opacity = 1; capa.hidden = false;
-    descubierto = false; zona.classList.remove("listo"); $("quiero").hidden = true; $("raspa-msg").textContent = "Raspa más de la mitad para descubrirlo.";
+  var COLORES_RASPA = ["#FFB347","#FF7A1A","#FF3D8B","#B3247A"], TINTA_RASPA = "rgba(255,255,255,.92)", FUENTE_RASPA = "Unbounded, Arial Black, sans-serif";
+  function chispas(x,y,n){ confeti(x,y,n) }
+  var QUEDAN = 3580;
+  /* ---------- raspa para descubrir premios ---------- */
+  function raspable(zona, colores, texto, alListo){
+    var capa = zona.querySelector("canvas"), cx = capa.getContext("2d"), on = false, listo = false, prev = null, mov = 0, ancho = 0;
+    function cubrir(){
+      var r = zona.getBoundingClientRect(), d = devicePixelRatio||1, w = r.width, h = r.height; ancho = w;
+      capa.width = w*d; capa.height = h*d; cx.setTransform(d,0,0,d,0,0); cx.globalCompositeOperation = "source-over";
+      var g = cx.createLinearGradient(0,0,w,h); colores.forEach(function(c,i){ g.addColorStop(i/(colores.length-1), c) });
+      cx.fillStyle = g; cx.fillRect(0,0,w,h);
+      for(var i=0;i<900;i++){ cx.fillStyle = "rgba(" + (Math.random()<.5?"255,255,255":"20,24,34") + "," + (Math.random()*.14) + ")"; cx.fillRect(Math.random()*w, Math.random()*h, 1.3, 1.3) }
+      var tam = Math.max(22, w/9);
+      cx.fillStyle = texto[1]; cx.textAlign = "center"; cx.textBaseline = "middle";
+      cx.font = texto[2] + " " + tam + "px " + texto[3]; cx.fillText(texto[0], w/2, h/2 - tam*.3);
+      cx.font = "600 " + Math.max(12, w/28) + "px system-ui, sans-serif"; cx.fillText("Raspa para descubrir", w/2, h/2 + tam*.55);
+      capa.style.transition = "none"; capa.style.opacity = 1; capa.hidden = false;
+    }
+    function raspar(e){
+      if(!on || listo) return; zona.parentNode.classList.add("tocada");
+      var r = capa.getBoundingClientRect(), x = e.clientX-r.left, y = e.clientY-r.top, rad = Math.max(18, r.width/13);
+      cx.globalCompositeOperation = "destination-out"; cx.strokeStyle = cx.fillStyle = "#000";
+      if(prev){ cx.lineWidth = rad*1.8; cx.lineCap = "round"; cx.beginPath(); cx.moveTo(prev[0],prev[1]); cx.lineTo(x,y); cx.stroke() } else { cx.beginPath(); cx.arc(x,y,rad*.9,0,7); cx.fill() }
+      prev = [x,y]; if(++mov % 4 === 0) medir();
+    }
+    function medir(){ var d = cx.getImageData(0,0,capa.width,capa.height).data, v = 0, t = 0; for(var i=3;i<d.length;i+=80){ t++; if(d[i]<40) v++ } if(v/t > .45) revelar() }
+    function revelar(){ listo = true; capa.style.transition = "opacity .5s"; capa.style.opacity = 0; setTimeout(function(){ capa.hidden = true }, 500); zona.parentNode.classList.add("listo"); alListo(zona) }
+    capa.addEventListener("pointerdown", function(e){ on = true; prev = null; try{ capa.setPointerCapture(e.pointerId) }catch(_){} raspar(e) });
+    capa.addEventListener("pointermove", raspar);
+    capa.addEventListener("pointerup", function(){ on = false; prev = null; if(!listo) medir() });
+    capa.addEventListener("pointercancel", function(){ on = false; prev = null });
+    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(cubrir);
+    addEventListener("resize", function(){ if(!listo && zona.offsetWidth !== ancho) cubrir() });
   }
-  function raspar(e){
-    if(!raspando || descubierto) return;
-    var r = capa.getBoundingClientRect(), x = e.clientX-r.left, y = e.clientY-r.top;
-    cx.globalCompositeOperation = "destination-out"; cx.beginPath(); cx.arc(x,y,Math.max(18,r.width/16),0,7); cx.fill();
-    if(++mov % 8 === 0) medir();
-  }
-  function medir(){
-    var d = cx.getImageData(0,0,capa.width,capa.height).data, vacio = 0, total = 0;
-    for(var i=3;i<d.length;i+=64){ total++; if(d[i]===0) vacio++ }
-    if(vacio/total > .5) revelar();
-  }
-  function revelar(){
-    descubierto = true; capa.style.transition = "opacity .5s"; capa.style.opacity = 0;
-    setTimeout(function(){ capa.hidden = true }, 500);
-    zona.classList.add("listo"); $("quiero").hidden = false;
-    $("raspa-msg").textContent = "¡Salió el N° " + ultimo + "! Está disponible.";
-    var r = zona.getBoundingClientRect(); confeti(r.left+r.width/2, r.top+r.height/2, 90);
-  }
-  capa.addEventListener("pointerdown", function(e){ raspando = true; capa.setPointerCapture(e.pointerId); raspar(e) });
-  capa.addEventListener("pointermove", raspar);
-  capa.addEventListener("pointerup", function(){ raspando = false; if(!descubierto) medir() });
-  capa.addEventListener("pointercancel", function(){ raspando = false });
-  $("otra").onclick = function(){ nuevoNumero(); cubrir() };
-  $("quiero").onclick = function(){ cant = 1; pintar(); abrir(); $("r-cant").textContent = "1 ticket · N° " + ultimo };
-  nuevoNumero();
-  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(cubrir);
-  var anchoZona = zona.offsetWidth;
-  addEventListener("resize", function(){ if(zona.offsetWidth !== anchoZona && !descubierto){ anchoZona = zona.offsetWidth; cubrir() } });
+  var descubiertos = 0;
+  document.querySelectorAll(".rp").forEach(function(rp){
+    raspable(rp.querySelector(".rp-zona"), COLORES_RASPA, [rp.dataset.i==="0" ? "PREMIO A" : "PREMIO B", TINTA_RASPA, "800", FUENTE_RASPA], function(z){
+      var b = rp.querySelector("[data-nombre]"); b.textContent = b.dataset.nombre;
+      var r = z.getBoundingClientRect(); chispas(r.left+r.width/2, r.top+r.height/2, 80);
+      descubiertos++; $("rp-cuenta").textContent = descubiertos + " de 2";
+      if(descubiertos === 2){ var f = $("rp-final"); f.hidden = false; f.style.display = "flex" }
+    });
+  });
+
+  var viendo = 37; setInterval(function(){ viendo = Math.max(18, Math.min(80, viendo + Math.round((Math.random()-.45)*4))); $("viendo").textContent = viendo }, 3500);
 
   /* ---------- avisos de compra (ejemplo) ---------- */
   var COMPRAS = [["C","Camila de Viña del Mar","compró 10 tickets"],["M","Matías de Santiago","compró 5 tickets"],["J","Javiera de Concepción","compró 25 tickets"],["F","Felipe de La Serena","compró 1 ticket"],["V","Valentina de Rancagua","compró 10 tickets"]];
@@ -639,6 +691,7 @@ document.documentElement.classList.add("js");
   function avisar(){
     if(!$("velo").hidden){ setTimeout(avisar, 4000); return }
     var c = COMPRAS[ai++ % COMPRAS.length];
+    QUEDAN = Math.max(50, QUEDAN - (+c[2].match(/\d+/)[0])); $("quedan").textContent = QUEDAN.toLocaleString("es-CL"); golpe($("quedan"));
     $("av-ini").textContent = c[0]; $("av-txt").textContent = c[1] + " " + c[2]; $("av-sub").textContent = "Hace " + (2+ai%7) + " min · ejemplo";
     aviso.classList.add("ver"); setTimeout(function(){ aviso.classList.remove("ver") }, 4200);
     setTimeout(avisar, 9000);
