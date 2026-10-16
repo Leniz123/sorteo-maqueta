@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}[hidden]{display:none!important}</style>
+<title>Sorteo Brutal V3</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: sala de exhibición de noche — la tarjeta dorada para raspar es lo primero que ves y se toca de inmediato;
+   abajo, los dos premios como piezas de vitrina, y los tickets como invitaciones. Un solo look oscuro a propósito. */
+:root{
+  --noche:#0D0E11;      /* fondo */
+  --grafito:#15171C;    /* superficies */
+  --grafito-2:#1C1F26;
+  --linea:#2A2E37;      /* bordes */
+  --champan:#D8B773;    /* acento */
+  --champan-claro:#F1DDAE;
+  --champan-hondo:#A9884D;
+  --marfil:#F2EDE3;     /* texto */
+  --gris:#9B9EA8;       /* texto secundario */
+  --moto:#A9D46B;       /* tinte sutil premio moto */
+  --mar:#7FC9C4;        /* tinte sutil premio viaje */
+  --f-display:"Fraunces",Georgia,"Times New Roman",serif;
+  --f-body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r:20px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--noche);color:var(--marfil);font-family:var(--f-body);font-size:16px;line-height:1.6;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+button{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:2px solid var(--champan);outline-offset:3px;border-radius:8px}
+.wrap{max-width:1200px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);font-weight:500;line-height:1.05;letter-spacing:-.015em;text-wrap:balance;margin:0;font-optical-sizing:auto}
+h2{font-size:clamp(2rem,4.4vw,3.2rem)}
+h1 em,h2 em{font-style:italic;color:var(--champan)}
+p{margin:0}
+.eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--champan)}
+.lead{color:var(--gris);max-width:56ch;font-size:1.05rem}
+section{padding-block:96px}
+.sec-head{display:grid;gap:14px;margin-bottom:44px}
+.regla{height:1px;background:linear-gradient(90deg,transparent,var(--linea) 20%,var(--linea) 80%,transparent)}
+
+/* botones */
+.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:999px;font-weight:700;letter-spacing:.02em;text-decoration:none;transition:transform .2s ease,box-shadow .2s ease,background .2s,color .2s}
+.btn-oro{background:linear-gradient(180deg,var(--champan-claro),var(--champan) 55%,var(--champan-hondo));color:#1A140A;padding:15px 30px;box-shadow:0 10px 30px rgba(216,183,115,.22),inset 0 1px 0 rgba(255,255,255,.6)}
+.btn-oro::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.55) 50%,transparent 65%);transform:translateX(-130%);animation:destello 5s ease-in-out infinite}
+@keyframes destello{0%,70%{transform:translateX(-130%)}90%,100%{transform:translateX(130%)}}
+.btn-oro:hover{transform:translateY(-2px);box-shadow:0 16px 36px rgba(216,183,115,.32),inset 0 1px 0 rgba(255,255,255,.6)}
+.btn-linea{background:transparent;border:1px solid var(--linea);color:var(--marfil);padding:13px 24px}
+.btn-linea:hover{border-color:var(--champan);color:var(--champan)}
+.btn-sm{padding:9px 18px;font-size:.86rem}
+
+/* barra superior */
+.aviso-maqueta{background:var(--grafito-2);color:var(--gris);text-align:center;font-size:.76rem;font-weight:600;letter-spacing:.06em;padding-block:7px;border-bottom:1px solid var(--linea)}
+.aviso-maqueta b{color:var(--champan)}
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:rgba(13,14,17,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--linea)}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.logo-ic{width:36px;height:36px;border-radius:50%;border:1px solid var(--champan);display:grid;place-items:center;font-family:var(--f-display);font-style:italic;color:var(--champan);font-size:1rem}
+.logo b{font-family:var(--f-display);font-weight:500;font-size:1.2rem;letter-spacing:.01em}
+nav.menu{display:flex;gap:26px;font-size:.9rem;font-weight:600}
+nav.menu a{text-decoration:none;color:var(--gris);transition:color .2s}
+nav.menu a:hover{color:var(--champan)}
+@media (max-width:1000px){nav.menu{display:none}}
+.reloj{display:flex;align-items:center;gap:14px}
+.reloj > span{font-size:.72rem;font-weight:700;letter-spacing:.16em;color:var(--gris);text-transform:uppercase}
+.digitos{display:flex;gap:4px;align-items:baseline;font-family:var(--f-display);font-size:1.15rem;font-variant-numeric:tabular-nums lining-nums}
+.digitos b{font-weight:500;display:inline-block;min-width:1.4em;text-align:center}
+.digitos b.tick{animation:tick .5s ease}
+@keyframes tick{0%{transform:translateY(-5px);opacity:.3;color:var(--champan)}100%{transform:none}}
+.digitos small{font-family:var(--f-body);font-size:.62rem;color:var(--gris);font-weight:700;margin-right:6px;letter-spacing:.06em}
+
+/* portada con la tarjeta */
+.hero{position:relative;padding-block:56px 80px;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:-20% -10% auto auto;width:780px;height:780px;max-width:100%;background:radial-gradient(closest-side,rgba(216,183,115,.16),transparent 70%);pointer-events:none}
+#polvo{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hero .wrap{position:relative;display:grid;grid-template-columns:.95fr 1.05fr;gap:56px;align-items:center;grid-template-areas:"txt carta"}
+.hero-txt{grid-area:txt;display:grid;gap:24px;min-width:0}
+.hero-carta{grid-area:carta;min-width:0;display:grid;gap:18px;justify-items:center}
+@media (max-width:900px){
+  .hero{padding-block:28px 56px}
+  .hero .wrap{grid-template-columns:1fr;gap:28px;grid-template-areas:"titulo" "carta" "txt"}
+  .hero-titulo{grid-area:titulo}
+}
+.hero-titulo{display:grid;gap:16px}
+.hero h1{font-size:clamp(2.6rem,6vw,5rem);font-weight:400}
+.hero h1 em{font-weight:500}
+.hero .wrap > .hero-titulo{display:none}
+@media (max-width:900px){.hero .wrap > .hero-titulo{display:grid}.hero-txt .hero-titulo{display:none}}
+.premios-mini{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pm{display:flex;gap:12px;align-items:center;background:var(--grafito);border:1px solid var(--linea);border-radius:16px;padding:10px 14px 10px 10px;min-width:0}
+.pm img{width:58px;height:58px;border-radius:12px;object-fit:cover;flex:none}
+.pm.moto img{object-fit:contain;background:#F4F4F1;mix-blend-mode:normal;padding:4px}
+.pm b{display:block;font-size:.95rem;line-height:1.25}
+.pm small{color:var(--gris);font-size:.8rem}
+@media (max-width:460px){.premios-mini{grid-template-columns:1fr}}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.confianza{display:flex;gap:18px;flex-wrap:wrap;color:var(--gris);font-size:.84rem;font-weight:600}
+.confianza span{display:flex;gap:8px;align-items:center}
+.confianza span::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--champan)}
+
+/* la tarjeta */
+.escena{perspective:1200px;width:100%;max-width:560px}
+.carta{position:relative;width:100%;aspect-ratio:1.586/1;max-width:100%;border-radius:22px;transform-style:preserve-3d;transition:transform .25s ease-out;background:
+  radial-gradient(120% 90% at 0% 0%,#2B2E36 0%,#17191E 55%,#101114 100%);box-shadow:0 40px 80px rgba(0,0,0,.6),0 0 0 1px rgba(216,183,115,.35),inset 0 1px 0 rgba(255,255,255,.08);overflow:hidden;animation:flota 6s ease-in-out infinite}
+@keyframes flota{50%{translate:0 -8px}}
+.carta.tocada{animation:none}
+.carta .marco{position:absolute;inset:14px;border:1px solid rgba(216,183,115,.25);border-radius:14px;pointer-events:none}
+.carta .cab{position:absolute;top:24px;left:28px;right:28px;display:flex;justify-content:space-between;align-items:center;font-size:.66rem;font-weight:800;letter-spacing:.22em;color:var(--champan)}
+.carta .cab i{font-style:normal;color:var(--gris)}
+.carta .pie{position:absolute;bottom:22px;left:28px;right:28px;display:flex;justify-content:space-between;align-items:flex-end;font-size:.66rem;font-weight:700;letter-spacing:.16em;color:var(--gris)}
+.carta .pie b{font-family:var(--f-display);font-style:italic;font-weight:500;letter-spacing:0;font-size:1rem;color:var(--marfil)}
+.zona{position:absolute;left:28px;right:28px;top:50%;height:46%;transform:translateY(-52%);border-radius:14px;overflow:hidden;background:#0B0C0F;box-shadow:inset 0 0 0 1px rgba(216,183,115,.25);display:grid;place-items:center;touch-action:none;user-select:none}
+.zona .num{display:grid;justify-items:center;gap:2px}
+.zona .num small{font-size:.62rem;font-weight:800;letter-spacing:.24em;color:var(--champan)}
+.zona .num b{font-family:var(--f-display);font-weight:500;font-size:clamp(2rem,6.4vw,3.4rem);letter-spacing:.06em;font-variant-numeric:tabular-nums lining-nums;background:linear-gradient(180deg,var(--champan-claro),var(--champan) 60%,var(--champan-hondo));-webkit-background-clip:text;background-clip:text;color:transparent}
+.zona canvas{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair}
+.zona.listo .num b{animation:revela .8s cubic-bezier(.2,1.2,.3,1)}
+@keyframes revela{0%{transform:scale(.7);filter:blur(6px)}100%{transform:none;filter:none}}
+.dedo{position:absolute;z-index:3;left:50%;top:58%;width:54px;height:54px;margin:-27px 0 0 -27px;pointer-events:none;animation:barre 2.4s ease-in-out infinite}
+.dedo::before{content:"";position:absolute;inset:0;border-radius:50%;background:rgba(242,237,227,.92);box-shadow:0 0 0 8px rgba(242,237,227,.18),0 8px 18px rgba(0,0,0,.4)}
+.dedo::after{content:"";position:absolute;inset:16px;border-radius:50%;background:var(--champan-hondo)}
+@keyframes barre{0%{transform:translate(-90px,0)}50%{transform:translate(90px,-6px)}100%{transform:translate(-90px,0)}}
+.carta.tocada .dedo{display:none}
+.carta-acc{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;min-height:52px;align-items:center}
+.carta-msg{color:var(--gris);font-size:.95rem;text-align:center;min-height:1.6em}
+.carta-msg b{color:var(--champan);font-family:var(--f-display);font-weight:500;font-size:1.1rem}
+.medidor{width:min(320px,100%);height:3px;background:var(--linea);border-radius:3px;overflow:hidden}
+.medidor i{display:block;height:100%;width:0;background:var(--champan);transition:width .2s}
+
+/* cinta fina */
+.ticker{border-block:1px solid var(--linea);overflow:hidden;padding-block:16px;background:var(--grafito)}
+.ticker .pista{display:flex;width:max-content;animation:corre 46s linear infinite}
+.ticker span{white-space:nowrap;padding-inline:28px;font-family:var(--f-display);font-style:italic;font-size:1.15rem;color:var(--gris);display:flex;gap:56px}
+.ticker span i{font-style:normal;color:var(--champan)}
+@keyframes corre{to{transform:translateX(-50%)}}
+
+/* premios */
+.vitrina{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media (max-width:860px){.vitrina{grid-template-columns:1fr}}
+.pieza{background:var(--grafito);border:1px solid var(--linea);border-radius:26px;overflow:hidden;display:grid;min-width:0;transition:border-color .4s,transform .4s}
+.pieza:hover{border-color:rgba(216,183,115,.5);transform:translateY(-4px)}
+.pieza .foto{aspect-ratio:16/11;max-width:100%;overflow:hidden;position:relative}
+.pieza.moto .foto{background:radial-gradient(80% 70% at 50% 55%,#FFFFFF,#ECEDE8 70%,#DCDDD6)}
+.pieza.moto .foto img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;padding:8% 6% 4%;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.pieza.viaje .foto img{width:100%;height:100%;object-fit:cover;object-position:50% 30%;transition:transform 1.2s cubic-bezier(.2,.8,.2,1)}
+.pieza:hover .foto img{transform:scale(1.05)}
+.pieza .op{position:absolute;top:16px;left:16px;font-size:.64rem;font-weight:800;letter-spacing:.2em;background:rgba(13,14,17,.85);color:var(--champan);padding:8px 12px;border-radius:999px;backdrop-filter:blur(6px)}
+.pieza .info{padding:26px 28px 28px;display:grid;gap:14px}
+.pieza h3{font-size:clamp(1.6rem,3vw,2.2rem)}
+.pieza dl{margin:0;display:grid}
+.pieza dl div{display:flex;justify-content:space-between;gap:14px;padding-block:11px;border-top:1px solid var(--linea)}
+.pieza dt{color:var(--gris);font-size:.9rem}
+.pieza dd{margin:0;font-weight:700;text-align:right}
+.pend{color:var(--champan);font-style:italic;font-weight:600}
+
+/* pasos */
+.pasos{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--linea);border-radius:24px;overflow:hidden}
+@media (max-width:860px){.pasos{grid-template-columns:1fr}}
+.paso{padding:32px 30px;display:grid;gap:12px;align-content:start;min-width:0;border-right:1px solid var(--linea);transition:background .4s}
+.paso:last-child{border-right:0}
+@media (max-width:860px){.paso{border-right:0;border-bottom:1px solid var(--linea)}.paso:last-child{border-bottom:0}}
+.paso:hover{background:var(--grafito)}
+.paso .n{font-family:var(--f-display);font-style:italic;font-size:2.6rem;color:var(--champan);line-height:1}
+.paso h3{font-family:var(--f-body);font-weight:800;font-size:1.15rem;letter-spacing:0}
+.paso p{color:var(--gris)}
+
+/* tickets */
+.packs{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;perspective:1000px}
+@media (max-width:1000px){.packs{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:460px){.packs{grid-template-columns:1fr}}
+.pack{position:relative;border:1px solid var(--linea);background:var(--grafito);border-radius:22px;padding:26px 22px 22px;text-align:left;display:grid;gap:6px;min-width:0;transition:transform .25s ease,border-color .25s,background .25s}
+.pack:hover{border-color:rgba(216,183,115,.45)}
+.pack[aria-pressed="true"]{border-color:var(--champan);background:linear-gradient(180deg,#1F1D18,var(--grafito))}
+.pack .marca{position:absolute;top:18px;right:18px;width:22px;height:22px;border-radius:50%;border:1px solid var(--linea);transition:all .25s}
+.pack[aria-pressed="true"] .marca{background:var(--champan);border-color:var(--champan);box-shadow:0 0 0 5px rgba(216,183,115,.15)}
+.pack .cant{font-family:var(--f-display);font-size:3rem;line-height:1;font-variant-numeric:lining-nums}
+.pack .cant small{font-family:var(--f-body);font-size:.95rem;font-weight:600;color:var(--gris);margin-left:6px}
+.pack .precio{font-weight:800;font-size:1.2rem;font-variant-numeric:tabular-nums}
+.pack .unit{color:var(--gris);font-size:.85rem}
+.pack .ahorro{justify-self:start;margin-top:10px;font-size:.72rem;font-weight:800;letter-spacing:.08em;color:var(--champan);border:1px solid rgba(216,183,115,.35);padding:5px 10px;border-radius:999px}
+.pack .top{position:absolute;top:-11px;left:22px;background:var(--champan);color:#1A140A;font-size:.62rem;font-weight:800;letter-spacing:.16em;padding:5px 10px;border-radius:999px}
+.compra{margin-top:24px;border:1px solid var(--linea);border-radius:22px;padding:20px 24px;display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;background:var(--grafito)}
+.compra .izq{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.stepper{display:flex;align-items:center;gap:4px;border:1px solid var(--linea);border-radius:999px;padding:4px}
+.stepper button{width:40px;height:40px;border-radius:50%;border:0;background:transparent;font-size:1.2rem;font-weight:600;transition:background .2s}
+.stepper button:hover{background:var(--grafito-2);color:var(--champan)}
+.stepper output{min-width:3.5ch;text-align:center;font-weight:800;font-size:1.1rem;font-variant-numeric:tabular-nums}
+.total small{display:block;color:var(--gris);font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.total b{font-family:var(--f-display);font-weight:500;font-size:1.9rem;font-variant-numeric:tabular-nums lining-nums}
+.total b.tick{animation:tick .5s ease}
+.pagos{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;color:var(--gris);font-size:.8rem;font-weight:600}
+.pagos span{border:1px solid var(--linea);border-radius:999px;padding:5px 12px}
+.avance{margin-top:34px;display:grid;gap:10px;max-width:620px}
+.avance .row{display:flex;justify-content:space-between;font-size:.88rem;font-weight:600;color:var(--gris)}
+.avance .row b{color:var(--champan);font-variant-numeric:tabular-nums}
+.barra{height:4px;border-radius:4px;background:var(--linea);overflow:hidden}
+.barra i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--champan-hondo),var(--champan-claro));transition:width 1.8s cubic-bezier(.2,.8,.2,1)}
+
+/* bases + faq */
+.dosc{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+@media (max-width:900px){.dosc{grid-template-columns:1fr;gap:56px}}
+.reglas{list-style:none;padding:0;margin:0;display:grid}
+.reglas li{display:grid;grid-template-columns:28px 1fr;gap:14px;padding-block:16px;border-top:1px solid var(--linea)}
+.reglas li:last-child{border-bottom:1px solid var(--linea)}
+.reglas .ok{color:var(--champan);font-family:var(--f-display);font-style:italic;font-size:1.2rem;line-height:1.3}
+.reglas b{display:block}
+.reglas span{color:var(--gris);font-size:.94rem}
+.faq{display:grid}
+.faq details{border-top:1px solid var(--linea)}
+.faq details:last-child{border-bottom:1px solid var(--linea)}
+.faq summary{cursor:pointer;list-style:none;padding:18px 0;font-weight:700;display:flex;justify-content:space-between;gap:14px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";color:var(--champan);font-size:1.3rem;line-height:1;transition:transform .3s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{padding-bottom:18px;color:var(--gris);max-width:62ch}
+footer{border-top:1px solid var(--linea);padding-block:40px;color:var(--gris);font-size:.88rem}
+footer .wrap{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;align-items:center}
+
+/* aparece al hacer scroll: siempre visible, solo se desplaza */
+.rv{transition:transform 1s cubic-bezier(.2,.8,.2,1)}
+.js .rv.abajo{transform:translateY(30px)}
+
+/* aviso de compra */
+.toast{position:fixed;left:calc(16px + env(safe-area-inset-left,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:45;background:rgba(21,23,28,.95);backdrop-filter:blur(10px);border:1px solid var(--linea);border-radius:16px;padding:12px 16px 12px 12px;display:flex;gap:12px;align-items:center;max-width:min(320px,calc(100vw - 32px));transform:translateY(160%);transition:transform .6s cubic-bezier(.2,.9,.3,1)}
+.toast.ver{transform:none}
+.toast .av{width:36px;height:36px;border-radius:50%;border:1px solid var(--champan);color:var(--champan);display:grid;place-items:center;font-family:var(--f-display);font-style:italic;flex:none}
+.toast b{display:block;font-size:.88rem}
+.toast small{color:var(--gris);font-size:.76rem}
+
+/* barra celular */
+.barra-movil{display:none}
+@media (max-width:760px){
+  body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+  .barra-movil{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:46;justify-content:space-between;align-items:center;gap:12px;background:rgba(13,14,17,.94);backdrop-filter:blur(12px);border-top:1px solid var(--linea);padding-top:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .barra-movil small{display:block;color:var(--gris);font-size:.76rem;font-weight:600}
+  .barra-movil b{font-family:var(--f-display);font-weight:500;font-size:1.25rem;font-variant-numeric:tabular-nums lining-nums}
+  .barra-movil .btn{padding:12px 22px}
+  .toast{bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+  .reloj > span,.topbar .btn{display:none}
+  section{padding-block:68px}
+  .carta .cab,.carta .pie{left:20px;right:20px}
+  .carta .cab{top:18px}.carta .pie{bottom:16px}
+  .zona{left:20px;right:20px}
+}
+
+/* modal */
+.velo{position:fixed;inset:0;z-index:60;background:rgba(5,6,8,.8);backdrop-filter:blur(8px);display:grid;place-items:center;overflow-y:auto;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.modal{width:100%;max-width:500px;background:var(--grafito);border:1px solid var(--linea);border-radius:26px;padding:28px;display:grid;gap:16px;position:relative;animation:entra .5s cubic-bezier(.2,.9,.3,1)}
+@keyframes entra{from{transform:translateY(24px);opacity:0}}
+.modal h3{font-size:1.7rem}
+.cerrar{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;border:1px solid var(--linea);background:transparent}
+.resumen{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;border:1px solid var(--linea);border-radius:14px;padding:13px 16px;font-weight:700}
+.resumen b{color:var(--champan)}
+form.datos{display:grid;gap:12px}
+.campo{display:grid;gap:6px}
+.campo label{font-size:.82rem;font-weight:700;color:var(--gris)}
+.campo input{background:var(--noche);border:1px solid var(--linea);border-radius:12px;padding:12px 14px;color:var(--marfil);font:inherit;transition:border-color .2s}
+.campo input:focus{outline:none;border-color:var(--champan)}
+.dos{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:460px){.dos{grid-template-columns:1fr}}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:.86rem;color:var(--gris)}
+.check input{width:18px;height:18px;accent-color:var(--champan);flex:none;margin-top:3px}
+.error{color:#F08A7E;font-weight:700;font-size:.88rem}
+.mis{display:grid;gap:8px}
+.mini{display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(216,183,115,.4);border-radius:12px;padding:12px 16px;font-family:var(--f-display);font-size:1.1rem;color:var(--champan-claro);animation:entra .5s both}
+.mini small{font-family:var(--f-body);font-size:.68rem;letter-spacing:.14em;color:var(--gris);font-weight:700}
+#chispas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:70}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}html{scroll-behavior:auto}.js .rv.abajo{transform:none}.dedo{display:none}}
+</style>
+
+<div class="aviso-maqueta"><b>Maqueta V3</b> para revisión · Precios, fechas y cifras de ejemplo · No se cobra nada</div>
+
+<div class="topbar">
+  <div class="wrap">
+    <a class="logo" href="#" aria-label="Sorteo Brutal, inicio"><span class="logo-ic" aria-hidden="true">S</span><b>Sorteo Brutal</b></a>
+    <nav class="menu" aria-label="Secciones"><a href="#premios">Premios</a><a href="#como">Cómo funciona</a><a href="#tickets">Tickets</a><a href="#bases">Bases</a></nav>
+    <div class="reloj" aria-label="Tiempo para el sorteo">
+      <span>Sorteo en</span>
+      <div class="digitos"><b id="cd-d">00</b><small>D</small><b id="cd-h">00</b><small>H</small><b id="cd-m">00</b><small>M</small><b id="cd-s">00</b><small>S</small></div>
+      <a class="btn btn-oro btn-sm" href="#tickets">Participar</a>
+    </div>
+  </div>
+</div>
+
+<section class="hero" aria-labelledby="titulo">
+  <canvas id="polvo" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="hero-titulo"><span class="eyebrow">Sorteo N°1 · Tú eliges el premio</span><h1>Raspa y <em>descubre</em> tu número.</h1></div>
+
+    <div class="hero-txt">
+      <div class="hero-titulo"><span class="eyebrow">Sorteo N°1 · Tú eliges el premio</span><h1 id="titulo">Raspa y <em>descubre</em> tu número.</h1></div>
+      <p class="lead">Cada ticket es un número para ganar una Kawasaki Ninja 500 SE 0 km o un viaje todo incluido a Búzios para 4 personas. Si sale el tuyo, eliges con cuál te quedas.</p>
+      <div class="premios-mini">
+        <div class="pm moto"><img src="img/moto.jpg" alt="" width="58" height="58"><div><b>Kawasaki Ninja 500 SE</b><small>0 km · casco de regalo</small></div></div>
+        <div class="pm viaje"><img src="img/buzios.jpg" alt="" width="58" height="58"><div><b>Búzios, Brasil</b><small>5 días · 4 personas</small></div></div>
+      </div>
+      <div class="hero-cta"><a class="btn btn-oro" href="#tickets">Comprar tickets</a><a class="btn btn-linea" href="#premios">Ver los premios</a></div>
+      <div class="confianza"><span>Sorteo en vivo</span><span>Bases legales</span><span>Pago seguro</span></div>
+    </div>
+
+    <div class="hero-carta">
+      <div class="escena" id="escena">
+        <div class="carta" id="carta">
+          <div class="marco" aria-hidden="true"></div>
+          <div class="cab"><span>SORTEO BRUTAL</span><i>N°1 · 2026</i></div>
+          <div class="zona" id="zona">
+            <div class="num"><small>TU NÚMERO</small><b id="num">000 000</b></div>
+            <canvas id="capa" role="img" aria-label="Capa dorada para raspar"></canvas>
+          </div>
+          <span class="dedo" aria-hidden="true"></span>
+          <div class="pie"><span>MOTO · O · VIAJE</span><b>Tú eliges</b></div>
+        </div>
+      </div>
+      <div class="medidor" aria-hidden="true"><i id="medidor"></i></div>
+      <p class="carta-msg" id="msg" aria-live="polite">Pasa el dedo o el mouse por la franja dorada.</p>
+      <div class="carta-acc">
+        <button class="btn btn-oro" type="button" id="quiero" hidden>Quedarme con este número</button>
+        <button class="btn btn-linea" type="button" id="otra">Otra tarjeta</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker" aria-hidden="true"><div class="pista">
+  <span>Kawasaki Ninja 500 SE <i>✦</i> Búzios, Brasil <i>✦</i> Un ticket, dos premios <i>✦</i> Sorteo en vivo <i>✦</i></span>
+  <span>Kawasaki Ninja 500 SE <i>✦</i> Búzios, Brasil <i>✦</i> Un ticket, dos premios <i>✦</i> Sorteo en vivo <i>✦</i></span>
+</div></div>
+
+<section id="premios" aria-labelledby="premios-t">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="eyebrow">Los premios</span><h2 id="premios-t">Dos premios. <em>Uno es tuyo.</em></h2><p class="lead">El ganador elige cuál se lleva. Lo que aparece en dorado lo confirma la organización.</p></div>
+    <div class="vitrina">
+      <article class="pieza moto rv">
+        <div class="foto"><span class="op">OPCIÓN 1</span><img src="img/moto.jpg" alt="Moto Kawasaki Ninja 500 SE verde" width="900" height="581"></div>
+        <div class="info"><h3>Kawasaki Ninja 500 SE</h3>
+          <dl><div><dt>Estado</dt><dd>0 km</dd></div><div><dt>Regalo</dt><dd>Casco Y.100R</dd></div><div><dt>Entrega</dt><dd class="pend">[Por definir]</dd></div></dl></div>
+      </article>
+      <article class="pieza viaje rv">
+        <div class="foto"><span class="op">OPCIÓN 2</span><img src="img/buzios.jpg" alt="Playa de Búzios, Brasil" width="1000" height="741"></div>
+        <div class="info"><h3>Búzios, Brasil</h3>
+          <dl><div><dt>Duración</dt><dd>5 días · 4 noches</dd></div><div><dt>Viajan</dt><dd>4 personas, todo incluido</dd></div><div><dt>Operador</dt><dd>Grupo CVA Viajes</dd></div><div><dt>Fechas</dt><dd class="pend">[Por definir]</dd></div></dl></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="regla"></div></div>
+
+<section id="como" aria-labelledby="como-t">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="eyebrow">Cómo funciona</span><h2 id="como-t">Participar es <em>simple</em></h2></div>
+    <div class="pasos rv">
+      <article class="paso"><span class="n">i.</span><h3>Elige tus tickets</h3><p>Más tickets, más números en el sorteo. Pagas con tarjeta o transferencia.</p></article>
+      <article class="paso"><span class="n">ii.</span><h3>Recibe tus números</h3><p>Llegan a tu correo apenas se confirma el pago.</p></article>
+      <article class="paso"><span class="n">iii.</span><h3>Mira el sorteo en vivo</h3><p>Si sale tu número, te contactamos y eliges: la moto o el viaje.</p></article>
+    </div>
+  </div>
+</section>
+
+<section id="tickets" aria-labelledby="tickets-t" style="background:linear-gradient(180deg,var(--noche),#121318)">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="eyebrow">Tickets</span><h2 id="tickets-t">Elige tu <em>pack</em></h2><p class="lead">Cada ticket es un número. Mientras más llevas, menos pagas por cada uno.</p></div>
+    <div class="packs" role="group" aria-label="Packs de tickets">
+      <button class="pack" type="button" data-cant="1" aria-pressed="false"><span class="marca" aria-hidden="true"></span><span class="cant">1<small>ticket</small></span><span class="precio" data-precio></span><span class="unit">Para probar suerte</span></button>
+      <button class="pack" type="button" data-cant="5" aria-pressed="false"><span class="marca" aria-hidden="true"></span><span class="cant">5<small>tickets</small></span><span class="precio" data-precio></span><span class="unit" data-unit></span><span class="ahorro">AHORRAS 10%</span></button>
+      <button class="pack" type="button" data-cant="10" aria-pressed="true"><span class="top">EL MÁS ELEGIDO</span><span class="marca" aria-hidden="true"></span><span class="cant">10<small>tickets</small></span><span class="precio" data-precio></span><span class="unit" data-unit></span><span class="ahorro">AHORRAS 20%</span></button>
+      <button class="pack" type="button" data-cant="25" aria-pressed="false"><span class="marca" aria-hidden="true"></span><span class="cant">25<small>tickets</small></span><span class="precio" data-precio></span><span class="unit" data-unit></span><span class="ahorro">AHORRAS 30%</span></button>
+    </div>
+    <div class="compra rv">
+      <div class="izq">
+        <div class="stepper" aria-label="Cantidad de tickets"><button type="button" id="menos" aria-label="Quitar un ticket">−</button><output id="cant" aria-live="polite">10</output><button type="button" id="mas" aria-label="Agregar un ticket">+</button></div>
+        <div class="total"><small>Total</small><b id="total">$0</b></div>
+      </div>
+      <button class="btn btn-oro" type="button" id="abrir">Continuar al pago</button>
+    </div>
+    <div class="pagos"><span>Pago seguro</span><span>Webpay</span><span>Mercado Pago</span><span>Transferencia</span></div>
+    <div class="avance"><div class="row"><span>Tickets vendidos (ejemplo)</span><b>64%</b></div><div class="barra"><i id="barra"></i></div></div>
+  </div>
+</section>
+
+<section id="bases" aria-labelledby="bases-t">
+  <div class="wrap dosc">
+    <div class="rv">
+      <div class="sec-head"><span class="eyebrow">Bases legales</span><h2 id="bases-t">Reglas <em>claras</em></h2></div>
+      <ul class="reglas">
+        <li><span class="ok" aria-hidden="true">✓</span><div><b>Un número por ticket</b><span>Cada ticket es un número distinto.</span></div></li>
+        <li><span class="ok" aria-hidden="true">✓</span><div><b>Sorteo en vivo y ante notario</b><span>Fecha y transmisión publicadas aquí. <span class="pend">[Notaría por confirmar]</span></span></div></li>
+        <li><span class="ok" aria-hidden="true">✓</span><div><b>El ganador elige</b><span>La moto o el viaje.</span></div></li>
+      </ul>
+      <p style="margin-top:18px;color:var(--gris);font-size:.9rem">Las bases completas en PDF se publican antes de abrir la venta.</p>
+    </div>
+    <div class="rv">
+      <div class="sec-head"><span class="eyebrow">Preguntas</span><h2>Lo que más <em>preguntan</em></h2></div>
+      <div class="faq">
+        <details open><summary>¿Cómo sé que mi compra quedó lista?</summary><p>Te llega un correo con tus números apenas se confirma el pago.</p></details>
+        <details><summary>¿Puedo comprar más tickets después?</summary><p>Sí, todas las veces que quieras mientras el sorteo esté abierto.</p></details>
+        <details><summary>¿Cómo se elige al ganador?</summary><p>Con un sorteo en vivo en la fecha publicada, según las bases legales.</p></details>
+        <details><summary>¿Puedo cambiar el premio por dinero?</summary><p>Lo definen las bases legales. <span class="pend">[Por definir]</span></p></details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer><div class="wrap"><b style="font-family:var(--f-display);font-weight:500;font-size:1.1rem">Sorteo Brutal</b><span>Contacto: <span class="pend">[WhatsApp y correo de la organización]</span></span><span>Maqueta V3 · 2026</span></div></footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><span class="av" id="t-ini">C</span><div><b id="t-txt"></b><small id="t-sub"></small></div></div>
+<div class="barra-movil"><div><small id="bm-cant">10 tickets</small><b id="bm-total">$0</b></div><button class="btn btn-oro" type="button" id="bm-btn">Comprar</button></div>
+
+<div class="velo" id="velo" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="m-t">
+    <button class="cerrar" type="button" id="cerrar" aria-label="Cerrar">✕</button>
+    <div id="paso-datos" style="display:grid;gap:16px">
+      <span class="eyebrow">Paso 1 de 2 · Tus datos</span>
+      <h3 id="m-t">¿A quién le enviamos tus números?</h3>
+      <div class="resumen"><span id="r-cant">10 tickets</span><b id="r-total">$0</b></div>
+      <form class="datos" id="form" novalidate>
+        <div class="campo"><label for="f-nombre">Nombre y apellido</label><input id="f-nombre" autocomplete="name" value="Camila Rojas"></div>
+        <div class="dos"><div class="campo"><label for="f-rut">RUT</label><input id="f-rut" value="12.345.678-5"></div><div class="campo"><label for="f-tel">Teléfono</label><input id="f-tel" type="tel" autocomplete="tel" value="+56 9 1234 5678"></div></div>
+        <div class="campo"><label for="f-mail">Correo (ahí llegan tus números)</label><input id="f-mail" type="email" autocomplete="email" value="camila@ejemplo.cl"></div>
+        <label class="check"><input type="checkbox" id="f-bases" checked>Acepto las bases legales y soy mayor de 18 años.</label>
+        <p class="error" id="err" hidden></p>
+        <button class="btn btn-oro" type="submit">Ir a pagar <span id="b-total"></span></button>
+        <p style="color:var(--gris);font-size:.8rem;text-align:center">En la página real aquí se abre Webpay o Mercado Pago. En esta maqueta no se cobra.</p>
+      </form>
+    </div>
+    <div id="paso-listo" hidden style="display:grid;gap:14px">
+      <span class="eyebrow">Pago confirmado · ejemplo</span>
+      <h3>Ya estás <em style="color:var(--champan)">participando</em>.</h3>
+      <p style="color:var(--gris)">Enviamos tus números a <b id="l-mail" style="color:var(--marfil)"></b>.</p>
+      <div class="mis" id="mis"></div>
+      <button class="btn btn-linea" type="button" id="listo">Volver a la página</button>
+    </div>
+  </div>
+</div>
+<canvas id="chispas" aria-hidden="true"></canvas>
+
+<script>
+document.documentElement.classList.add("js");
+(function(){
+  var quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var $ = function(id){ return document.getElementById(id) };
+  function golpe(el){ el.classList.remove("tick"); void el.offsetWidth; el.classList.add("tick") }
+
+  /* ---------- precios de ejemplo ---------- */
+  var PRECIO = 2000, DESC = function(n){ return n>=25?.30:n>=10?.20:n>=5?.10:0 };
+  var clp = function(v){ return "$" + Math.round(v).toLocaleString("es-CL") };
+  var totalDe = function(n){ return Math.round(n*PRECIO*(1-DESC(n))/10)*10 };
+  document.querySelectorAll(".pack").forEach(function(p){ var n = +p.dataset.cant, t = totalDe(n); p.querySelector("[data-precio]").textContent = clp(t); var u = p.querySelector("[data-unit]"); if(u) u.textContent = clp(t/n) + " cada uno" });
+  var cant = 10;
+  function pintar(){
+    $("cant").textContent = cant; $("total").textContent = clp(totalDe(cant)); golpe($("total"));
+    $("bm-cant").textContent = cant + (cant===1?" ticket":" tickets"); $("bm-total").textContent = clp(totalDe(cant));
+    document.querySelectorAll(".pack").forEach(function(p){ p.setAttribute("aria-pressed", +p.dataset.cant===cant ? "true":"false") });
+  }
+  document.querySelectorAll(".pack").forEach(function(p){
+    p.addEventListener("click", function(){ cant = +p.dataset.cant; pintar(); var r = p.getBoundingClientRect(); chispas(r.left+r.width/2, r.top+r.height/2, 24) });
+    p.addEventListener("pointermove", function(e){ if(quieto) return; var r = p.getBoundingClientRect(), x = (e.clientX-r.left)/r.width-.5, y = (e.clientY-r.top)/r.height-.5; p.style.transform = "rotateY("+(x*8)+"deg) rotateX("+(-y*8)+"deg) translateY(-3px)" });
+    p.addEventListener("pointerleave", function(){ p.style.transform = "" });
+  });
+  $("mas").onclick = function(){ cant = Math.min(cant+1,100); pintar() };
+  $("menos").onclick = function(){ cant = Math.max(cant-1,1); pintar() };
+  pintar();
+
+  /* ---------- cuenta regresiva (fecha de ejemplo) ---------- */
+  var META = new Date(2026,10,28,21,0,0), prev = {}, dos = function(v){ return String(v).padStart(2,"0") };
+  function tic(){ var s = Math.max(0,Math.floor((META-new Date())/1000)), v = {d:Math.floor(s/86400),h:Math.floor(s%86400/3600),m:Math.floor(s%3600/60),s:s%60};
+    for(var k in v){ var t = dos(v[k]); if(prev[k]!==t){ $("cd-"+k).textContent = t; if(prev[k]!==undefined) golpe($("cd-"+k)); prev[k] = t } } }
+  tic(); setInterval(tic,1000);
+
+  /* ---------- tarjeta para raspar ---------- */
+  var carta = $("carta"), escena = $("escena"), zona = $("zona"), capa = $("capa"), cx = capa.getContext("2d");
+  var raspando = false, listo = false, ultimo = "", mov = 0;
+  function numero(){ var n = String(Math.floor(Math.random()*900000)+100000); ultimo = n.slice(0,3)+" "+n.slice(3); $("num").textContent = ultimo }
+  function cubrir(){
+    var r = zona.getBoundingClientRect(), d = devicePixelRatio||1, w = r.width, h = r.height;
+    capa.width = w*d; capa.height = h*d; cx.setTransform(d,0,0,d,0,0); cx.globalCompositeOperation = "source-over";
+    var g = cx.createLinearGradient(0,0,w,h);
+    g.addColorStop(0,"#8A6B33"); g.addColorStop(.25,"#E9CF92"); g.addColorStop(.45,"#B8934F"); g.addColorStop(.62,"#F4E2B4"); g.addColorStop(.8,"#A9884D"); g.addColorStop(1,"#7A5D2A");
+    cx.fillStyle = g; cx.fillRect(0,0,w,h);
+    for(var i=0;i<1400;i++){ cx.fillStyle = "rgba(" + (Math.random()<.5?"255,248,225":"60,42,12") + "," + (Math.random()*.16) + ")"; cx.fillRect(Math.random()*w, Math.random()*h, 1.2, 1.2) }
+    cx.strokeStyle = "rgba(60,42,12,.35)"; cx.lineWidth = 1;
+    for(var x=-h; x<w; x+=9){ cx.beginPath(); cx.moveTo(x,h); cx.lineTo(x+h,0); cx.stroke() }
+    cx.fillStyle = "rgba(42,29,8,.78)"; cx.textAlign = "center"; cx.textBaseline = "middle";
+    cx.font = "600 " + Math.max(12, w/26) + "px Manrope, system-ui, sans-serif"; cx.fillText("R A S P A   A Q U Í", w/2, h/2);
+    capa.style.transition = "none"; capa.style.opacity = 1; capa.hidden = false;
+    listo = false; mov = 0; zona.classList.remove("listo"); $("quiero").hidden = true; $("medidor").style.width = "0";
+    $("msg").textContent = "Pasa el dedo o el mouse por la franja dorada.";
+  }
+  function raspar(e){
+    if(!raspando || listo) return;
+    carta.classList.add("tocada");
+    var r = capa.getBoundingClientRect(), x = e.clientX-r.left, y = e.clientY-r.top, rad = Math.max(16, r.width/15);
+    cx.globalCompositeOperation = "destination-out";
+    if(previo){ cx.lineWidth = rad*1.8; cx.lineCap = "round"; cx.strokeStyle = "rgba(0,0,0,1)"; cx.beginPath(); cx.moveTo(previo[0],previo[1]); cx.lineTo(x,y); cx.stroke() }
+    else { cx.fillStyle = "rgba(0,0,0,1)"; cx.beginPath(); cx.arc(x,y,rad*.9,0,7); cx.fill() }
+    previo = [x,y];
+    if(Math.random()<.35) chispas(e.clientX, e.clientY, 2, true);
+    if(++mov % 4 === 0) medir();
+  }
+  function medir(){
+    var d = cx.getImageData(0,0,capa.width,capa.height).data, v = 0, t = 0;
+    for(var i=3;i<d.length;i+=80){ t++; if(d[i]<40) v++ }
+    var p = v/t; $("medidor").style.width = Math.min(100, p/.5*100) + "%";
+    if(p > .5) revelar();
+  }
+  function revelar(){
+    listo = true; capa.style.transition = "opacity .6s"; capa.style.opacity = 0; setTimeout(function(){ capa.hidden = true }, 600);
+    zona.classList.add("listo"); $("quiero").hidden = false; $("medidor").style.width = "100%";
+    $("msg").innerHTML = "Salió el <b>N° " + ultimo + "</b>. Está disponible para ti.";
+    var r = zona.getBoundingClientRect(); chispas(r.left+r.width/2, r.top+r.height/2, 110);
+  }
+  var previo = null;
+  capa.addEventListener("pointerdown", function(e){ raspando = true; previo = null; try{ capa.setPointerCapture(e.pointerId) }catch(_){} raspar(e) });
+  capa.addEventListener("pointermove", raspar);
+  capa.addEventListener("pointerup", function(){ raspando = false; previo = null; if(!listo) medir() });
+  capa.addEventListener("pointercancel", function(){ raspando = false; previo = null });
+  $("otra").onclick = function(){ numero(); cubrir(); carta.classList.remove("tocada") };
+  $("quiero").onclick = function(){ cant = 1; pintar(); abrir(); $("r-cant").textContent = "1 ticket · N° " + ultimo };
+  escena.addEventListener("pointermove", function(e){ if(quieto || raspando) return; var r = escena.getBoundingClientRect(), x = (e.clientX-r.left)/r.width-.5, y = (e.clientY-r.top)/r.height-.5; carta.style.transform = "rotateY("+(x*9)+"deg) rotateX("+(-y*9)+"deg)" });
+  escena.addEventListener("pointerleave", function(){ carta.style.transform = "" });
+  numero();
+  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(cubrir);
+  var anchoZona = 0; addEventListener("resize", function(){ var w = zona.offsetWidth; if(w !== anchoZona && !listo){ anchoZona = w; cubrir() } });
+
+  /* ---------- polvo dorado en la portada ---------- */
+  var pv = $("polvo"), pg = pv.getContext("2d"), motas = [];
+  function tamPolvo(){ var d = devicePixelRatio||1; pv.width = pv.offsetWidth*d; pv.height = pv.offsetHeight*d; pg.setTransform(d,0,0,d,0,0) }
+  tamPolvo(); addEventListener("resize", tamPolvo);
+  for(var i=0;i<40;i++) motas.push({x:Math.random(), y:Math.random(), r:Math.random()*1.4+.3, v:Math.random()*.00025+.00008, f:Math.random()*6});
+  function polvo(t){
+    var w = pv.offsetWidth, h = pv.offsetHeight; pg.clearRect(0,0,w,h);
+    motas.forEach(function(m){ if(!quieto){ m.y -= m.v; if(m.y < -.02) m.y = 1.02 } var a = .25 + .35*Math.sin(t/900 + m.f); pg.fillStyle = "rgba(241,221,174," + a + ")"; pg.beginPath(); pg.arc(m.x*w, m.y*h, m.r, 0, 7); pg.fill() });
+    if(!quieto) requestAnimationFrame(polvo);
+  }
+  requestAnimationFrame(polvo);
+
+  /* ---------- aparecer al hacer scroll ---------- */
+  if("IntersectionObserver" in window && !quieto){
+    var rvs = [].slice.call(document.querySelectorAll(".rv"));
+    rvs.forEach(function(el){ if(el.getBoundingClientRect().top > innerHeight) el.classList.add("abajo") });
+    var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.remove("abajo"); io.unobserve(e.target) } }) }, {rootMargin:"0px 0px -8% 0px"});
+    rvs.forEach(function(el){ io.observe(el) });
+  }
+  var barra = $("barra");
+  if("IntersectionObserver" in window){ new IntersectionObserver(function(es,o){ if(es[0].isIntersecting){ barra.style.width = "64%"; o.disconnect() } }).observe(barra) } else barra.style.width = "64%";
+
+  /* ---------- aviso de compras (ejemplo) ---------- */
+  var COMPRAS = [["C","Camila, Viña del Mar","10 tickets"],["M","Matías, Santiago","5 tickets"],["J","Javiera, Concepción","25 tickets"],["F","Felipe, La Serena","1 ticket"],["V","Valentina, Rancagua","10 tickets"]];
+  var ti = 0, toast = $("toast");
+  function avisar(){
+    if(!$("velo").hidden){ setTimeout(avisar, 5000); return }
+    var c = COMPRAS[ti++ % COMPRAS.length]; $("t-ini").textContent = c[0]; $("t-txt").textContent = c[1] + " compró " + c[2]; $("t-sub").textContent = "Hace " + (2+ti%7) + " min · ejemplo";
+    toast.classList.add("ver"); setTimeout(function(){ toast.classList.remove("ver") }, 4200); setTimeout(avisar, 11000);
+  }
+  if(!quieto) setTimeout(avisar, 6000);
+
+  /* ---------- modal ---------- */
+  var velo = $("velo"), datos = $("paso-datos"), fin = $("paso-listo");
+  function abrir(){ $("r-cant").textContent = cant + (cant===1?" ticket":" tickets"); $("r-total").textContent = clp(totalDe(cant)); $("b-total").textContent = "· " + clp(totalDe(cant));
+    datos.hidden = false; datos.style.display = "grid"; fin.hidden = true; velo.hidden = false; toast.classList.remove("ver"); setTimeout(function(){ $("f-nombre").focus() }, 30) }
+  function cerrar(){ velo.hidden = true }
+  $("abrir").onclick = abrir; $("bm-btn").onclick = abrir; $("cerrar").onclick = cerrar; $("listo").onclick = cerrar;
+  velo.addEventListener("click", function(e){ if(e.target===velo) cerrar() });
+  document.addEventListener("keydown", function(e){ if(e.key==="Escape" && !velo.hidden) cerrar() });
+  $("form").addEventListener("submit", function(e){
+    e.preventDefault(); var err = $("err"), mail = $("f-mail").value.trim();
+    if(["f-nombre","f-rut","f-tel","f-mail"].some(function(id){ return !$(id).value.trim() })){ err.textContent = "Completa todos los campos para recibir tus números."; err.hidden = false; return }
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)){ err.textContent = "Revisa el correo: ahí te llegan los números."; err.hidden = false; return }
+    if(!$("f-bases").checked){ err.textContent = "Para participar tienes que aceptar las bases legales."; err.hidden = false; return }
+    err.hidden = true; var mis = $("mis"); mis.innerHTML = ""; var k = Math.min(cant,5);
+    for(var i=0;i<k;i++){ var n = String(Math.floor(Math.random()*900000)+100000), d = document.createElement("div"); d.className = "mini"; d.style.animationDelay = (i*100)+"ms"; d.innerHTML = "<span>N° "+n.slice(0,3)+" "+n.slice(3)+"</span><small>SORTEO N°1</small>"; mis.appendChild(d) }
+    if(cant>k){ var m = document.createElement("p"); m.style.cssText = "color:var(--gris);font-size:.86rem"; m.textContent = "+ " + (cant-k) + " números más en tu correo."; mis.appendChild(m) }
+    $("l-mail").textContent = mail; datos.hidden = true; datos.style.display = "none"; fin.hidden = false; fin.style.display = "grid";
+    chispas(innerWidth/2, innerHeight*.35, 140);
+  });
+
+  /* ---------- chispas doradas ---------- */
+  var cv = $("chispas"), g = cv.getContext("2d"), ps = [], vivo = false, COL = ["#F1DDAE","#D8B773","#FFF4D6","#A9884D"];
+  function tam(){ var d = devicePixelRatio||1; cv.width = innerWidth*d; cv.height = innerHeight*d; g.setTransform(d,0,0,d,0,0) }
+  tam(); addEventListener("resize", tam);
+  function chispas(x,y,n,suave){
+    if(quieto) return;
+    for(var i=0;i<n;i++){ var a = Math.random()*Math.PI*2, v = suave ? 1+Math.random()*2 : 2+Math.random()*6; ps.push({x:x,y:y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-(suave?1:2.5),r:suave?1+Math.random()*1.5:1.2+Math.random()*2.4,c:COL[i%COL.length],t:0,vida:suave?40:90+Math.random()*40}) }
+    if(!vivo){ vivo = true; requestAnimationFrame(anim) }
+  }
+  function anim(){
+    g.clearRect(0,0,innerWidth,innerHeight);
+    ps = ps.filter(function(p){ return p.t < p.vida });
+    ps.forEach(function(p){ p.t++; p.vy += .07; p.vx *= .97; p.vy *= .99; p.x += p.vx; p.y += p.vy; var a = 1-p.t/p.vida;
+      g.globalAlpha = a; g.fillStyle = p.c; g.beginPath(); g.arc(p.x,p.y,p.r,0,7); g.fill();
+      if(p.r > 2.4){ g.globalAlpha = a*.6; g.fillRect(p.x-p.r*2.2, p.y-.4, p.r*4.4, .8); g.fillRect(p.x-.4, p.y-p.r*2.2, .8, p.r*4.4) } });
+    g.globalAlpha = 1;
+    if(ps.length) requestAnimationFrame(anim); else { vivo = false; g.clearRect(0,0,innerWidth,innerHeight) }
+  }
+})();
+</script>
+
+</html>
