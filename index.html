@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}[hidden]{display:none!important}</style>
+<title>Sorteo Brutal</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: noche de feria — franja de cuenta regresiva, portada partida en dos premios con un "VS" al centro,
+   y los tickets dibujados como talonarios reales (con número y troquel). Un solo look oscuro a propósito. */
+:root{
+  --noche:#0B1533;      /* fondo */
+  --noche-2:#111F47;    /* superficies */
+  --noche-3:#1A2C5E;    /* bordes / superficies elevadas */
+  --sol:#FFC83D;        /* acento principal: amarillo del flyer */
+  --sol-hondo:#F5A300;
+  --coral:#FF4F5E;      /* acento secundario: rojo del flyer */
+  --lima:#8EE03C;       /* premio moto (verde Ninja) */
+  --mar:#2BC9CF;        /* premio viaje (turquesa Búzios) */
+  --papel:#FFF8E6;      /* papel del ticket */
+  --tinta:#F2F5FF;      /* texto */
+  --tinta-2:#A9B6DA;    /* texto secundario */
+  --tinta-papel:#1B2246;
+  --f-display:"Archivo","Arial Narrow","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+  --ancho-display:72%;
+  --r:18px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--noche);color:var(--tinta);font-family:var(--f-body);font-size:16px;line-height:1.55;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--sol);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1180px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3,.logo-txt,.logo-mark span,.vs b,.ticket .cant,.paso .n{font-family:var(--f-display);font-weight:800;font-stretch:var(--ancho-display);letter-spacing:-.012em}
+h1,h2,h3{line-height:.98;text-wrap:balance;margin:0}
+h1{font-weight:900;text-transform:uppercase;letter-spacing:-.02em}
+h2{font-size:clamp(2.1rem,4.8vw,3.5rem);text-transform:uppercase}
+p{margin:0}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sol)}
+.lead{color:var(--tinta-2);max-width:60ch;font-size:1.08rem}
+
+/* ---- franja maqueta ---- */
+.maqueta{background:var(--sol);color:var(--tinta-papel);font-weight:700;font-size:.8rem;text-align:center;padding-block:6px}
+.maqueta .wrap{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+
+/* ---- cuenta regresiva ---- */
+.countbar{background:#060D24;border-bottom:1px solid var(--noche-3);position:sticky;top:env(safe-area-inset-top,0px);z-index:30}
+.countbar .wrap{display:flex;align-items:center;justify-content:center;gap:18px;padding-block:10px;flex-wrap:wrap}
+.countbar strong{font-weight:800;letter-spacing:.06em;text-transform:uppercase;font-size:.82rem}
+.clock{display:flex;gap:6px;align-items:flex-start}
+.clock div{display:grid;justify-items:center;gap:2px}
+.clock b{font-family:var(--f-mono);font-weight:700;font-variant-numeric:tabular-nums;background:var(--sol);color:var(--tinta-papel);border-radius:8px;padding:4px 8px;min-width:2.6ch;text-align:center;font-size:1.05rem}
+.clock small{font-size:.62rem;color:var(--tinta-2);letter-spacing:.1em}
+.clock i{font-style:normal;color:var(--sol);font-weight:800;padding-top:4px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:999px;font-weight:800;text-decoration:none;letter-spacing:.02em;transition:transform .15s ease,box-shadow .15s ease,background .15s}
+.btn-sol{background:var(--sol);color:var(--tinta-papel);padding:12px 24px;box-shadow:0 6px 0 var(--sol-hondo)}
+.btn-sol:hover{transform:translateY(-2px);box-shadow:0 8px 0 var(--sol-hondo)}
+.btn-sol:active{transform:translateY(3px);box-shadow:0 2px 0 var(--sol-hondo)}
+.btn-sm{padding:8px 16px;font-size:.85rem;box-shadow:0 4px 0 var(--sol-hondo)}
+.btn-ghost{background:transparent;color:var(--tinta);border:2px solid var(--noche-3);padding:10px 20px}
+.btn-ghost:hover{border-color:var(--tinta-2)}
+
+/* ---- header ---- */
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:18px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-mark{width:42px;height:30px;background:var(--coral);border-radius:6px;position:relative;display:grid;place-items:center;transform:rotate(-6deg)}
+.logo-mark::before,.logo-mark::after{content:"";position:absolute;top:50%;width:12px;height:12px;border-radius:50%;background:var(--noche);transform:translateY(-50%)}
+.logo-mark::before{left:-6px}.logo-mark::after{right:-6px}
+.logo-mark span{font-family:var(--f-display);font-size:.9rem;color:var(--papel)}
+.logo-txt{font-family:var(--f-display);font-size:1.25rem;line-height:.9}
+.logo-txt em{font-style:normal;color:var(--sol);display:block;font-size:.72rem;font-family:var(--f-mono);letter-spacing:.12em}
+nav.menu{display:flex;gap:22px;font-weight:600;font-size:.95rem}
+nav.menu a{text-decoration:none;color:var(--tinta-2)}
+nav.menu a:hover{color:var(--tinta)}
+@media (max-width:860px){nav.menu{display:none}}
+
+/* ---- portada ---- */
+.hero{position:relative;padding-block:18px 56px;overflow:hidden}
+#confeti{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.55}
+.hero .wrap{position:relative}
+.hero-head{display:grid;gap:14px;justify-items:center;text-align:center;margin-bottom:34px}
+.hero h1{font-size:clamp(2.9rem,9vw,7rem);line-height:.9}
+.hero h1 .sol{color:var(--sol)}
+.chip{display:inline-flex;align-items:center;gap:8px;background:var(--noche-2);border:1px solid var(--noche-3);border-radius:999px;padding:6px 14px;font-weight:700;font-size:.85rem}
+.chip .dot{width:8px;height:8px;border-radius:50%;background:var(--lima);box-shadow:0 0 0 4px rgba(142,224,60,.18);animation:pulso 1.6s infinite}
+@keyframes pulso{50%{box-shadow:0 0 0 8px rgba(142,224,60,0)}}
+
+.duelo{display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch;gap:0}
+.premio{position:relative;border-radius:26px;overflow:hidden;min-width:0;display:flex;flex-direction:column;border:3px solid transparent;transition:transform .25s ease,border-color .25s,box-shadow .25s;cursor:pointer;text-align:left;padding:0;color:inherit;background:none}
+.premio:hover{transform:translateY(-4px)}
+.premio[aria-pressed="true"]{border-color:var(--sol);box-shadow:0 0 0 6px rgba(255,200,61,.18)}
+.premio .foto{aspect-ratio:16/11;position:relative;max-width:100%}
+.premio.moto .foto{background:radial-gradient(120% 90% at 50% 60%,#FFFFFF 0%,#EEF8DD 55%,#CFEFA6 100%)}
+.premio.moto .foto img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;padding:6% 4% 2%}
+.premio.viaje .foto img{width:100%;height:100%;object-fit:cover;object-position:50% 30%}
+.premio .tag{position:absolute;top:14px;left:14px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.12em;padding:6px 10px;border-radius:8px;font-weight:700}
+.moto .tag{background:var(--tinta-papel);color:var(--lima)}
+.viaje .tag{background:var(--tinta-papel);color:var(--mar)}
+.premio .info{padding:20px 22px 22px;display:grid;gap:8px;flex:1}
+.moto .info{background:linear-gradient(180deg,#14361B,#0F2A16)}
+.viaje .info{background:linear-gradient(180deg,#0C3A4A,#0A2D3C)}
+.premio h3{font-size:clamp(1.5rem,2.8vw,2.1rem)}
+.moto h3 span{color:var(--lima)}
+.viaje h3 span{color:var(--mar)}
+.specs{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.specs li{list-style:none;font-size:.8rem;font-weight:700;padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.08)}
+.specs{padding:0;margin:0}
+.elige{margin-top:6px;font-weight:700;font-size:.9rem;color:var(--tinta-2);display:flex;align-items:center;gap:8px}
+.elige .caja{width:20px;height:20px;border-radius:6px;border:2px solid var(--tinta-2);display:grid;place-items:center;flex:none}
+.premio[aria-pressed="true"] .elige{color:var(--sol)}
+.premio[aria-pressed="true"] .caja{background:var(--sol);border-color:var(--sol)}
+.premio[aria-pressed="true"] .caja::after{content:"";width:6px;height:10px;border:solid var(--tinta-papel);border-width:0 3px 3px 0;transform:rotate(45deg) translate(-1px,-1px)}
+
+.vs{display:grid;place-items:center;width:110px;position:relative;z-index:2}
+.vs b{font-family:var(--f-display);font-size:2.6rem;color:var(--tinta-papel);background:var(--sol);width:96px;height:96px;border-radius:50%;display:grid;place-items:center;box-shadow:0 0 0 8px var(--noche),0 0 0 11px var(--coral);transform:rotate(-8deg)}
+@media (max-width:760px){
+  .duelo{grid-template-columns:1fr}
+  .vs{width:auto;height:44px}
+  .vs b{width:74px;height:74px;font-size:1.9rem}
+}
+/* ---- máquina de la suerte ---- */
+.maquina{margin:40px auto 0;max-width:760px;background:var(--papel);color:var(--tinta-papel);border-radius:26px;padding:24px;display:grid;gap:18px;justify-items:center;text-align:center;position:relative;box-shadow:0 0 0 6px var(--coral),0 24px 50px rgba(0,0,0,.45)}
+.maquina::before,.maquina::after{content:"";position:absolute;top:50%;width:30px;height:30px;border-radius:50%;background:var(--noche);transform:translateY(-50%)}
+.maquina::before{left:-21px}.maquina::after{right:-21px}
+.maq-head{display:grid;gap:4px}
+.maq-head .eyebrow{color:var(--coral);font-weight:600}
+.maq-head h3{font-size:clamp(1.6rem,3.6vw,2.3rem);text-transform:uppercase}
+.maq-head p{color:#4C557E;font-weight:500}
+.rodillos{--dh:76px;display:flex;gap:8px;align-items:center;background:var(--tinta-papel);padding:12px;border-radius:18px;box-shadow:inset 0 6px 14px rgba(0,0,0,.5)}
+.rodillos .np{font-family:var(--f-display);font-stretch:var(--ancho-display);font-weight:800;color:var(--sol);font-size:1.4rem;padding-inline:4px 6px}
+.rodillo{width:calc(var(--dh)*.72);height:var(--dh);overflow:hidden;border-radius:10px;background:linear-gradient(180deg,#D9D3C2 0%,#FFFDF6 22%,#FFFDF6 78%,#D9D3C2 100%);position:relative}
+.rodillo.sep{margin-left:10px}
+.tira{will-change:transform}
+.tira span{display:block;height:var(--dh);line-height:var(--dh);font-family:var(--f-mono);font-weight:600;font-size:calc(var(--dh)*.6);font-variant-numeric:tabular-nums;color:var(--tinta-papel)}
+.maquina.gano .rodillo{animation:brillo .9s ease 2}
+@keyframes brillo{50%{background:linear-gradient(180deg,#F5D27A,#FFF3C4 30%,#FFF3C4 70%,#F5D27A)}}
+.maq-acc{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn-coral{background:var(--coral);color:#fff;padding:14px 30px;font-size:1.05rem;box-shadow:0 6px 0 #C7303F}
+.btn-coral:hover{transform:translateY(-2px);box-shadow:0 8px 0 #C7303F}
+.btn-coral:active{transform:translateY(3px);box-shadow:0 2px 0 #C7303F}
+.btn-coral[disabled]{opacity:.7;cursor:wait}
+.btn-tinta{background:var(--tinta-papel);color:var(--papel);padding:14px 26px;font-size:1.05rem}
+.maq-msg{font-weight:700;min-height:1.6em;color:var(--tinta-papel)}
+.maq-msg b{font-family:var(--f-mono);background:var(--sol);padding:2px 8px;border-radius:6px}
+@media (max-width:520px){.rodillos{--dh:52px;gap:5px;padding:9px}.rodillo.sep{margin-left:5px}.rodillos .np{font-size:1rem}.maquina{padding:20px 14px}}
+@media (max-width:360px){.rodillos{--dh:44px}}
+
+/* ---- barra fija en celular ---- */
+.barra-movil{display:none}
+@media (max-width:760px){
+  body{padding-bottom:calc(86px + env(safe-area-inset-bottom,0px))}
+  .barra-movil{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:45;align-items:center;justify-content:space-between;gap:12px;background:rgba(6,13,36,.96);backdrop-filter:blur(8px);border-top:1px solid var(--noche-3);padding-top:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .barra-movil small{display:block;color:var(--tinta-2);font-size:.8rem;font-weight:600}
+  .barra-movil b{font-family:var(--f-mono);font-size:1.25rem;font-variant-numeric:tabular-nums}
+  .barra-movil .btn{padding:12px 22px}
+  .wsp{bottom:calc(100px + env(safe-area-inset-bottom,0px));width:52px;height:52px}
+  .countbar .btn{display:none}
+  .countbar .wrap{gap:10px;padding-block:8px}
+  .countbar strong{font-size:.72rem}
+  .clock b{font-size:.92rem;padding:3px 6px}
+  header.top .btn-ghost{display:none}
+  section{padding-block:56px}
+}
+
+.hero-cta{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:36px;text-align:center}
+.hero-cta .btn-sol{font-size:1.15rem;padding:16px 34px}
+.hero-cta p{color:var(--tinta-2);font-size:.95rem}
+.hero-cta p b{color:var(--tinta)}
+
+/* ---- barra de avance ---- */
+.avance{max-width:620px;width:100%;display:grid;gap:8px}
+.avance .row{display:flex;justify-content:space-between;font-size:.85rem;font-weight:700}
+.avance .row span:last-child{font-family:var(--f-mono);font-variant-numeric:tabular-nums;color:var(--sol)}
+.barra{height:14px;background:var(--noche-2);border:1px solid var(--noche-3);border-radius:99px;overflow:hidden}
+.barra i{display:block;height:100%;width:0;background:repeating-linear-gradient(-45deg,var(--sol) 0 12px,var(--sol-hondo) 12px 24px);border-radius:99px;transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
+
+section{padding-block:72px}
+.sec-head{display:grid;gap:12px;margin-bottom:36px}
+
+/* ---- cómo funciona ---- */
+.pasos{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;counter-reset:paso}
+.paso{background:var(--noche-2);border:1px solid var(--noche-3);border-radius:var(--r);padding:24px;display:grid;gap:10px;align-content:start;min-width:0}
+.paso .n{font-family:var(--f-display);font-size:2.6rem;color:var(--sol);line-height:1}
+.paso h3{font-family:var(--f-body);font-weight:800;font-size:1.2rem;line-height:1.25}
+.paso p{color:var(--tinta-2)}
+@media (max-width:820px){.pasos{grid-template-columns:1fr}}
+
+/* ---- tickets ---- */
+#tickets{background:linear-gradient(180deg,var(--noche) 0%,#0E1B42 100%)}
+.packs{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+@media (max-width:980px){.packs{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:480px){.packs{grid-template-columns:1fr}}
+.ticket{--perf:var(--noche);position:relative;background:var(--papel);color:var(--tinta-papel);border-radius:16px;display:grid;grid-template-rows:auto auto;min-width:0;border:0;padding:0;text-align:left;transition:transform .2s ease;cursor:pointer}
+.ticket:hover{transform:translateY(-4px) rotate(-.6deg)}
+.ticket[aria-pressed="true"]{box-shadow:0 0 0 4px var(--sol),0 14px 30px rgba(0,0,0,.35)}
+.ticket .cuerpo{padding:22px 20px 18px;display:grid;gap:4px}
+.ticket .cant{font-family:var(--f-display);font-size:2.6rem;line-height:1}
+.ticket .cant small{font-family:var(--f-body);font-weight:800;font-size:1rem;margin-left:4px}
+.ticket .precio{font-family:var(--f-mono);font-weight:700;font-size:1.25rem;font-variant-numeric:tabular-nums}
+.ticket .unit{font-size:.82rem;color:#5A6286;font-weight:600}
+.ticket .talon{border-top:2px dashed #C9C2AE;padding:12px 20px 16px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;color:#5A6286;position:relative}
+.ticket .talon::before,.ticket .talon::after{content:"";position:absolute;top:-11px;width:20px;height:20px;border-radius:50%;background:var(--perf)}
+.ticket .talon::before{left:-10px}.ticket .talon::after{right:-10px}
+#tickets .ticket{--perf:#0D1A3F}
+.ticket .badge{position:absolute;top:-12px;right:14px;background:var(--coral);color:#fff;font-weight:800;font-size:.72rem;letter-spacing:.06em;padding:5px 10px;border-radius:999px;text-transform:uppercase}
+.ticket.top{background:var(--sol)}
+.ticket.top .talon{border-color:rgba(27,34,70,.3);color:var(--tinta-papel)}
+.ticket.top .unit{color:var(--tinta-papel)}
+
+.compra{margin-top:30px;background:var(--noche-2);border:1px solid var(--noche-3);border-radius:22px;padding:22px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.stepper{display:flex;align-items:center;gap:6px;background:var(--noche);border-radius:999px;padding:5px;border:1px solid var(--noche-3)}
+.stepper button{width:40px;height:40px;border-radius:50%;border:0;background:var(--noche-3);color:var(--tinta);font-size:1.3rem;font-weight:800}
+.stepper button:hover{background:var(--sol);color:var(--tinta-papel)}
+.stepper output{min-width:4ch;text-align:center;font-family:var(--f-mono);font-weight:700;font-size:1.15rem;font-variant-numeric:tabular-nums}
+.compra .total{display:grid;gap:2px}
+.compra .total small{color:var(--tinta-2);font-size:.82rem;font-weight:600}
+.compra .total b{font-family:var(--f-mono);font-size:1.6rem;font-variant-numeric:tabular-nums}
+.compra .izq{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.pagos{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;color:var(--tinta-2);font-size:.8rem;font-weight:700;align-items:center}
+.pagos span{border:1px solid var(--noche-3);border-radius:8px;padding:5px 10px}
+
+/* ---- premios detalle ---- */
+.detalle{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+@media (max-width:820px){.detalle{grid-template-columns:1fr}}
+.ficha{border-radius:var(--r);overflow:hidden;background:var(--noche-2);border:1px solid var(--noche-3);display:grid;min-width:0}
+.ficha .franja{padding:16px 22px;font-family:var(--f-mono);font-size:.75rem;letter-spacing:.12em;font-weight:700;color:var(--tinta-papel)}
+.ficha.moto .franja{background:var(--lima)}
+.ficha.viaje .franja{background:var(--mar)}
+.ficha dl{margin:0;padding:8px 22px 22px;display:grid}
+.ficha dl div{display:grid;grid-template-columns:150px 1fr;gap:12px;padding-block:12px;border-bottom:1px solid var(--noche-3)}
+.ficha dl div:last-child{border-bottom:0}
+.ficha dt{color:var(--tinta-2);font-weight:600;font-size:.9rem}
+.ficha dd{margin:0;font-weight:700}
+.pend{color:var(--sol);font-weight:600;font-style:italic}
+@media (max-width:480px){.ficha dl div{grid-template-columns:1fr;gap:2px}}
+
+/* ---- bases ---- */
+.bases{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:start}
+@media (max-width:860px){.bases{grid-template-columns:1fr}}
+.reglas{display:grid;gap:12px;padding:0;margin:0;list-style:none}
+.reglas li{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;background:var(--noche-2);border:1px solid var(--noche-3);border-radius:14px;padding:14px 16px}
+.reglas li svg{width:34px;height:34px}
+.reglas b{display:block}
+.reglas span{color:var(--tinta-2);font-size:.95rem}
+.sello{background:var(--papel);color:var(--tinta-papel);border-radius:var(--r);padding:26px;display:grid;gap:14px;transform:rotate(1deg)}
+.sello h3{font-size:1.6rem}
+.sello p{color:#46507A}
+.sello .btn{justify-self:start}
+.sello .btn[disabled]{opacity:.55;cursor:not-allowed}
+
+/* ---- faq ---- */
+.faq{display:grid;gap:10px;max-width:820px}
+.faq details{background:var(--noche-2);border:1px solid var(--noche-3);border-radius:14px;padding:0 18px}
+.faq summary{cursor:pointer;list-style:none;padding:18px 0;font-weight:800;font-size:1.05rem;display:flex;justify-content:space-between;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--f-mono);color:var(--sol);font-size:1.3rem;line-height:1}
+.faq details[open] summary::after{content:"–"}
+.faq details p{padding-bottom:18px;color:var(--tinta-2);max-width:65ch}
+
+footer{border-top:1px solid var(--noche-3);padding-block:34px;color:var(--tinta-2);font-size:.9rem}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
+
+/* ---- modal compra ---- */
+.velo{position:fixed;inset:0;background:rgba(4,8,22,.78);backdrop-filter:blur(4px);z-index:60;display:grid;place-items:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));overflow-y:auto}
+.modal{background:var(--noche-2);border:1px solid var(--noche-3);border-radius:24px;width:100%;max-width:520px;padding:26px;display:grid;gap:18px;position:relative}
+.modal h3{font-size:1.7rem}
+.cerrar{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;border:0;background:var(--noche-3);color:var(--tinta);font-size:1.2rem}
+.resumen{display:flex;justify-content:space-between;gap:12px;background:var(--noche);border-radius:14px;padding:14px 16px;font-weight:700;flex-wrap:wrap}
+.resumen b{font-family:var(--f-mono);color:var(--sol)}
+form.datos{display:grid;gap:12px}
+.campo{display:grid;gap:6px}
+.campo label{font-weight:700;font-size:.88rem}
+.campo input{background:var(--noche);border:1.5px solid var(--noche-3);border-radius:12px;padding:12px 14px;color:var(--tinta);font:inherit}
+.campo input:focus{outline:none;border-color:var(--sol)}
+.dos{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:480px){.dos{grid-template-columns:1fr}}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:.88rem;color:var(--tinta-2)}
+.check input{width:20px;height:20px;accent-color:var(--sol);flex:none;margin-top:2px}
+.error{color:var(--coral);font-weight:700;font-size:.88rem}
+.mis{display:grid;gap:10px}
+.mini{display:flex;justify-content:space-between;align-items:center;background:var(--papel);color:var(--tinta-papel);border-radius:10px;padding:10px 14px;font-family:var(--f-mono);font-weight:700;position:relative}
+.mini::before,.mini::after{content:"";position:absolute;top:50%;width:14px;height:14px;border-radius:50%;background:var(--noche-2);transform:translateY(-50%)}
+.mini::before{left:-7px}.mini::after{right:-7px}
+.mini small{font-weight:500;font-size:.7rem;letter-spacing:.08em}
+.wsp{position:fixed;right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:40;width:58px;height:58px;border-radius:50%;background:#25D366;display:grid;place-items:center;box-shadow:0 10px 24px rgba(0,0,0,.4)}
+.wsp svg{width:30px;height:30px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+
+<div class="maqueta"><div class="wrap"><span>MAQUETA PARA REVISIÓN</span><span>· Precios, fechas y cifras son de ejemplo · No se cobra nada</span></div></div>
+
+<div class="countbar" role="region" aria-label="Cuenta regresiva del sorteo">
+  <div class="wrap">
+    <strong>El sorteo se realiza en</strong>
+    <div class="clock" aria-live="off">
+      <div><b id="cd-d">00</b><small>DÍAS</small></div><i>:</i>
+      <div><b id="cd-h">00</b><small>HRS</small></div><i>:</i>
+      <div><b id="cd-m">00</b><small>MIN</small></div><i>:</i>
+      <div><b id="cd-s">00</b><small>SEG</small></div>
+    </div>
+    <a class="btn btn-sol btn-sm" href="#tickets">Participar</a>
+  </div>
+</div>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#" aria-label="Sorteo Brutal, inicio">
+      <span class="logo-mark" aria-hidden="true"><span>SB</span></span>
+      <span class="logo-txt">SORTEO BRUTAL<em>TÚ ELIGES EL PREMIO</em></span>
+    </a>
+    <nav class="menu" aria-label="Secciones">
+      <a href="#como">Cómo funciona</a>
+      <a href="#tickets">Tickets</a>
+      <a href="#premios">Premios</a>
+      <a href="#bases">Bases legales</a>
+      <a href="#faq">Preguntas</a>
+    </nav>
+    <a class="btn btn-ghost" href="#tickets" style="padding:8px 16px;font-size:.9rem">Comprar</a>
+  </div>
+</header>
+
+<section class="hero" aria-labelledby="titulo">
+  <canvas id="confeti" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="hero-head">
+      <span class="chip"><span class="dot" aria-hidden="true"></span>Sorteo abierto · Sorteo N°1</span>
+      <h1 id="titulo">Un ticket. <span class="sol">Dos premios.</span><br>Tú eliges.</h1>
+      <p class="lead">Compra tu ticket y participa por una moto 0 km o un viaje a Brasil para 4 personas. Si sale tu número, tú decides cuál te llevas.</p>
+    </div>
+
+    <div class="duelo">
+      <button class="premio moto" type="button" aria-pressed="false" data-premio="moto" id="p-moto">
+        <div class="foto">
+          <span class="tag">OPCIÓN 1 · MOTO</span>
+          <img src="img/moto.jpg" alt="Moto Kawasaki Ninja 500 SE verde, vista lateral" width="900" height="581">
+        </div>
+        <div class="info">
+          <h3>Kawasaki <span>Ninja 500 SE</span></h3>
+          <ul class="specs"><li>0 km</li><li>+ Casco de regalo</li><li>Lista para salir</li></ul>
+          <span class="elige"><span class="caja" aria-hidden="true"></span>Yo elegiría la moto</span>
+        </div>
+      </button>
+
+      <div class="vs" aria-hidden="true"><b>VS</b></div>
+
+      <button class="premio viaje" type="button" aria-pressed="false" data-premio="viaje" id="p-viaje">
+        <div class="foto">
+          <span class="tag">OPCIÓN 2 · VIAJE</span>
+          <img src="img/buzios.jpg" alt="Playa de Búzios, Brasil, con cuatro amigos sonriendo" width="1000" height="741">
+        </div>
+        <div class="info">
+          <h3>Búzios, <span>Brasil</span></h3>
+          <ul class="specs"><li>5 días · 4 noches</li><li>4 personas</li><li>Todo incluido</li></ul>
+          <span class="elige"><span class="caja" aria-hidden="true"></span>Yo elegiría el viaje</span>
+        </div>
+      </button>
+    </div>
+
+    <div class="maquina" id="maquina">
+      <div class="maq-head">
+        <span class="eyebrow">Prueba tu suerte</span>
+        <h3>¿Qué número te tocaría?</h3>
+        <p>Gira la máquina y mira un número disponible del sorteo.</p>
+      </div>
+      <div class="rodillos" id="rodillos" role="img" aria-label="Número de ticket">
+        <span class="np" aria-hidden="true">N°</span>
+        <div class="rodillo"><div class="tira"></div></div>
+        <div class="rodillo"><div class="tira"></div></div>
+        <div class="rodillo"><div class="tira"></div></div>
+        <div class="rodillo sep"><div class="tira"></div></div>
+        <div class="rodillo"><div class="tira"></div></div>
+        <div class="rodillo"><div class="tira"></div></div>
+      </div>
+      <div class="maq-acc">
+        <button class="btn btn-coral" type="button" id="girar">Girar</button>
+        <button class="btn btn-tinta" type="button" id="quiero" hidden>Quiero este número</button>
+      </div>
+      <p class="maq-msg" id="maq-msg" aria-live="polite">Cada ticket es un número como este.</p>
+    </div>
+
+    <div class="hero-cta">
+      <div class="avance" aria-label="Avance de tickets vendidos (ejemplo)">
+        <div class="row"><span>Tickets vendidos <span style="color:var(--tinta-2);font-weight:500">(ejemplo)</span></span><span id="pct">0%</span></div>
+        <div class="barra"><i id="barra"></i></div>
+      </div>
+      <a class="btn btn-sol" href="#tickets">Comprar mis tickets</a>
+      <p>Sorteo en vivo el <b id="fecha-txt">sábado 28 de noviembre, 21:00 hrs</b> · Con bases legales</p>
+    </div>
+  </div>
+</section>
+
+<section id="como" aria-labelledby="como-t">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Cómo funciona</span>
+      <h2 id="como-t">Participar toma dos minutos</h2>
+    </div>
+    <div class="pasos">
+      <article class="paso"><span class="n">1</span><h3>Elige cuántos tickets quieres</h3><p>Más tickets, más números en el sorteo. Pagas con tarjeta o transferencia.</p></article>
+      <article class="paso"><span class="n">2</span><h3>Recibe tus números por correo</h3><p>Apenas se confirma el pago te llega un correo con cada número de ticket.</p></article>
+      <article class="paso"><span class="n">3</span><h3>Mira el sorteo en vivo</h3><p>Se transmite en vivo. Si sale tu número, te contactamos y eliges: la moto o el viaje.</p></article>
+    </div>
+  </div>
+</section>
+
+<section id="tickets" aria-labelledby="tickets-t">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Tickets</span>
+      <h2 id="tickets-t">Elige tu pack</h2>
+      <p class="lead">Cada ticket es un número en el sorteo. Los packs traen descuento.</p>
+    </div>
+    <div class="packs" role="group" aria-label="Packs de tickets">
+      <button class="ticket" type="button" data-cant="1" aria-pressed="false">
+        <div class="cuerpo"><span class="cant">1<small>ticket</small></span><span class="precio" data-precio></span><span class="unit">Para probar suerte</span></div>
+        <div class="talon"><span>N° ••••••</span><span>ADMIT ONE</span></div>
+      </button>
+      <button class="ticket" type="button" data-cant="5" aria-pressed="false">
+        <div class="cuerpo"><span class="cant">5<small>tickets</small></span><span class="precio" data-precio></span><span class="unit" data-unit></span></div>
+        <div class="talon"><span>5 NÚMEROS</span><span>−10%</span></div>
+      </button>
+      <button class="ticket top" type="button" data-cant="10" aria-pressed="true">
+        <span class="badge">El más elegido</span>
+        <div class="cuerpo"><span class="cant">10<small>tickets</small></span><span class="precio" data-precio></span><span class="unit" data-unit></span></div>
+        <div class="talon"><span>10 NÚMEROS</span><span>−20%</span></div>
+      </button>
+      <button class="ticket" type="button" data-cant="25" aria-pressed="false">
+        <div class="cuerpo"><span class="cant">25<small>tickets</small></span><span class="precio" data-precio></span><span class="unit" data-unit></span></div>
+        <div class="talon"><span>25 NÚMEROS</span><span>−30%</span></div>
+      </button>
+    </div>
+
+    <div class="compra">
+      <div class="izq">
+        <div class="stepper" aria-label="Cantidad de tickets">
+          <button type="button" id="menos" aria-label="Quitar un ticket">−</button>
+          <output id="cant" aria-live="polite">10</output>
+          <button type="button" id="mas" aria-label="Agregar un ticket">+</button>
+        </div>
+        <div class="total"><small>Total a pagar</small><b id="total">$0</b></div>
+      </div>
+      <button class="btn btn-sol" type="button" id="abrir">Continuar al pago</button>
+    </div>
+    <div class="pagos"><span>Pago seguro</span><span>Webpay</span><span>Mercado Pago</span><span>Transferencia</span></div>
+  </div>
+</section>
+
+<section id="premios" aria-labelledby="premios-t">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Los premios</span>
+      <h2 id="premios-t">Lo que te puedes llevar</h2>
+      <p class="lead">El ganador elige uno de los dos. Los datos en amarillo se confirman con la organización.</p>
+    </div>
+    <div class="detalle">
+      <article class="ficha moto">
+        <div class="franja">OPCIÓN 1 · MOTO</div>
+        <dl>
+          <div><dt>Modelo</dt><dd>Kawasaki Ninja 500 SE</dd></div>
+          <div><dt>Estado</dt><dd>0 km</dd></div>
+          <div><dt>Regalo</dt><dd>Casco Y.100R</dd></div>
+          <div><dt>Entrega</dt><dd class="pend">[Lugar y plazo por definir]</dd></div>
+          <div><dt>Papeles</dt><dd class="pend">[Inscripción y permiso: por definir]</dd></div>
+        </dl>
+      </article>
+      <article class="ficha viaje">
+        <div class="franja">OPCIÓN 2 · VIAJE</div>
+        <dl>
+          <div><dt>Destino</dt><dd>Búzios, Brasil</dd></div>
+          <div><dt>Duración</dt><dd>5 días · 4 noches</dd></div>
+          <div><dt>Viajan</dt><dd>4 personas</dd></div>
+          <div><dt>Incluye</dt><dd>Todo incluido: playas, gastronomía, paseos</dd></div>
+          <div><dt>Operador</dt><dd>Grupo CVA Viajes</dd></div>
+          <div><dt>Fechas</dt><dd class="pend">[Temporada por definir]</dd></div>
+        </dl>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="bases" aria-labelledby="bases-t">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Bases legales</span>
+      <h2 id="bases-t">Reglas claras</h2>
+    </div>
+    <div class="bases">
+      <ul class="reglas">
+        <li><svg viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="16" fill="var(--noche-3)"/><path d="M11 17.5l4 4 8-9" fill="none" stroke="var(--sol)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Un número por ticket</b><span>Cada ticket comprado es un número distinto en el sorteo.</span></div></li>
+        <li><svg viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="16" fill="var(--noche-3)"/><path d="M11 17.5l4 4 8-9" fill="none" stroke="var(--sol)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Sorteo en vivo y ante notario</b><span>Fecha, hora y transmisión publicadas aquí. <span class="pend">[Notaría por confirmar]</span></span></div></li>
+        <li><svg viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="16" fill="var(--noche-3)"/><path d="M11 17.5l4 4 8-9" fill="none" stroke="var(--sol)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>El ganador elige su premio</b><span>Moto o viaje. Se elige uno de los dos.</span></div></li>
+        <li><svg viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="16" fill="var(--noche-3)"/><path d="M11 17.5l4 4 8-9" fill="none" stroke="var(--sol)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Plazo para reclamar</b><span>Te contactamos por correo y teléfono. <span class="pend">[Plazo por definir]</span></span></div></li>
+      </ul>
+      <aside class="sello">
+        <span class="eyebrow" style="color:var(--coral)">Documento oficial</span>
+        <h3>Bases completas del sorteo</h3>
+        <p>Organizador, vigencia, mecánica, premios y cómo se entrega cada uno. Se publican aquí antes de abrir la venta.</p>
+        <button class="btn btn-sol" type="button" disabled>Ver bases (PDF) · pronto</button>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section id="faq" aria-labelledby="faq-t">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Preguntas</span>
+      <h2 id="faq-t">Lo que más nos preguntan</h2>
+    </div>
+    <div class="faq">
+      <details open><summary>¿Cómo sé que mi compra quedó lista?</summary><p>Te llega un correo con tus números apenas se confirma el pago. Si no lo ves, revisa la carpeta de spam o escríbenos por WhatsApp.</p></details>
+      <details><summary>¿Puedo comprar más tickets después?</summary><p>Sí. Puedes comprar las veces que quieras mientras el sorteo esté abierto. Cada compra suma números nuevos.</p></details>
+      <details><summary>¿Cómo se elige al ganador?</summary><p>Con un sorteo en vivo, en la fecha y hora publicadas, según las bases legales.</p></details>
+      <details><summary>Si gano, ¿puedo cambiar el premio por dinero?</summary><p>Lo define la organización en las bases legales. <span class="pend">[Por definir]</span></p></details>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span class="logo-txt" style="font-size:1rem">SORTEO BRUTAL<em>TÚ ELIGES EL PREMIO</em></span>
+    <span>Contacto: <span class="pend">[WhatsApp y correo de la organización]</span></span>
+    <span>Maqueta de diseño · 2026</span>
+  </div>
+</footer>
+
+<a class="wsp" href="#faq" aria-label="Contacto por WhatsApp (en la maqueta lleva a Preguntas)">
+  <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#fff" d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3zm0 23.6a10.6 10.6 0 0 1-5.4-1.5l-.4-.2-3.9 1 1-3.8-.2-.4A10.6 10.6 0 1 1 16 26.6zm5.8-7.9c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7 0a8.7 8.7 0 0 1-4.3-3.8c-.3-.6.3-.5.9-1.7a.6.6 0 0 0 0-.5l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.6 3.6 0 0 0-1.1 2.7 6.3 6.3 0 0 0 1.3 3.3 14.4 14.4 0 0 0 5.5 4.9c2 .9 2.8 1 3.9.8a3.3 3.3 0 0 0 2.1-1.5 2.7 2.7 0 0 0 .2-1.5c-.1-.2-.3-.3-.6-.4z"/></svg>
+</a>
+
+<div class="barra-movil" aria-label="Compra rápida">
+  <div><small id="bm-cant">10 tickets</small><b id="bm-total">$0</b></div>
+  <button class="btn btn-sol" type="button" id="bm-btn">Comprar</button>
+</div>
+
+<div class="velo" id="velo" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="m-t">
+    <button class="cerrar" type="button" id="cerrar" aria-label="Cerrar">✕</button>
+    <div id="paso-datos" style="display:grid;gap:18px">
+      <span class="eyebrow">Paso 1 de 2 · Tus datos</span>
+      <h3 id="m-t">¿A quién le enviamos los números?</h3>
+      <div class="resumen"><span id="r-cant">10 tickets</span><b id="r-total">$0</b></div>
+      <form class="datos" id="form" novalidate>
+        <div class="campo"><label for="f-nombre">Nombre y apellido</label><input id="f-nombre" autocomplete="name" value="Camila Rojas" required></div>
+        <div class="dos">
+          <div class="campo"><label for="f-rut">RUT</label><input id="f-rut" inputmode="text" value="12.345.678-5" required></div>
+          <div class="campo"><label for="f-tel">Teléfono</label><input id="f-tel" type="tel" autocomplete="tel" value="+56 9 1234 5678" required></div>
+        </div>
+        <div class="campo"><label for="f-mail">Correo (ahí llegan tus números)</label><input id="f-mail" type="email" autocomplete="email" value="camila@ejemplo.cl" required></div>
+        <label class="check"><input type="checkbox" id="f-bases" checked>Acepto las bases legales del sorteo y soy mayor de 18 años.</label>
+        <p class="error" id="err" hidden></p>
+        <button class="btn btn-sol" type="submit" style="padding:14px">Ir a pagar <span id="b-total"></span></button>
+        <p style="color:var(--tinta-2);font-size:.8rem;text-align:center">En la página real aquí se abre Webpay o Mercado Pago. En esta maqueta no se cobra.</p>
+      </form>
+    </div>
+    <div id="paso-listo" hidden style="display:grid;gap:16px">
+      <span class="eyebrow" style="color:var(--lima)">Pago confirmado · ejemplo</span>
+      <h3>¡Ya estás participando!</h3>
+      <p style="color:var(--tinta-2)">Enviamos tus números a <b id="l-mail" style="color:var(--tinta)"></b>. Guárdalos para el día del sorteo.</p>
+      <div class="mis" id="mis"></div>
+      <button class="btn btn-ghost" type="button" id="listo">Volver a la página</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  /* ---------- precios de ejemplo ---------- */
+  var PRECIO = 2000, DESC = function(n){ return n>=25?.30:n>=10?.20:n>=5?.10:0 };
+  var clp = function(v){ return "$" + Math.round(v).toLocaleString("es-CL") };
+  var totalDe = function(n){ return Math.round(n*PRECIO*(1-DESC(n))/10)*10 };
+
+  document.querySelectorAll(".ticket").forEach(function(t){
+    var n = +t.dataset.cant, tot = totalDe(n);
+    t.querySelector("[data-precio]").textContent = clp(tot);
+    var u = t.querySelector("[data-unit]"); if(u) u.textContent = clp(tot/n) + " cada uno";
+  });
+
+  var cant = 10, out = document.getElementById("cant"), totEl = document.getElementById("total");
+  function pintar(){
+    out.textContent = cant; totEl.textContent = clp(totalDe(cant));
+    document.getElementById("bm-cant").textContent = cant + (cant===1?" ticket":" tickets");
+    document.getElementById("bm-total").textContent = clp(totalDe(cant));
+    document.querySelectorAll(".ticket").forEach(function(t){ t.setAttribute("aria-pressed", +t.dataset.cant===cant ? "true":"false") });
+  }
+  document.querySelectorAll(".ticket").forEach(function(t){ t.addEventListener("click", function(){ cant = +t.dataset.cant; pintar() }) });
+  document.getElementById("mas").onclick = function(){ cant = Math.min(cant+1, 100); pintar() };
+  document.getElementById("menos").onclick = function(){ cant = Math.max(cant-1, 1); pintar() };
+  pintar();
+
+  /* ---------- elegir premio en la portada ---------- */
+  document.querySelectorAll(".premio").forEach(function(p){
+    p.addEventListener("click", function(){
+      document.querySelectorAll(".premio").forEach(function(o){ o.setAttribute("aria-pressed", o===p ? "true":"false") });
+    });
+  });
+
+  /* ---------- cuenta regresiva (fecha de ejemplo) ---------- */
+  var META = new Date(2026, 10, 28, 21, 0, 0);
+  var dos = function(v){ return String(v).padStart(2,"0") };
+  function tic(){
+    var s = Math.max(0, Math.floor((META - new Date())/1000));
+    document.getElementById("cd-d").textContent = dos(Math.floor(s/86400));
+    document.getElementById("cd-h").textContent = dos(Math.floor(s%86400/3600));
+    document.getElementById("cd-m").textContent = dos(Math.floor(s%3600/60));
+    document.getElementById("cd-s").textContent = dos(s%60);
+  }
+  tic(); setInterval(tic, 1000);
+
+  /* ---------- barra de avance (ejemplo) ---------- */
+  var PCT = 64;
+  requestAnimationFrame(function(){ setTimeout(function(){ document.getElementById("barra").style.width = PCT+"%" }, 150) });
+  document.getElementById("pct").textContent = PCT + "%";
+
+  /* ---------- modal de compra ---------- */
+  var velo = document.getElementById("velo"), datos = document.getElementById("paso-datos"), listo = document.getElementById("paso-listo");
+  function abrir(){
+    document.getElementById("r-cant").textContent = cant + (cant===1?" ticket":" tickets");
+    document.getElementById("r-total").textContent = clp(totalDe(cant));
+    document.getElementById("b-total").textContent = "· " + clp(totalDe(cant));
+    datos.hidden = false; datos.style.display = "grid"; listo.hidden = true; velo.hidden = false;
+    setTimeout(function(){ document.getElementById("f-nombre").focus() }, 30);
+  }
+  function cerrar(){ velo.hidden = true; document.getElementById("abrir").focus() }
+  document.getElementById("abrir").onclick = abrir;
+  document.getElementById("bm-btn").onclick = abrir;
+
+  /* ---------- máquina de la suerte ---------- */
+  var tiras = [].slice.call(document.querySelectorAll("#rodillos .tira")), VUELTAS = 4;
+  var actual = tiras.map(function(){ return Math.floor(Math.random()*10) });
+  tiras.forEach(function(t,i){
+    var html = ""; for(var v=0; v<VUELTAS+1; v++) for(var d=0; d<10; d++) html += "<span>"+d+"</span>";
+    t.innerHTML = html;
+    t.style.transform = "translateY(" + (-actual[i]) + "00%)";
+  });
+  var alto = function(){ return tiras[0].firstChild.offsetHeight };
+  tiras.forEach(function(t,i){ t.style.transform = "translateY(" + (-actual[i]*alto()) + "px)" });
+  var girando = false, ultimo = "";
+  document.getElementById("girar").onclick = function(){
+    if(girando) return; girando = true;
+    var b = this, maq = document.getElementById("maquina"), msg = document.getElementById("maq-msg");
+    b.disabled = true; b.textContent = "Girando…"; maq.classList.remove("gano"); document.getElementById("quiero").hidden = true;
+    msg.textContent = "Mucha suerte…";
+    var h = alto(), meta = tiras.map(function(){ return Math.floor(Math.random()*10) });
+    if(meta[0]===0) meta[0] = 1 + Math.floor(Math.random()*9);
+    var fin = 0;
+    tiras.forEach(function(t,i){
+      t.style.transition = "none";
+      t.style.transform = "translateY(" + (-actual[i]*h) + "px)";
+      void t.offsetHeight;
+      var dur = quieto ? 0 : 1100 + i*260;
+      t.style.transition = quieto ? "none" : "transform " + dur + "ms cubic-bezier(.12,.85,.22,1)";
+      t.style.transform = "translateY(" + (-((VUELTAS-1)*10 + meta[i])*h) + "px)";
+      setTimeout(function(){
+        t.style.transition = "none"; t.style.transform = "translateY(" + (-meta[i]*h) + "px)";
+        if(++fin === tiras.length){
+          actual = meta; girando = false; b.disabled = false; b.textContent = "Girar otra vez";
+          ultimo = meta.slice(0,3).join("") + " " + meta.slice(3).join("");
+          document.getElementById("rodillos").setAttribute("aria-label", "Número de ticket " + ultimo);
+          msg.innerHTML = "Salió el <b>N° " + ultimo + "</b>. Está disponible.";
+          maq.classList.add("gano"); document.getElementById("quiero").hidden = false; lluvia();
+        }
+      }, dur + 30);
+    });
+  };
+  document.getElementById("quiero").onclick = function(){ cant = 1; pintar(); abrir(); document.getElementById("r-cant").textContent = "1 ticket · N° " + ultimo };
+  addEventListener("resize", function(){ var h = alto(); tiras.forEach(function(t,i){ t.style.transition = "none"; t.style.transform = "translateY(" + (-actual[i]*h) + "px)" }) });
+  document.getElementById("cerrar").onclick = cerrar;
+  document.getElementById("listo").onclick = cerrar;
+  velo.addEventListener("click", function(e){ if(e.target===velo) cerrar() });
+  document.addEventListener("keydown", function(e){ if(e.key==="Escape" && !velo.hidden) cerrar() });
+
+  document.getElementById("form").addEventListener("submit", function(e){
+    e.preventDefault();
+    var err = document.getElementById("err"), mail = document.getElementById("f-mail").value.trim();
+    var falta = ["f-nombre","f-rut","f-tel","f-mail"].filter(function(id){ return !document.getElementById(id).value.trim() });
+    if(falta.length){ err.textContent = "Completa todos los campos para recibir tus números."; err.hidden = false; return }
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)){ err.textContent = "Revisa el correo: ahí te llegan los números."; err.hidden = false; return }
+    if(!document.getElementById("f-bases").checked){ err.textContent = "Para participar tienes que aceptar las bases legales."; err.hidden = false; return }
+    err.hidden = true;
+    var mis = document.getElementById("mis"); mis.innerHTML = "";
+    var muestra = Math.min(cant, 5);
+    for(var i=0;i<muestra;i++){
+      var n = String(Math.floor(Math.random()*900000)+100000);
+      var d = document.createElement("div"); d.className = "mini";
+      d.innerHTML = "<span>N° " + n.slice(0,3) + " " + n.slice(3) + "</span><small>SORTEO N°1</small>";
+      mis.appendChild(d);
+    }
+    if(cant > muestra){ var m = document.createElement("p"); m.style.color = "var(--tinta-2)"; m.style.fontSize = ".88rem"; m.textContent = "+ " + (cant-muestra) + " números más en tu correo."; mis.appendChild(m) }
+    document.getElementById("l-mail").textContent = mail;
+    datos.hidden = true; datos.style.display = "none"; listo.hidden = false; listo.style.display = "grid";
+    lluvia();
+  });
+
+  /* ---------- confeti ---------- */
+  var cv = document.getElementById("confeti"), cx = cv.getContext("2d"), piezas = [], quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var COL = ["#FFC83D","#FF4F5E","#8EE03C","#2BC9CF","#FFF8E6"];
+  function tam(){ cv.width = cv.offsetWidth*devicePixelRatio; cv.height = cv.offsetHeight*devicePixelRatio }
+  function nueva(y){ return {x:Math.random()*cv.width, y:y==null?Math.random()*cv.height:y, w:(4+Math.random()*6)*devicePixelRatio, h:(8+Math.random()*8)*devicePixelRatio, r:Math.random()*6, vr:(Math.random()-.5)*.08, vy:(.25+Math.random()*.6)*devicePixelRatio, vx:(Math.random()-.5)*.3, c:COL[Math.floor(Math.random()*COL.length)]} }
+  function iniciar(){ tam(); piezas = []; for(var i=0;i<46;i++) piezas.push(nueva()); dibujar() }
+  function dibujar(){
+    cx.clearRect(0,0,cv.width,cv.height);
+    piezas.forEach(function(p){
+      if(!quieto){ p.y += p.vy; p.x += p.vx; p.r += p.vr; if(p.y > cv.height+20){ var q = nueva(-20); for(var k in q) p[k] = q[k] } }
+      cx.save(); cx.translate(p.x,p.y); cx.rotate(p.r); cx.fillStyle = p.c; cx.fillRect(-p.w/2,-p.h/2,p.w,p.h); cx.restore();
+    });
+    if(!quieto) requestAnimationFrame(dibujar);
+  }
+  function lluvia(){ if(quieto) return; for(var i=0;i<60;i++) piezas.push(nueva(-Math.random()*cv.height*.5)); if(piezas.length>160) piezas.splice(0,piezas.length-160) }
+  addEventListener("resize", tam);
+  iniciar();
+})();
+</script>
+
+</html>
