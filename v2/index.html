@@ -7,6 +7,17 @@
 <title>Sorteo V2</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="robots" content="noindex">
+<meta name="description" content="Un ticket, dos premios: Kawasaki Ninja 500 SE 0 km o viaje a Búzios para 4 personas. Si sale tu número, tú eliges.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leniz123.github.io/sorteo-maqueta/v2/">
+<meta property="og:title" content="Sorteo · Moto o viaje a Búzios">
+<meta property="og:description" content="Un ticket, dos premios: Kawasaki Ninja 500 SE 0 km o viaje a Búzios para 4. Si sale tu número, tú eliges.">
+<meta property="og:image" content="https://leniz123.github.io/sorteo-maqueta/v2/img/compartir.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="es_CL">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://leniz123.github.io/sorteo-maqueta/v2/img/compartir.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800;900&family=Onest:wght@400;500;600;700;800&display=swap">
@@ -229,7 +240,7 @@ nav.menu a:hover::after{transform:scaleX(1)}
 .ficha.moto .cab{background:var(--lima)}
 .ficha.viaje .cab{background:var(--agua)}
 .ficha .cab h3{font-size:1.15rem}
-.ficha .cab span{font-family:var(--f-display);font-weight:700;font-size:.62rem;letter-spacing:.1em}
+.ficha .cab span{font-family:var(--f-display);font-weight:700;font-size:.62rem;letter-spacing:.1em;white-space:nowrap}
 .ficha dl{margin:0;padding:6px 22px 20px}
 .ficha dl div{display:grid;grid-template-columns:130px 1fr;gap:12px;padding-block:12px;border-bottom:1px dashed var(--selva-3)}
 .ficha dl div:last-child{border-bottom:0}
@@ -281,7 +292,9 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
   .aviso{bottom:calc(96px + env(safe-area-inset-bottom,0px))}
   .reloj > span{display:none}
   .topbar .btn{display:none}
-  section{padding-block:60px}
+  section{padding-block:48px}
+  .tombola-sec{padding-block:36px 48px}
+  .cuenta{padding-block:20px 48px}
 }
 @media (max-width:420px){.logo b{display:none}}
 
@@ -949,7 +962,7 @@ document.documentElement.classList.add("js");
       var ex = b.x-G.c, ey = b.y-G.cy, dist = Math.hypot(ex,ey), lim = G.R-b.r-3;
       if(dist > lim){
         var nx = ex/dist, ny = ey/dist, vn = b.vx*nx + b.vy*ny;
-        if(vn > 0){ b.vx -= 1.5*vn*nx; b.vy -= 1.5*vn*ny; var tg = b.vx*-ny + b.vy*nx; b.vx -= .03*tg*-ny; b.vy -= .03*tg*nx }
+        if(vn > 0){ var ep = vn > .9*k ? 1.5 : 1; b.vx -= ep*vn*nx; b.vy -= ep*vn*ny; var tg = b.vx*-ny + b.vy*nx; b.vx -= .03*tg*-ny; b.vy -= .03*tg*nx }
         b.x = G.c+nx*lim; b.y = G.cy+ny*lim;
       }
     });
@@ -958,10 +971,15 @@ document.documentElement.classList.add("js");
       if(d > 0 && d < m){
         var ux = dx/d, uy = dy/d, o = (m-d)/2; a.x -= ux*o; a.y -= uy*o; b.x += ux*o; b.y += uy*o;
         var vn = (b.vx-a.vx)*ux + (b.vy-a.vy)*uy;
-        if(vn < 0){ var imp = -.85*vn; a.vx -= imp*ux; a.vy -= imp*uy; b.vx += imp*ux; b.vy += imp*uy }
+        if(vn < 0){ var imp = vn < -.8*k ? -.85*vn : -.5*vn; a.vx -= imp*ux; a.vy -= imp*uy; b.vx += imp*ux; b.vy += imp*uy }
       }
     }
-    bolas.forEach(function(b){ if(!isFinite(b.x) || !isFinite(b.y)){ b.x = G.c; b.y = G.cy; b.vx = b.vy = 0 } mov += Math.abs(b.vx) + Math.abs(b.vy) });
+    var calma = aire < .03 && !girando;
+    bolas.forEach(function(b){
+      if(!isFinite(b.x) || !isFinite(b.y)){ b.x = G.c; b.y = G.cy; b.vx = b.vy = 0 }
+      if(calma){ b.vx *= .96; if(Math.abs(b.vx) + Math.abs(b.vy) < .25*k){ b.vx *= .5; b.vy *= .5 } }
+      mov += Math.abs(b.vx) + Math.abs(b.vy);
+    });
     return mov/k;
   }
   function bolaDib(b){
@@ -988,7 +1006,7 @@ document.documentElement.classList.add("js");
     // boca de salida
     tx.fillStyle = "#FF7A1A"; tx.fillRect(c-tubo-4, cy+R-4, tubo*2+8, 8);
   }
-  var tPrev = 0, acum = 0, PASO = 1000/60;
+  var tPrev = 0, acum = 0, PASO = 1000/60, tCalma = 0;
   function bucleTb(ahora){
     var mov = 0;
     try{
@@ -997,7 +1015,9 @@ document.documentElement.classList.add("js");
       if(saliendo){ saliendo.vy += .45*TW/300; saliendo.y += saliendo.vy; saliendo.x += (geo().c-saliendo.x)*.2; saliendo.ang = (saliendo.ang||0) + .15; if(saliendo.y > Math.max(TH,TW)+saliendo.r){ var fin = saliendo.alFin; saliendo = null; fin() } } }
       dibujarTb();
     }catch(err){ saliendo = null; girando = false; reiniciarTb() }
-    if(girando || saliendo || aire > .02 || Date.now() < quietoHasta || mov > bolas.length*.03) requestAnimationFrame(bucleTb); else { vivoTb = false; tPrev = 0; acum = 0 }
+    if(girando || saliendo || aire > .02) tCalma = Date.now();
+    var sigue = girando || saliendo || aire > .02 || Date.now() < quietoHasta || (mov > bolas.length*.06 && Date.now()-tCalma < 3500);
+    if(sigue) requestAnimationFrame(bucleTb); else { vivoTb = false; tPrev = 0; acum = 0; bolas.forEach(function(b){ b.vx = b.vy = 0 }) }
   }
   function reiniciarTb(){ clearInterval(tbRodar); medirTb(); crearBolas(); $("tb-girar").disabled = false; $("tb-res").classList.remove("rodando"); $("tb-sub").textContent = "Tu número de la suerte"; $("tb-num").textContent = "— — — — —" }
   function animarTb(ms){ quietoHasta = Math.max(quietoHasta, Date.now()+ms); if(!vivoTb){ vivoTb = true; requestAnimationFrame(bucleTb) } }
@@ -1010,7 +1030,7 @@ document.documentElement.classList.add("js");
     clearInterval(tbRodar); var rodar = tbRodar = setInterval(function(){ $("tb-num").textContent = fmt(Math.floor(Math.random()*TOTAL)+1) }, 70);
     girando = true; animarTb(0);
     setTimeout(function(){
-      girando = false; animarTb(3000);
+      girando = false; animarTb(600);
       setTimeout(function(){
         // la bolita más baja sale por el tubo
         var G = geo(), b = bolas.reduce(function(a,x){ return x.y > a.y ? x : a });
@@ -1137,7 +1157,7 @@ document.documentElement.classList.add("js");
   var COMPRAS = [["C","Camila de Viña del Mar","compró 10 tickets"],["M","Matías de Santiago","compró 5 tickets"],["J","Javiera de Concepción","compró 25 tickets"],["F","Felipe de La Serena","compró 1 ticket"],["V","Valentina de Rancagua","compró 10 tickets"],["B","Benjamín de Temuco","compró 5 tickets"],["A","Antonia de Antofagasta","compró 10 tickets"],["T","Tomás de Puerto Montt","compró 1 ticket"],["I","Isidora de Talca","compró 25 tickets"],["D","Diego de Iquique","compró 5 tickets"]];
   var ai = 0, aviso = $("aviso");
   function avisar(){
-    if(!$("velo").hidden){ setTimeout(avisar, 4000); return }
+    if(!$("velo").hidden || scrollY < innerHeight*.7){ setTimeout(avisar, 4000); return }
     var c = COMPRAS[ai++ % COMPRAS.length];
     QUEDAN = Math.max(50, QUEDAN - (+c[2].match(/\d+/)[0])); golpe($("quedan")); actualizarAvance();
     $("av-ini").textContent = c[0]; $("av-txt").textContent = c[1] + " " + c[2]; $("av-sub").textContent = "Recién · ejemplo";
