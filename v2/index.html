@@ -380,22 +380,23 @@ form.datos{display:grid;gap:12px}
 @media (max-width:980px){.cuenta-box{grid-template-columns:1fr}}
 .cuenta-txt{display:grid;gap:14px;justify-items:start}
 .cuenta-txt h2{font-size:clamp(1.6rem,3.4vw,2.5rem)}
+.cuenta-txt h2 .hcl{display:block;margin-top:8px;font-family:var(--f-body);font-size:.95rem;font-weight:600;letter-spacing:0;color:var(--tinta-2)}
 .tablero{display:flex;gap:clamp(8px,1.6vw,18px);justify-content:center}
 .grupo{display:grid;gap:8px;justify-items:center}
 .grupo small{font-family:var(--f-display);font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--tinta-2)}
 .par{display:flex;gap:4px}
 .fd{position:relative;width:clamp(34px,6.4vw,58px);height:clamp(50px,9vw,84px);perspective:300px;font-family:var(--f-display);font-weight:800;font-size:clamp(1.3rem,4.3vw,2.55rem);font-variant-numeric:tabular-nums;color:var(--oscuro)}
 .fd .m,.fd .h{position:absolute;left:0;right:0;height:50%;overflow:hidden;backface-visibility:hidden}
-.fd .arriba,.fd .h-arriba{top:0;border-radius:10px 10px 0 0;background:linear-gradient(#fff,var(--crema))}
-.fd .abajo,.fd .h-abajo{bottom:0;border-radius:0 0 10px 10px;background:linear-gradient(#F7EEDF,#EFE3CE)}
+.fd .sup,.fd .h-sup{top:0;border-radius:10px 10px 0 0;background:linear-gradient(#fff,var(--crema))}
+.fd .inf,.fd .h-inf{bottom:0;border-radius:0 0 10px 10px;background:linear-gradient(#F7EEDF,#EFE3CE)}
 .fd b{position:absolute;left:0;right:0;height:200%;display:grid;place-items:center;line-height:1}
-.fd .arriba b,.fd .h-arriba b{top:0}
-.fd .abajo b,.fd .h-abajo b{bottom:0}
+.fd .sup b,.fd .h-sup b{top:0}
+.fd .inf b,.fd .h-inf b{bottom:0}
 .fd::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(6,38,37,.28);z-index:3}
 .fd .h{display:none}
 .fd.gira .h{display:block}
-.fd .h-arriba{transform-origin:50% 100%;z-index:2;animation:cae-arriba .3s ease-in forwards}
-.fd .h-abajo{transform-origin:50% 0;z-index:2;transform:rotateX(90deg);animation:cae-abajo .3s .3s ease-out forwards}
+.fd .h-sup{transform-origin:50% 100%;z-index:2;animation:cae-arriba .3s ease-in forwards}
+.fd .h-inf{transform-origin:50% 0;z-index:2;transform:rotateX(90deg);animation:cae-abajo .3s .3s ease-out forwards}
 @keyframes cae-arriba{to{transform:rotateX(-90deg)}}
 @keyframes cae-abajo{to{transform:rotateX(0)}}
 
@@ -520,7 +521,7 @@ form.datos{display:grid;gap:12px}
       <div class="stats">
         <div class="stat"><b data-cuenta="2">0</b><small>premios para elegir</small></div>
         <div class="stat"><b data-cuenta="1">0</b><small>ticket y participas</small></div>
-        <div class="stat"><b><span data-cuenta="64">0</span>%</b><small>tickets vendidos (ejemplo)</small></div>
+        <div class="stat"><b><span data-cuenta="64" id="pct-hero">0</span>%</b><small>tickets vendidos (ejemplo)</small></div>
       </div>
     </div>
 
@@ -579,7 +580,7 @@ form.datos{display:grid;gap:12px}
     <div class="cuenta-box rv">
       <div class="cuenta-txt">
         <span class="eyebrow">Sorteo en vivo</span>
-        <h2 id="cuenta-t">Sábado 28 de noviembre, 21:00</h2>
+        <h2 id="cuenta-t">Sábado 28 de noviembre, 21:00 <small class="hcl">hora de Chile</small></h2>
         <p class="lead">Lo transmitimos en vivo por <span class="pend">[Instagram o YouTube, por confirmar]</span>. Fecha de ejemplo.</p>
         <button class="btn btn-o btn-sm" type="button" id="ics">Agregar a mi calendario</button>
       </div>
@@ -771,7 +772,7 @@ document.documentElement.classList.add("js");
   pintar();
 
   /* ---------- cuenta regresiva (fecha de ejemplo) ---------- */
-  var META = new Date(2026,10,28,21,0,0), prev = {};
+  var META = new Date("2026-11-29T00:00:00Z"), prev = {};  /* sáb 28 nov 21:00 hora de Chile (UTC-3) */
   var dos = function(v){ return String(v).padStart(2,"0") };
   function tic(){
     var s = Math.max(0, Math.floor((META-new Date())/1000));
@@ -819,6 +820,7 @@ document.documentElement.classList.add("js");
 
   /* ---------- barra de avance ---------- */
   var barra = $("barra");
+  function actualizarAvance(){ $("quedan").textContent = QUEDAN.toLocaleString("es-CL"); $("pct").textContent = pctVendido() + "%"; $("pct-hero").textContent = pctVendido(); if(barra.style.width) barra.style.width = pctVendido() + "%" }
   if("IntersectionObserver" in window){ new IntersectionObserver(function(es,o){ if(es[0].isIntersecting){ barra.style.width = pctVendido() + "%"; o.disconnect() } }).observe(barra) } else barra.style.width = pctVendido() + "%";
 
   var COLORES_RASPA = ["#AEB5BE","#EEF1F4","#A3AAB4","#E6E9ED","#959DA8"], TINTA_RASPA = "rgba(58,64,74,.82)", FUENTE_RASPA = "Unbounded, Arial Black, sans-serif";
@@ -879,18 +881,19 @@ document.documentElement.classList.add("js");
 
   /* ---------- tablero de la cuenta regresiva ---------- */
   var fds = [].slice.call(document.querySelectorAll("#tablero .fd")), valFd = [];
-  fds.forEach(function(fd){ fd.innerHTML = '<span class="m arriba"><b>0</b></span><span class="m abajo"><b>0</b></span><span class="h h-arriba"><b>0</b></span><span class="h h-abajo"><b>0</b></span>' });
+  fds.forEach(function(fd){ fd.innerHTML = '<span class="m sup"><b>0</b></span><span class="m inf"><b>0</b></span><span class="h h-sup"><b>0</b></span><span class="h h-inf"><b>0</b></span>' });
   function voltear(fd, nuevo, viejo){
-    var q = function(c){ return fd.querySelector(c + " b") };
-    if(viejo === undefined || quieto){ q(".arriba").textContent = q(".abajo").textContent = nuevo; return }
-    q(".arriba").textContent = nuevo; q(".abajo").textContent = viejo; q(".h-arriba").textContent = viejo; q(".h-abajo").textContent = nuevo;
+    var q = function(c){ return fd.querySelector(":scope > " + c + " > b") };
+    if(viejo === undefined || quieto){ q(".sup").textContent = q(".inf").textContent = nuevo; return }
+    q(".sup").textContent = nuevo; q(".inf").textContent = viejo; q(".h-sup").textContent = viejo; q(".h-inf").textContent = nuevo;
     fd.classList.remove("gira"); void fd.offsetWidth; fd.classList.add("gira");
-    clearTimeout(fd._t); fd._t = setTimeout(function(){ q(".abajo").textContent = nuevo; fd.classList.remove("gira") }, 600);
+    clearTimeout(fd._t); fd._t = setTimeout(function(){ q(".inf").textContent = nuevo; fd.classList.remove("gira") }, 600);
   }
   function tablero(){
     var s = Math.max(0, Math.floor((META-new Date())/1000));
     var txt = dos(Math.min(99,Math.floor(s/86400))) + dos(Math.floor(s%86400/3600)) + dos(Math.floor(s%3600/60)) + dos(s%60);
     fds.forEach(function(fd,i){ if(valFd[i] !== txt[i]){ voltear(fd, txt[i], valFd[i]); valFd[i] = txt[i] } });
+    if(s === 0 && !tablero.fin){ tablero.fin = true; $("cuenta-t").textContent = "¡El sorteo está en vivo!"; document.querySelector(".cuenta-txt .lead").textContent = "La venta de tickets cerró. Míralo en la transmisión."; $("ics").hidden = true }
   }
   tablero(); setInterval(tablero, 1000);
   $("ics").onclick = function(){
@@ -901,7 +904,8 @@ document.documentElement.classList.add("js");
   /* ---------- grilla para elegir números ---------- */
   var POR_RANGO = 50, elegidos = [], rango = 0;
   var fmt = function(n){ return String(n).padStart(5,"0") };
-  function vendido(n){ var h = Math.imul(n ^ 0x5bd1e995, 2654435761) >>> 0; h ^= h >>> 15; return h % 100 < 64 }
+  var comprados = {};
+  function vendido(n){ if(comprados[n]) return true; var h = Math.imul(n ^ 0x5bd1e995, 2654435761) >>> 0; h ^= h >>> 15; return h % 100 < 64 }
   var sel = $("n-rango");
   for(var r=0; r<TOTAL/POR_RANGO; r++){ var o = document.createElement("option"); o.value = r; o.textContent = "Del " + fmt(r*POR_RANGO+1) + " al " + fmt((r+1)*POR_RANGO); sel.appendChild(o) }
   function msg(t){ $("n-msg").textContent = t }
@@ -1050,7 +1054,7 @@ document.documentElement.classList.add("js");
   function avisar(){
     if(!$("velo").hidden){ setTimeout(avisar, 4000); return }
     var c = COMPRAS[ai++ % COMPRAS.length];
-    QUEDAN = Math.max(50, QUEDAN - (+c[2].match(/\d+/)[0])); $("quedan").textContent = QUEDAN.toLocaleString("es-CL"); golpe($("quedan")); $("pct").textContent = pctVendido() + "%"; if(barra.style.width) barra.style.width = pctVendido() + "%";
+    QUEDAN = Math.max(50, QUEDAN - (+c[2].match(/\d+/)[0])); golpe($("quedan")); actualizarAvance();
     $("av-ini").textContent = c[0]; $("av-txt").textContent = c[1] + " " + c[2]; $("av-sub").textContent = "Recién · ejemplo";
     aviso.classList.add("ver"); setTimeout(function(){ aviso.classList.remove("ver") }, 4200);
     setTimeout(avisar, 18000);
@@ -1069,16 +1073,24 @@ document.documentElement.classList.add("js");
   $("abrir").onclick = abrir; $("bm-btn").onclick = abrir; $("cerrar").onclick = cerrar; $("listo").onclick = cerrar;
   velo.addEventListener("click", function(e){ if(e.target===velo) cerrar() });
   document.addEventListener("keydown", function(e){ if(e.key==="Escape" && !velo.hidden) cerrar() });
+  function rutValido(r){
+    r = r.replace(/[^0-9kK]/g,"").toUpperCase(); if(r.length < 2) return false;
+    var cuerpo = r.slice(0,-1), dv = r.slice(-1), suma = 0, m = 2;
+    for(var i=cuerpo.length-1; i>=0; i--){ suma += +cuerpo[i]*m; m = m===7 ? 2 : m+1 }
+    var esp = 11 - suma%11; return dv === (esp===11 ? "0" : esp===10 ? "K" : String(esp));
+  }
   $("form").addEventListener("submit", function(e){
     e.preventDefault();
     var err = $("err"), mail = $("f-mail").value.trim();
     if(["f-nombre","f-rut","f-tel","f-mail"].some(function(id){ return !$(id).value.trim() })){ err.textContent = "Completa todos los campos para recibir tus números."; err.hidden = false; return }
+    if(!rutValido($("f-rut").value)){ err.textContent = "Revisa el RUT: el dígito verificador no calza."; err.hidden = false; return }
     if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)){ err.textContent = "Revisa el correo: ahí te llegan los números."; err.hidden = false; return }
     if(!$("f-bases").checked){ err.textContent = "Para participar tienes que aceptar las bases legales."; err.hidden = false; return }
     err.hidden = true;
     var nums = numerosFinales();
     $("l-mail").textContent = mail; datos.hidden = true; datos.style.display = "none"; listo.hidden = false; listo.style.display = "grid";
     imprimir($("f-nombre").value.trim(), nums);
+    nums.forEach(function(n){ comprados[n] = 1 }); elegidos = []; QUEDAN = Math.max(0, QUEDAN - nums.length); actualizarAvance(); grilla(); chips(); msg("");
     setTimeout(function(){ confeti(innerWidth/2, innerHeight*.3, 140) }, quieto ? 0 : 1300);
   });
 
