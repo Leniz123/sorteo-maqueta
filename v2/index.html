@@ -930,28 +930,45 @@ document.documentElement.classList.add("js");
   function medirTb(){ var d = devicePixelRatio||1; TW = tcv.offsetWidth; TH = tcv.offsetHeight; tcv.width = TW*d; tcv.height = TH*d; tx.setTransform(d,0,0,d,0,0) }
   function crearBolas(){
     var G = geo(); bolas = [];
-    for(var i=0;i<18;i++) bolas.push({x:G.c+(Math.random()-.5)*G.R, y:G.cy+G.R*.5-Math.random()*G.R*.4, vx:0, vy:0, r:G.rb, c:COL_BOLAS[i%COL_BOLAS.length], t:String(Math.floor(Math.random()*90)+10)});
+    for(var i=0;i<18;i++) bolas.push({x:G.c+(Math.random()-.5)*G.R, y:G.cy+G.R*.5-Math.random()*G.R*.4, vx:0, vy:0, r:G.rb, c:COL_BOLAS[i%COL_BOLAS.length], t:String(Math.floor(Math.random()*90)+10), fase:Math.random()*6.3, ang:0});
   }
+  /* física a paso fijo (60 por segundo): chorro de aire por el centro, rebotes suaves, igual en cualquier pantalla */
+  var aire = 0, tAire = 0;
   function fisica(){
-    var G = geo(), mov = 0;
+    var G = geo(), mov = 0, k = TW/300, top = G.cy-G.R;
+    aire += ((girando ? 1 : 0) - aire) * (girando ? .05 : .035); tAire += 1/60;
     bolas.forEach(function(b){
-      if(girando && b.y > G.cy+G.R*.15){ b.vy -= 1.2+Math.random()*2.2; b.vx += (Math.random()-.5)*3 }
-      b.vy += .38; b.vx *= .985; b.vy *= .985; b.x += b.vx; b.y += b.vy;
+      if(aire > .01){
+        var dx = (b.x-G.c)/(G.R*.42), col = Math.exp(-dx*dx), alt = (b.y-top)/(2*G.R);
+        b.vy -= aire*.62*k*col*(.25+alt*1.1);
+        if(alt < .45) b.vx += aire*.05*k*(b.x >= G.c ? 1 : -1);
+        b.vx += aire*.03*k*Math.sin(tAire*2.3 + b.fase);
+      }
+      b.vy += .3*k; b.vx *= .992; b.vy *= .992;
+      b.x += b.vx; b.y += b.vy; b.ang += b.vx/b.r;
       var ex = b.x-G.c, ey = b.y-G.cy, dist = Math.hypot(ex,ey), lim = G.R-b.r-3;
-      if(dist > lim){ var nx = ex/dist, ny = ey/dist, vn = b.vx*nx + b.vy*ny; if(vn > 0){ b.vx -= 1.7*vn*nx; b.vy -= 1.7*vn*ny } b.x = G.c+nx*lim; b.y = G.cy+ny*lim }
+      if(dist > lim){
+        var nx = ex/dist, ny = ey/dist, vn = b.vx*nx + b.vy*ny;
+        if(vn > 0){ b.vx -= 1.5*vn*nx; b.vy -= 1.5*vn*ny; var tg = b.vx*-ny + b.vy*nx; b.vx -= .03*tg*-ny; b.vy -= .03*tg*nx }
+        b.x = G.c+nx*lim; b.y = G.cy+ny*lim;
+      }
     });
     for(var i=0;i<bolas.length;i++) for(var j=i+1;j<bolas.length;j++){
       var a = bolas[i], b = bolas[j], dx = b.x-a.x, dy = b.y-a.y, d = Math.hypot(dx,dy), m = a.r+b.r;
-      if(d > 0 && d < m){ var o = (m-d)/2, ux = dx/d, uy = dy/d; a.x -= ux*o; a.y -= uy*o; b.x += ux*o; b.y += uy*o }
+      if(d > 0 && d < m){
+        var ux = dx/d, uy = dy/d, o = (m-d)/2; a.x -= ux*o; a.y -= uy*o; b.x += ux*o; b.y += uy*o;
+        var vn = (b.vx-a.vx)*ux + (b.vy-a.vy)*uy;
+        if(vn < 0){ var imp = -.85*vn; a.vx -= imp*ux; a.vy -= imp*uy; b.vx += imp*ux; b.vy += imp*uy }
+      }
     }
     bolas.forEach(function(b){ if(!isFinite(b.x) || !isFinite(b.y)){ b.x = G.c; b.y = G.cy; b.vx = b.vy = 0 } mov += Math.abs(b.vx) + Math.abs(b.vy) });
-    return mov;
+    return mov/k;
   }
   function bolaDib(b){
     var g = tx.createRadialGradient(b.x-b.r*.35, b.y-b.r*.4, b.r*.1, b.x, b.y, b.r); g.addColorStop(0,"rgba(255,255,255,.95)"); g.addColorStop(.4,"rgba(255,255,255,0)"); g.addColorStop(1,"rgba(0,0,0,.28)");
     tx.fillStyle = b.c; tx.beginPath(); tx.arc(b.x,b.y,b.r,0,7); tx.fill(); tx.fillStyle = g; tx.fill();
     tx.fillStyle = "#fff"; tx.beginPath(); tx.arc(b.x,b.y,b.r*.52,0,7); tx.fill();
-    tx.fillStyle = "#062625"; tx.font = "800 " + (b.r*.5) + "px Unbounded, Arial Black, sans-serif"; tx.textAlign = "center"; tx.textBaseline = "middle"; tx.fillText(b.t, b.x, b.y+1);
+    tx.fillStyle = "#062625"; tx.font = "800 " + (b.r*.5) + "px Unbounded, Arial Black, sans-serif"; tx.textAlign = "center"; tx.textBaseline = "middle"; tx.save(); tx.translate(b.x, b.y); tx.rotate(b.ang||0); tx.fillText(b.t, 0, 1); tx.restore();
   }
   function dibujarTb(){
     var G = geo(), c = G.c, cy = G.cy, R = G.R, tubo = G.rb*1.25;
@@ -971,14 +988,16 @@ document.documentElement.classList.add("js");
     // boca de salida
     tx.fillStyle = "#FF7A1A"; tx.fillRect(c-tubo-4, cy+R-4, tubo*2+8, 8);
   }
-  function bucleTb(){
+  var tPrev = 0, acum = 0, PASO = 1000/60;
+  function bucleTb(ahora){
     var mov = 0;
     try{
-      mov = fisica();
-      if(saliendo){ saliendo.vy += .5; saliendo.y += saliendo.vy; saliendo.x += (geo().c-saliendo.x)*.2; if(saliendo.y > Math.max(TH,TW)+saliendo.r){ var fin = saliendo.alFin; saliendo = null; fin() } }
+      acum += Math.min(tPrev ? ahora-tPrev : PASO, 50); tPrev = ahora;
+      while(acum >= PASO){ mov = fisica(); acum -= PASO;
+      if(saliendo){ saliendo.vy += .45*TW/300; saliendo.y += saliendo.vy; saliendo.x += (geo().c-saliendo.x)*.2; saliendo.ang = (saliendo.ang||0) + .15; if(saliendo.y > Math.max(TH,TW)+saliendo.r){ var fin = saliendo.alFin; saliendo = null; fin() } } }
       dibujarTb();
     }catch(err){ saliendo = null; girando = false; reiniciarTb() }
-    if(girando || saliendo || Date.now() < quietoHasta || mov > bolas.length*.03) requestAnimationFrame(bucleTb); else vivoTb = false;
+    if(girando || saliendo || aire > .02 || Date.now() < quietoHasta || mov > bolas.length*.03) requestAnimationFrame(bucleTb); else { vivoTb = false; tPrev = 0; acum = 0 }
   }
   function reiniciarTb(){ clearInterval(tbRodar); medirTb(); crearBolas(); $("tb-girar").disabled = false; $("tb-res").classList.remove("rodando"); $("tb-sub").textContent = "Tu número de la suerte"; $("tb-num").textContent = "— — — — —" }
   function animarTb(ms){ quietoHasta = Math.max(quietoHasta, Date.now()+ms); if(!vivoTb){ vivoTb = true; requestAnimationFrame(bucleTb) } }
@@ -996,19 +1015,19 @@ document.documentElement.classList.add("js");
         // la bolita más baja sale por el tubo
         var G = geo(), b = bolas.reduce(function(a,x){ return x.y > a.y ? x : a });
         bolas.splice(bolas.indexOf(b),1);
-        saliendo = {x:b.x, y:b.y, vy:1, r:b.r, c:b.c, t:b.t, alFin:function(){
+        saliendo = {x:b.x, y:b.y, vy:1, r:b.r, c:b.c, t:b.t, ang:b.ang, alFin:function(){
           clearInterval(rodar); sacado = libreAlAzar();
           $("tb-num").textContent = fmt(sacado); $("tb-sub").textContent = "¡Salió! Está libre";
           res.classList.remove("rodando"); void res.offsetWidth; res.classList.add("sale");
           var q = $("tb-quiero"); q.hidden = false; q.disabled = false; q.textContent = "Lo quiero";
           btn.disabled = false; btn.textContent = "Girar de nuevo";
           var r = $("tb-bola").getBoundingClientRect(); confeti(r.left+r.width/2, r.top, 40);
-          setTimeout(function(){ bolas.push({x:G.c+(Math.random()-.5)*G.R*.6, y:G.cy-G.R*.5, vx:0, vy:0, r:b.r, c:b.c, t:b.t}); animarTb(1500) }, 400);
+          setTimeout(function(){ bolas.push({x:G.c+(Math.random()-.5)*G.R*.6, y:G.cy-G.R*.5, vx:0, vy:0, r:b.r, c:b.c, t:b.t, fase:Math.random()*6.3, ang:0}); animarTb(1500) }, 400);
         }};
         animarTb(0);
         setTimeout(function(){ if(saliendo){ var fin = saliendo.alFin; saliendo = null; fin() } }, 2500);
-      }, quieto ? 0 : 900);
-    }, quieto ? 150 : 2000);
+      }, quieto ? 0 : 1300);
+    }, quieto ? 150 : 2600);
   };
   $("tb-quiero").onclick = function(){
     if(sacado === null) return;
@@ -1019,7 +1038,7 @@ document.documentElement.classList.add("js");
     this.disabled = true; this.textContent = "Agregado ✓";
     tbMsg("Quedó en tu compra (" + elegidos.length + " de " + cant + "). Lo ves marcado en Tickets.");
   };
-  function iniciarTb(){ medirTb(); crearBolas(); for(var i=0;i<150;i++) fisica(); dibujarTb() }
+  function iniciarTb(){ medirTb(); crearBolas(); for(var i=0;i<240;i++) fisica(); dibujarTb() }
   (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(iniciarTb);
   addEventListener("resize", function(){ if(tcv.offsetWidth && tcv.offsetWidth !== TW){ var viejo = TW; medirTb(); var f = TW/(viejo||TW); bolas.forEach(function(b){ b.x *= f; b.y *= f; b.r *= f }); dibujarTb() } });
 
