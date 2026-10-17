@@ -307,29 +307,16 @@ form.datos{display:grid;gap:12px}
 .mini{display:flex;justify-content:space-between;align-items:center;background:var(--crema);color:var(--oscuro);border-radius:12px;padding:11px 14px;font-family:var(--f-display);font-weight:800;animation:sube .5s cubic-bezier(.2,1.4,.4,1) both}
 .mini small{font-family:var(--f-body);font-weight:700;font-size:.72rem;color:#6A5A40}
 
-/* descubre los premios */
-.descubre{padding-top:30px}
-.rp-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-@media (max-width:680px){.rp-grid{grid-template-columns:1fr}}
-.rp{background:var(--selva-2);border:1px solid var(--selva-3);border-radius:24px;padding:14px;display:grid;gap:12px;min-width:0;transition:border-color .3s,transform .3s}
-.rp:hover{border-color:var(--agua)}
-.rp-zona{position:relative;aspect-ratio:16/10;max-width:100%;border-radius:16px;overflow:hidden;touch-action:none;user-select:none;background:var(--crema)}
-.rp.moto .rp-zona{background:radial-gradient(80% 70% at 50% 55%,#fff,#F1F7DE 60%,#D9EFA7)}
-.rp-zona img{width:100%;height:100%;object-fit:cover}
-.rp-zona img.contener{object-fit:contain;mix-blend-mode:multiply;padding:5% 8%}
-.rp-zona canvas{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair}
-.rp.listo .rp-zona img{animation:revela .8s cubic-bezier(.2,1.2,.3,1)}
-@keyframes revela{0%{transform:scale(1.15);filter:blur(6px)}100%{transform:none;filter:none}}
-.rp-info{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding-inline:4px}
-.rp-info small{display:block;font-family:var(--f-display);font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--limon)}
-.rp-info b{font-family:var(--f-display);font-weight:800;font-size:1.2rem;line-height:1.2}
-.rp-chip{font-size:.8rem;font-weight:800;border-radius:999px;padding:6px 11px;background:var(--limon);color:var(--oscuro);opacity:0;transform:translateY(6px) scale(.9);transition:all .4s cubic-bezier(.3,1.6,.5,1)}
-.rp.listo .rp-chip{opacity:1;transform:none}
-.dedo{position:absolute;left:50%;top:66%;width:46px;height:46px;margin:-23px 0 0 -23px;pointer-events:none;animation:barre 2.4s ease-in-out infinite}
+/* raspa en la portada */
+.slide canvas{position:absolute;inset:0;z-index:4;width:100%;height:100%;cursor:crosshair;touch-action:none}
+.slide.tapada{touch-action:none;user-select:none}
+.escenario.tapado .selector .prog i{animation:none}
+.escenario.tapado .estampa{display:none}
+.dedo{position:absolute;z-index:5;left:50%;top:66%;width:46px;height:46px;margin:-23px 0 0 -23px;pointer-events:none;animation:barre 2.4s ease-in-out infinite}
 .dedo::before{content:"";position:absolute;inset:0;border-radius:50%;background:rgba(255,255,255,.95);box-shadow:0 0 0 7px rgba(255,255,255,.3),0 6px 16px rgba(0,0,0,.3)}
 .dedo::after{content:"";position:absolute;inset:14px;border-radius:50%;background:var(--mandarina)}
 @keyframes barre{0%{transform:translateX(-70px)}50%{transform:translateX(70px)}100%{transform:translateX(-70px)}}
-.rp.tocada .dedo,.rp.listo .dedo{display:none}
+.tocada .dedo,.listo .dedo{display:none}
 .rp-final{margin-top:20px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:linear-gradient(120deg,var(--mandarina),var(--fucsia));color:#fff;border-radius:22px;padding:18px 22px;animation:entra .5s cubic-bezier(.3,1.4,.5,1) both}
 .rp-final b{display:block;font-family:var(--f-display);font-weight:900;font-size:1.3rem}
 .rp-final .btn-m{background:var(--oscuro);color:var(--crema);box-shadow:0 6px 0 #000}
@@ -374,7 +361,7 @@ form.datos{display:grid;gap:12px}
   <div class="wrap">
     <a class="logo" href="#" aria-label="Sorteo, inicio"><span class="logo-ic" aria-hidden="true"><span>S</span></span><b>Sorteo</b></a>
     <nav class="menu" aria-label="Secciones">
-      <a href="#descubre">Descubre los premios</a><a href="#como">Cómo funciona</a><a href="#tickets">Tickets</a><a href="#premios">Premios</a><a href="#bases">Bases</a>
+      <a href="#como">Cómo funciona</a><a href="#tickets">Tickets</a><a href="#premios">Premios</a><a href="#bases">Bases</a>
     </nav>
     <div class="reloj" aria-label="Tiempo para el sorteo">
       <span>Sorteo en</span>
@@ -394,55 +381,41 @@ form.datos{display:grid;gap:12px}
   <div class="wrap">
     <div class="hero-txt">
       <span class="vivo"><i aria-hidden="true"></i>Sorteo N°1 abierto · <b id="viendo">37</b>&nbsp;viendo ahora</span>
-      <h1 id="titulo">Gánate<br><span class="cambia" id="cambia"><span>la moto</span></span><br>con un <span class="tachado">ticket.<svg viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true"><path d="M4 22 C 80 6, 170 6, 296 18"/></svg></span></h1>
-      <p class="lead">Un ticket, dos premios: una Kawasaki Ninja 500 SE 0 km o un viaje todo incluido a Búzios para 4 personas. Si sale tu número, eliges con cuál te quedas.</p>
+      <h1 id="titulo">Gánate<br><span class="cambia" id="cambia"><span>???</span></span><br>con un <span class="tachado">ticket.<svg viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true"><path d="M4 22 C 80 6, 170 6, 296 18"/></svg></span></h1>
+      <p class="lead" id="hero-lead">Un ticket, dos premios escondidos. Raspa la tarjeta para ver lo que te puedes llevar: si sale tu número, eliges con cuál te quedas.</p>
       <div class="hero-cta">
         <a class="btn btn-m pulso" href="#tickets">Comprar tickets</a>
-        <a class="btn btn-o" href="#descubre">Descubre los premios</a>
+        <a class="btn btn-o" href="#escenario">Descubre los premios</a>
       </div>
       <div class="stats">
         <div class="stat"><b data-cuenta="2">0</b><small>premios para elegir</small></div>
-        <div class="stat"><b data-cuenta="4">0</b><small>personas viajan</small></div>
+        <div class="stat"><b data-cuenta="1">0</b><small>ticket y participas</small></div>
         <div class="stat"><b><span data-cuenta="64">0</span>%</b><small>tickets vendidos (ejemplo)</small></div>
       </div>
     </div>
 
-    <div class="escenario" id="escenario">
+    <div class="escenario tapado" id="escenario">
       <div class="estampa" aria-hidden="true"><span>TÚ<br>ELIGES<br>EL PREMIO</span></div>
       <div class="tarjeta" id="tarjeta">
-        <div class="slide moto on" data-i="0">
+        <div class="slide moto on tapada" data-i="0">
           <span class="sello-op">OPCIÓN 1</span>
           <img src="img/moto.jpg" alt="Moto Kawasaki Ninja 500 SE verde" width="900" height="581">
+          <canvas role="img" aria-label="Tarjeta para raspar: premio 1"></canvas><span class="dedo" aria-hidden="true"></span>
           <div class="pie"><div><h3>Kawasaki Ninja 500 SE</h3><small>0 km · casco de regalo</small></div><span class="pill">MOTO</span></div>
         </div>
-        <div class="slide viaje" data-i="1">
+        <div class="slide viaje tapada" data-i="1">
           <span class="sello-op">OPCIÓN 2</span>
           <img src="img/buzios.jpg" alt="Playa de Búzios, Brasil, con cuatro amigos" width="1000" height="741">
+          <canvas role="img" aria-label="Tarjeta para raspar: premio 2"></canvas><span class="dedo" aria-hidden="true"></span>
           <div class="pie"><div><h3>Búzios, Brasil</h3><small>5 días · 4 noches · 4 personas</small></div><span class="pill">VIAJE</span></div>
         </div>
       </div>
       <div class="selector" role="tablist" aria-label="Premios">
-        <button type="button" role="tab" aria-selected="true" data-i="0"><span>Moto</span><span class="prog"><i></i></span></button>
-        <button type="button" role="tab" aria-selected="false" data-i="1"><span>Viaje</span><span class="prog"><i></i></span></button>
+        <button type="button" role="tab" aria-selected="true" data-i="0"><span data-nombre="Moto">Premio 1</span><span class="prog"><i></i></span></button>
+        <button type="button" role="tab" aria-selected="false" data-i="1"><span data-nombre="Viaje">Premio 2</span><span class="prog"><i></i></span></button>
       </div>
+      <div class="rp-final" id="rp-final" hidden><div><b>¡Los dos pueden ser tuyos!</b><span>Con un ticket participas y, si ganas, eliges cuál te llevas.</span></div><a class="btn btn-m pulso" href="#tickets">Quiero participar</a></div>
     </div>
-  </div>
-</section>
-
-<section id="descubre" class="descubre" aria-labelledby="desc-t">
-  <div class="wrap">
-    <div class="sec-head rv"><span class="eyebrow">Descubre los premios</span><h2 id="desc-t">Raspa y mira lo que te puedes llevar</h2><p class="lead">Pasa el dedo o el mouse por cada tarjeta. <b id="rp-cuenta" style="color:var(--limon)">0 de 2</b> premios descubiertos.</p></div>
-    <div class="rp-grid">
-      <div class="rp moto rv" data-i="0">
-        <div class="rp-zona"><img src="img/moto.jpg" alt="Kawasaki Ninja 500 SE" class="contener" width="900" height="581"><canvas role="img" aria-label="Tarjeta para raspar: premio 1"></canvas><span class="dedo" aria-hidden="true"></span></div>
-        <div class="rp-info"><div><small>Opción 1</small><b data-nombre="Kawasaki Ninja 500 SE">? ? ?</b></div><span class="rp-chip">0 km + casco</span></div>
-      </div>
-      <div class="rp viaje rv" data-i="1">
-        <div class="rp-zona"><img src="img/buzios.jpg" alt="Búzios, Brasil" width="1000" height="741"><canvas role="img" aria-label="Tarjeta para raspar: premio 2"></canvas><span class="dedo" aria-hidden="true"></span></div>
-        <div class="rp-info"><div><small>Opción 2</small><b data-nombre="Viaje a Búzios para 4">? ? ?</b></div><span class="rp-chip">5 días · todo incluido</span></div>
-      </div>
-    </div>
-    <div class="rp-final" id="rp-final" hidden><div><b>¡Los dos pueden ser tuyos!</b><span>Con un ticket participas y, si ganas, eliges cuál te llevas.</span></div><a class="btn btn-m pulso" href="#tickets">Quiero participar</a></div>
   </div>
 </section>
 
@@ -603,21 +576,21 @@ document.documentElement.classList.add("js");
   /* ---------- portada: premios que rotan ---------- */
   var slides = [].slice.call(document.querySelectorAll(".slide")), tabs = [].slice.call(document.querySelectorAll(".selector button"));
   var TONOS = ["var(--lima)","var(--agua)"], NOMBRES = ["la moto","el viaje"], idx = 0, DUR = 5000, reloj = null, pausado = false, restante = DUR, inicio = 0;
-  var esc = $("escenario");
+  var esc = $("escenario"), descubiertos = 0;
   function mostrar(i){
     idx = i;
     slides.forEach(function(s,j){ s.classList.toggle("on", j===i) });
     tabs.forEach(function(t,j){ t.setAttribute("aria-selected", j===i ? "true":"false"); var b = t.querySelector(".prog i"); b.style.animation = "none"; void b.offsetWidth; b.style.animation = "" });
     document.documentElement.style.setProperty("--tono", TONOS[i]);
-    $("cambia").innerHTML = "<span>" + NOMBRES[i] + "</span>";
+    $("cambia").innerHTML = "<span>" + (slides[i].classList.contains("listo") ? NOMBRES[i] : "???") + "</span>";
     programar(DUR);
   }
-  function programar(ms){ clearTimeout(reloj); restante = ms; inicio = Date.now(); if(!quieto && !pausado) reloj = setTimeout(function(){ mostrar((idx+1)%slides.length) }, ms) }
+  function programar(ms){ clearTimeout(reloj); restante = ms; inicio = Date.now(); if(!quieto && !pausado && descubiertos === 2) reloj = setTimeout(function(){ mostrar((idx+1)%slides.length) }, ms) }
   tabs.forEach(function(t,j){ t.onclick = function(){ mostrar(j) } });
   esc.style.setProperty("--dur", DUR+"ms");
   esc.addEventListener("pointerenter", function(){ pausado = true; esc.classList.add("pausa"); clearTimeout(reloj); restante -= Date.now()-inicio });
   esc.addEventListener("pointerleave", function(){ pausado = false; esc.classList.remove("pausa"); programar(Math.max(restante,400)); $("tarjeta").style.transform = "" });
-  esc.addEventListener("pointermove", function(e){ if(quieto) return; var r = esc.getBoundingClientRect(), x = (e.clientX-r.left)/r.width-.5, y = (e.clientY-r.top)/r.height-.5; $("tarjeta").style.transform = "rotateY("+(x*10)+"deg) rotateX("+(-y*10)+"deg)" });
+  esc.addEventListener("pointermove", function(e){ if(quieto || descubiertos < 2) return; var r = esc.getBoundingClientRect(), x = (e.clientX-r.left)/r.width-.5, y = (e.clientY-r.top)/r.height-.5; $("tarjeta").style.transform = "rotateY("+(x*10)+"deg) rotateX("+(-y*10)+"deg)" });
   programar(DUR);
 
   /* ---------- números que cuentan ---------- */
@@ -646,7 +619,7 @@ document.documentElement.classList.add("js");
   function raspable(zona, colores, texto, alListo){
     var capa = zona.querySelector("canvas"), cx = capa.getContext("2d"), on = false, listo = false, prev = null, mov = 0, ancho = 0;
     function cubrir(){
-      var r = zona.getBoundingClientRect(), d = devicePixelRatio||1, w = r.width, h = r.height; ancho = w;
+      var d = devicePixelRatio||1, w = zona.offsetWidth, h = zona.offsetHeight; ancho = w;
       capa.width = w*d; capa.height = h*d; cx.setTransform(d,0,0,d,0,0); cx.globalCompositeOperation = "source-over";
       var g = cx.createLinearGradient(0,0,w,h); colores.forEach(function(c,i){ g.addColorStop(i/(colores.length-1), c) });
       cx.fillStyle = g; cx.fillRect(0,0,w,h);
@@ -658,14 +631,14 @@ document.documentElement.classList.add("js");
       capa.style.transition = "none"; capa.style.opacity = 1; capa.hidden = false;
     }
     function raspar(e){
-      if(!on || listo) return; zona.parentNode.classList.add("tocada");
+      if(!on || listo) return; zona.classList.add("tocada");
       var r = capa.getBoundingClientRect(), x = e.clientX-r.left, y = e.clientY-r.top, rad = Math.max(18, r.width/13);
       cx.globalCompositeOperation = "destination-out"; cx.strokeStyle = cx.fillStyle = "#000";
       if(prev){ cx.lineWidth = rad*1.8; cx.lineCap = "round"; cx.beginPath(); cx.moveTo(prev[0],prev[1]); cx.lineTo(x,y); cx.stroke() } else { cx.beginPath(); cx.arc(x,y,rad*.9,0,7); cx.fill() }
       prev = [x,y]; if(++mov % 4 === 0) medir();
     }
     function medir(){ var d = cx.getImageData(0,0,capa.width,capa.height).data, v = 0, t = 0; for(var i=3;i<d.length;i+=80){ t++; if(d[i]<40) v++ } if(v/t > .45) revelar() }
-    function revelar(){ listo = true; capa.style.transition = "opacity .5s"; capa.style.opacity = 0; setTimeout(function(){ capa.hidden = true }, 500); zona.parentNode.classList.add("listo"); alListo(zona) }
+    function revelar(){ listo = true; capa.style.transition = "opacity .5s"; capa.style.opacity = 0; setTimeout(function(){ capa.hidden = true }, 500); zona.classList.remove("tapada"); zona.classList.add("listo"); alListo(zona) }
     capa.addEventListener("pointerdown", function(e){ on = true; prev = null; try{ capa.setPointerCapture(e.pointerId) }catch(_){} raspar(e) });
     capa.addEventListener("pointermove", raspar);
     capa.addEventListener("pointerup", function(){ on = false; prev = null; if(!listo) medir() });
@@ -673,13 +646,18 @@ document.documentElement.classList.add("js");
     (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(cubrir);
     addEventListener("resize", function(){ if(!listo && zona.offsetWidth !== ancho) cubrir() });
   }
-  var descubiertos = 0;
-  document.querySelectorAll(".rp").forEach(function(rp){
-    raspable(rp.querySelector(".rp-zona"), COLORES_RASPA, [rp.dataset.i==="0" ? "PREMIO A" : "PREMIO B", TINTA_RASPA, "800", FUENTE_RASPA], function(z){
-      var b = rp.querySelector("[data-nombre]"); b.textContent = b.dataset.nombre;
+  slides.forEach(function(sl,i){
+    raspable(sl, COLORES_RASPA, ["PREMIO " + (i+1), TINTA_RASPA, "800", FUENTE_RASPA], function(z){
       var r = z.getBoundingClientRect(); chispas(r.left+r.width/2, r.top+r.height/2, 80);
-      descubiertos++; $("rp-cuenta").textContent = descubiertos + " de 2";
-      if(descubiertos === 2){ var f = $("rp-final"); f.hidden = false; f.style.display = "flex" }
+      var et = tabs[i].querySelector("[data-nombre]"); et.textContent = et.dataset.nombre;
+      $("cambia").innerHTML = "<span>" + NOMBRES[i] + "</span>";
+      document.documentElement.style.setProperty("--tono", TONOS[i]);
+      descubiertos++;
+      if(descubiertos < 2){ setTimeout(function(){ mostrar(i ? 0 : 1) }, 1400); return }
+      esc.classList.remove("tapado");
+      $("hero-lead").textContent = "Un ticket, dos premios: una Kawasaki Ninja 500 SE 0 km o un viaje todo incluido a Búzios para 4 personas. Si sale tu número, eliges con cuál te quedas.";
+      var f = $("rp-final"); f.hidden = false; f.style.display = "flex";
+      setTimeout(function(){ programar(DUR) }, 1400);
     });
   });
 
