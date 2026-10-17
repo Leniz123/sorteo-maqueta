@@ -924,16 +924,16 @@ document.documentElement.classList.add("js");
   grilla(); chips();
 
   /* ---------- tómbola del número de la suerte: esfera con aire, tubo de salida y bandeja ---------- */
-  var tcv = $("tb-cv"), tx = tcv.getContext("2d"), TW = 0, TH = 0, bolas = [], girando = false, vivoTb = false, quietoHasta = 0, sacado = null, saliendo = null;
+  var tcv = $("tb-cv"), tx = tcv.getContext("2d"), TW = 0, TH = 0, bolas = [], girando = false, vivoTb = false, quietoHasta = 0, sacado = null, saliendo = null, tbRodar = null;
   var COL_BOLAS = ["#FF7A1A","#F7E14B","#45E3D3","#FFF6E8","#FF3D8B"];
-  function geo(){ return {c:TW/2, cy:TW*.45, R:TW*.4, rb:TW*.056} }
+  function geo(){ return {c:TW/2, cy:TW*.45, R:TW*.4, rb:TW*.05} }
   function medirTb(){ var d = devicePixelRatio||1; TW = tcv.offsetWidth; TH = tcv.offsetHeight; tcv.width = TW*d; tcv.height = TH*d; tx.setTransform(d,0,0,d,0,0) }
   function crearBolas(){
     var G = geo(); bolas = [];
-    for(var i=0;i<20;i++) bolas.push({x:G.c+(Math.random()-.5)*G.R, y:G.cy+G.R*.5-Math.random()*G.R*.4, vx:0, vy:0, r:G.rb, c:COL_BOLAS[i%COL_BOLAS.length], t:String(Math.floor(Math.random()*90)+10)});
+    for(var i=0;i<18;i++) bolas.push({x:G.c+(Math.random()-.5)*G.R, y:G.cy+G.R*.5-Math.random()*G.R*.4, vx:0, vy:0, r:G.rb, c:COL_BOLAS[i%COL_BOLAS.length], t:String(Math.floor(Math.random()*90)+10)});
   }
   function fisica(){
-    var G = geo();
+    var G = geo(), mov = 0;
     bolas.forEach(function(b){
       if(girando && b.y > G.cy+G.R*.15){ b.vy -= 1.2+Math.random()*2.2; b.vx += (Math.random()-.5)*3 }
       b.vy += .38; b.vx *= .985; b.vy *= .985; b.x += b.vx; b.y += b.vy;
@@ -944,6 +944,8 @@ document.documentElement.classList.add("js");
       var a = bolas[i], b = bolas[j], dx = b.x-a.x, dy = b.y-a.y, d = Math.hypot(dx,dy), m = a.r+b.r;
       if(d > 0 && d < m){ var o = (m-d)/2, ux = dx/d, uy = dy/d; a.x -= ux*o; a.y -= uy*o; b.x += ux*o; b.y += uy*o }
     }
+    bolas.forEach(function(b){ if(!isFinite(b.x) || !isFinite(b.y)){ b.x = G.c; b.y = G.cy; b.vx = b.vy = 0 } mov += Math.abs(b.vx) + Math.abs(b.vy) });
+    return mov;
   }
   function bolaDib(b){
     var g = tx.createRadialGradient(b.x-b.r*.35, b.y-b.r*.4, b.r*.1, b.x, b.y, b.r); g.addColorStop(0,"rgba(255,255,255,.95)"); g.addColorStop(.4,"rgba(255,255,255,0)"); g.addColorStop(1,"rgba(0,0,0,.28)");
@@ -970,11 +972,15 @@ document.documentElement.classList.add("js");
     tx.fillStyle = "#FF7A1A"; tx.fillRect(c-tubo-4, cy+R-4, tubo*2+8, 8);
   }
   function bucleTb(){
-    fisica();
-    if(saliendo){ saliendo.vy += .5; saliendo.y += saliendo.vy; saliendo.x += (geo().c-saliendo.x)*.2; if(saliendo.y > TH+saliendo.r){ var fin = saliendo.alFin; saliendo = null; fin() } }
-    dibujarTb();
-    if(girando || saliendo || Date.now() < quietoHasta) requestAnimationFrame(bucleTb); else vivoTb = false;
+    var mov = 0;
+    try{
+      mov = fisica();
+      if(saliendo){ saliendo.vy += .5; saliendo.y += saliendo.vy; saliendo.x += (geo().c-saliendo.x)*.2; if(saliendo.y > Math.max(TH,TW)+saliendo.r){ var fin = saliendo.alFin; saliendo = null; fin() } }
+      dibujarTb();
+    }catch(err){ saliendo = null; girando = false; reiniciarTb() }
+    if(girando || saliendo || Date.now() < quietoHasta || mov > bolas.length*.03) requestAnimationFrame(bucleTb); else vivoTb = false;
   }
+  function reiniciarTb(){ clearInterval(tbRodar); medirTb(); crearBolas(); $("tb-girar").disabled = false; $("tb-res").classList.remove("rodando"); $("tb-sub").textContent = "Tu número de la suerte"; $("tb-num").textContent = "— — — — —" }
   function animarTb(ms){ quietoHasta = Math.max(quietoHasta, Date.now()+ms); if(!vivoTb){ vivoTb = true; requestAnimationFrame(bucleTb) } }
   function libreAlAzar(){ var n; do{ n = Math.floor(Math.random()*TOTAL)+1 }while(vendido(n) || elegidos.indexOf(n) > -1); return n }
   function tbMsg(t){ $("tb-msg").textContent = t }
@@ -982,10 +988,10 @@ document.documentElement.classList.add("js");
     if(girando || saliendo) return;
     var btn = this, res = $("tb-res"); btn.disabled = true; $("tb-quiero").hidden = true; tbMsg("");
     res.classList.remove("sale"); res.classList.add("rodando"); $("tb-sub").textContent = "Mezclando…";
-    var rodar = setInterval(function(){ $("tb-num").textContent = fmt(Math.floor(Math.random()*TOTAL)+1) }, 70);
+    clearInterval(tbRodar); var rodar = tbRodar = setInterval(function(){ $("tb-num").textContent = fmt(Math.floor(Math.random()*TOTAL)+1) }, 70);
     girando = true; animarTb(0);
     setTimeout(function(){
-      girando = false;
+      girando = false; animarTb(3000);
       setTimeout(function(){
         // la bolita más baja sale por el tubo
         var G = geo(), b = bolas.reduce(function(a,x){ return x.y > a.y ? x : a });
@@ -1000,6 +1006,7 @@ document.documentElement.classList.add("js");
           setTimeout(function(){ bolas.push({x:G.c+(Math.random()-.5)*G.R*.6, y:G.cy-G.R*.5, vx:0, vy:0, r:b.r, c:b.c, t:b.t}); animarTb(1500) }, 400);
         }};
         animarTb(0);
+        setTimeout(function(){ if(saliendo){ var fin = saliendo.alFin; saliendo = null; fin() } }, 2500);
       }, quieto ? 0 : 900);
     }, quieto ? 150 : 2000);
   };
