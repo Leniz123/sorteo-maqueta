@@ -307,23 +307,6 @@ form.datos{display:grid;gap:12px}
 .mini{display:flex;justify-content:space-between;align-items:center;background:var(--crema);color:var(--oscuro);border-radius:12px;padding:11px 14px;font-family:var(--f-display);font-weight:800;animation:sube .5s cubic-bezier(.2,1.4,.4,1) both}
 .mini small{font-family:var(--f-body);font-weight:700;font-size:.72rem;color:#6A5A40}
 
-/* raspa en la portada */
-.slide canvas{position:absolute;inset:0;z-index:4;width:100%;height:100%;cursor:crosshair;touch-action:pan-y}
-.slide.tapada{user-select:none}
-.sin-raspar{justify-self:center;margin-top:12px;background:none;border:0;color:var(--tinta-2);font-weight:700;font-size:.85rem;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
-.sin-raspar:hover{color:var(--tinta)}
-.escenario:not(.tapado) .sin-raspar{display:none}
-.escenario{display:grid}
-.escenario.tapado .selector .prog i{animation:none}
-.escenario.tapado .estampa{display:none}
-.dedo{position:absolute;z-index:5;left:50%;top:66%;width:46px;height:46px;margin:-23px 0 0 -23px;pointer-events:none;animation:barre 2.4s ease-in-out infinite}
-.dedo::before{content:"";position:absolute;inset:0;border-radius:50%;background:rgba(255,255,255,.95);box-shadow:0 0 0 7px rgba(255,255,255,.3),0 6px 16px rgba(0,0,0,.3)}
-.dedo::after{content:"";position:absolute;inset:14px;border-radius:50%;background:var(--mandarina)}
-@keyframes barre{0%{transform:translateX(-70px)}50%{transform:translateX(70px)}100%{transform:translateX(-70px)}}
-.tocada .dedo,.listo .dedo{display:none}
-.rp-final{margin-top:20px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:linear-gradient(120deg,var(--mandarina),var(--fucsia));color:#fff;border-radius:22px;padding:18px 22px;animation:entra .5s cubic-bezier(.3,1.4,.5,1) both}
-.rp-final b{display:block;font-family:var(--f-display);font-weight:900;font-size:1.3rem}
-.rp-final .btn-m{background:var(--oscuro);color:var(--crema);box-shadow:0 6px 0 #000}
 .pulso{animation:pulso 2.2s infinite}
 .btn.pulso::after{animation:none}
 @keyframes pulso{0%{box-shadow:0 6px 0 var(--mandarina-h),0 0 0 0 rgba(255,122,26,.55)}70%{box-shadow:0 6px 0 var(--mandarina-h),0 0 0 16px rgba(255,122,26,0)}100%{box-shadow:0 6px 0 var(--mandarina-h),0 0 0 0 rgba(255,122,26,0)}}
@@ -353,12 +336,7 @@ form.datos{display:grid;gap:12px}
   .aviso b{font-size:.8rem}
   .aviso small{font-size:.7rem}
 }
-@media (prefers-reduced-motion:reduce){.dedo{display:none}}
 
-/* raspe plateado */
-.brillo-r{position:absolute;inset:0;z-index:5;pointer-events:none;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.65) 50%,transparent 62%);background-size:260% 100%;animation:barrido 3.2s ease-in-out infinite}
-@keyframes barrido{0%,35%{background-position:120% 0}100%{background-position:-60% 0}}
-.tocada .brillo-r,.listo .brillo-r{display:none}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* franja de confianza */
@@ -481,7 +459,31 @@ form.datos{display:grid;gap:12px}
 .t-acc{display:flex;gap:10px;flex-wrap:wrap}
 .t-acc .btn{flex:1;min-width:180px;padding-block:13px}
 @media (max-width:460px){.t-cuerpo{grid-template-columns:1fr}#t-qr{justify-self:start}}
-@media (prefers-reduced-motion:reduce){.brillo-r{display:none}.vista.on img{animation:none}.ticket.sale{animation:none}}
+@media (prefers-reduced-motion:reduce){.vista.on img{animation:none}.ticket.sale{animation:none}}
+
+/* tómbola del número de la suerte */
+.tombola-sec{padding-block:50px 70px}
+.tombola-sec .wrap{display:grid;grid-template-columns:1.05fr 1fr;gap:44px;align-items:center}
+@media (max-width:900px){.tombola-sec .wrap{grid-template-columns:1fr}}
+.tb-txt{display:grid;gap:18px;align-content:start;min-width:0}
+.tb-res{display:flex;align-items:center;gap:18px;background:var(--crema);color:var(--oscuro);border-radius:24px;padding:18px 20px;box-shadow:0 20px 40px rgba(0,0,0,.3)}
+.tb-bola{width:76px;height:76px;flex:none;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 34% 30%,#fff 0 8%,var(--limon) 40%,#C9AE10 100%);box-shadow:inset -6px -8px 14px rgba(0,0,0,.18),0 8px 18px rgba(0,0,0,.25)}
+.tb-bola span{width:42px;height:42px;border-radius:50%;background:#fff;display:grid;place-items:center;font-family:var(--f-display);font-weight:900;font-size:.8rem}
+.tb-res.sale .tb-bola{animation:bola-cae .8s cubic-bezier(.3,1.6,.5,1)}
+@keyframes bola-cae{0%{transform:translateY(-60px) scale(.4) rotate(-90deg);opacity:0}100%{transform:none;opacity:1}}
+.tb-info{display:grid;gap:2px;min-width:0}
+.tb-info small{font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#6A5A40}
+.tb-num{font-family:var(--f-display);font-weight:900;font-size:clamp(1.8rem,5vw,2.6rem);font-variant-numeric:tabular-nums;letter-spacing:.02em;line-height:1.1}
+.tb-res.sale .tb-num{animation:pop .5s cubic-bezier(.3,1.8,.5,1)}
+.tb-estado{font-weight:700;font-size:.9rem;color:#4F4330}
+.tb-acc{display:flex;gap:12px;flex-wrap:wrap}
+.tb-msg{min-height:1.3em;font-weight:700;font-size:.9rem;color:var(--agua)}
+.bombo{position:relative;width:100%;max-width:440px;justify-self:center;display:grid;justify-items:center}
+#tb-cv{width:100%;aspect-ratio:1;display:block;position:relative;z-index:1}
+.bombo-pie{position:relative;width:100%;height:70px;margin-top:-46px;display:grid;justify-items:center}
+.bombo-pie .eje{width:18px;height:56px;border-radius:6px;background:linear-gradient(90deg,#0C4B48,var(--selva-3),#0C4B48)}
+.bombo-pie .base{position:absolute;bottom:0;width:58%;height:18px;border-radius:12px 12px 6px 6px;background:linear-gradient(var(--selva-3),#0C4B48);box-shadow:0 14px 24px rgba(0,0,0,.35)}
+@media (max-width:520px){.tb-res{padding:14px 16px;gap:14px}.tb-bola{width:60px;height:60px}.tb-bola span{width:34px;height:34px;font-size:.7rem}.bombo{max-width:340px}}
 #confeti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:70}
 
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}html{scroll-behavior:auto}.js .rv.abajo{transform:none}}
@@ -493,7 +495,7 @@ form.datos{display:grid;gap:12px}
   <div class="wrap">
     <a class="logo" href="#" aria-label="Sorteo, inicio"><span class="logo-ic" aria-hidden="true"><span>S</span></span><b>Sorteo</b></a>
     <nav class="menu" aria-label="Secciones">
-      <a href="#como">Cómo funciona</a><a href="#tickets">Tickets</a><a href="#premios">Premios</a><a href="#bases">Bases</a>
+      <a href="#tombola">Tu número</a><a href="#como">Cómo funciona</a><a href="#tickets">Tickets</a><a href="#premios">Premios</a><a href="#bases">Bases</a>
     </nav>
     <div class="reloj" aria-label="Tiempo para el sorteo">
       <span>Sorteo en</span>
@@ -512,11 +514,11 @@ form.datos{display:grid;gap:12px}
     <div class="wrap">
     <div class="hero-txt">
       <span class="vivo"><i aria-hidden="true"></i>Sorteo N°1 abierto · <b id="viendo">37</b>&nbsp;viendo ahora</span>
-      <h1 id="titulo">Gánate<br><span class="cambia" id="cambia"><span>???</span></span><br>con un <span class="tachado">ticket.<svg viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true"><path d="M4 22 C 80 6, 170 6, 296 18"/></svg></span></h1>
-      <p class="lead" id="hero-lead">Un ticket, dos premios escondidos. Raspa la tarjeta para ver lo que te puedes llevar: si sale tu número, eliges con cuál te quedas.</p>
+      <h1 id="titulo">Gánate<br><span class="cambia" id="cambia"><span>la moto</span></span><br>con un <span class="tachado">ticket.<svg viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true"><path d="M4 22 C 80 6, 170 6, 296 18"/></svg></span></h1>
+      <p class="lead">Un ticket, dos premios: una Kawasaki Ninja 500 SE 0 km o un viaje todo incluido a Búzios para 4 personas. Si sale tu número, eliges con cuál te quedas.</p>
       <div class="hero-cta">
         <a class="btn btn-m" href="#tickets">Comprar tickets</a>
-        <a class="btn btn-o" href="#escenario">Descubre los premios</a>
+        <a class="btn btn-o" href="#tombola">Saca tu número de la suerte</a>
       </div>
       <div class="stats">
         <div class="stat"><b data-cuenta="2">0</b><small>premios para elegir</small></div>
@@ -525,28 +527,24 @@ form.datos{display:grid;gap:12px}
       </div>
     </div>
 
-    <div class="escenario tapado" id="escenario">
+    <div class="escenario" id="escenario">
       <div class="estampa" aria-hidden="true"><span>TÚ<br>ELIGES<br>EL PREMIO</span></div>
       <div class="tarjeta" id="tarjeta">
-        <div class="slide moto on tapada" data-i="0">
+        <div class="slide moto on" data-i="0">
           <span class="sello-op">OPCIÓN 1</span>
           <img src="img/moto.jpg" alt="Moto Kawasaki Ninja 500 SE verde" width="900" height="581">
-          <canvas role="img" aria-label="Tarjeta para raspar: premio 1"></canvas><span class="brillo-r" aria-hidden="true"></span><span class="dedo" aria-hidden="true"></span>
           <div class="pie"><div><h3>Kawasaki Ninja 500 SE</h3><small>0 km · casco de regalo</small></div><span class="pill">MOTO</span></div>
         </div>
-        <div class="slide viaje tapada" data-i="1">
+        <div class="slide viaje" data-i="1">
           <span class="sello-op">OPCIÓN 2</span>
           <img src="img/buzios.jpg" alt="Playa de Búzios, Brasil, con cuatro amigos" width="1000" height="741">
-          <canvas role="img" aria-label="Tarjeta para raspar: premio 2"></canvas><span class="brillo-r" aria-hidden="true"></span><span class="dedo" aria-hidden="true"></span>
           <div class="pie"><div><h3>Búzios, Brasil</h3><small>5 días · 4 noches · 4 personas</small></div><span class="pill">VIAJE</span></div>
         </div>
       </div>
       <div class="selector" role="tablist" aria-label="Premios">
-        <button type="button" role="tab" aria-selected="true" data-i="0"><span data-nombre="Moto">Premio 1</span><span class="prog"><i></i></span></button>
-        <button type="button" role="tab" aria-selected="false" data-i="1"><span data-nombre="Viaje">Premio 2</span><span class="prog"><i></i></span></button>
+        <button type="button" role="tab" aria-selected="true" data-i="0"><span>Moto</span><span class="prog"><i></i></span></button>
+        <button type="button" role="tab" aria-selected="false" data-i="1"><span>Viaje</span><span class="prog"><i></i></span></button>
       </div>
-      <button type="button" class="sin-raspar" id="sin-raspar">Ver los premios sin raspar</button>
-      <div class="rp-final" id="rp-final" hidden><div><b>¡Los dos pueden ser tuyos!</b><span>Con un ticket participas y, si ganas, eliges cuál te llevas.</span></div><a class="btn btn-m" href="#tickets">Quiero participar</a></div>
     </div>
   </div>
 </section>
@@ -563,6 +561,33 @@ form.datos{display:grid;gap:12px}
 <div class="cintas" aria-hidden="true">
   <div class="cinta"><div class="pista"><span>MOTO 0 KM ✦ VIAJE A BÚZIOS ✦ TÚ ELIGES ✦ SORTEO EN VIVO ✦</span><span>MOTO 0 KM ✦ VIAJE A BÚZIOS ✦ TÚ ELIGES ✦ SORTEO EN VIVO ✦</span></div></div>
 </div>
+
+<section id="tombola" class="tombola-sec" aria-labelledby="tb-t">
+  <div class="wrap">
+    <div class="tb-txt rv">
+      <span class="eyebrow">Tu número de la suerte</span>
+      <h2 id="tb-t">Gira la tómbola y saca tu número</h2>
+      <p class="lead">La tómbola solo saca números que siguen libres. Si te gusta, lo sumas a tu compra con un toque.</p>
+      <div class="tb-res" id="tb-res" aria-live="polite">
+        <div class="tb-bola" id="tb-bola" aria-hidden="true"><span>N°</span></div>
+        <div class="tb-info">
+          <small id="tb-sub">Todavía no giras</small>
+          <b class="tb-num" id="tb-num">? ? ? ? ?</b>
+          <span class="tb-estado" id="tb-estado">Toca «Girar» y mira qué número sale.</span>
+        </div>
+      </div>
+      <div class="tb-acc">
+        <button class="btn btn-m" type="button" id="tb-girar">Girar la tómbola</button>
+        <button class="btn btn-o" type="button" id="tb-quiero" hidden>Lo quiero</button>
+      </div>
+      <p class="tb-msg" id="tb-msg"></p>
+    </div>
+    <div class="bombo rv">
+      <canvas id="tb-cv" role="img" aria-label="Tómbola con bolitas de números"></canvas>
+      <div class="bombo-pie" aria-hidden="true"><span class="eje"></span><span class="base"></span></div>
+    </div>
+  </div>
+</section>
 
 <section id="como" aria-labelledby="como-t">
   <div class="wrap">
@@ -784,23 +809,21 @@ document.documentElement.classList.add("js");
   /* ---------- portada: premios que rotan ---------- */
   var slides = [].slice.call(document.querySelectorAll(".slide")), tabs = [].slice.call(document.querySelectorAll(".selector button"));
   var TONOS = ["var(--lima)","var(--agua)"], NOMBRES = ["la moto","el viaje"], idx = 0, DUR = 5000, reloj = null, pausado = false, restante = DUR, inicio = 0;
-  var esc = $("escenario"), descubiertos = 0, TONO_TAPADO = "var(--mandarina)";
-  document.documentElement.style.setProperty("--tono", TONO_TAPADO);
+  var esc = $("escenario");
   function mostrar(i){
     idx = i;
     slides.forEach(function(s,j){ s.classList.toggle("on", j===i) });
     tabs.forEach(function(t,j){ t.setAttribute("aria-selected", j===i ? "true":"false"); var b = t.querySelector(".prog i"); b.style.animation = "none"; void b.offsetWidth; b.style.animation = "" });
-    var visto = slides[i].classList.contains("listo");
-    document.documentElement.style.setProperty("--tono", visto ? TONOS[i] : TONO_TAPADO);
-    $("cambia").innerHTML = "<span>" + (visto ? NOMBRES[i] : "???") + "</span>";
+    document.documentElement.style.setProperty("--tono", TONOS[i]);
+    $("cambia").innerHTML = "<span>" + NOMBRES[i] + "</span>";
     programar(DUR);
   }
-  function programar(ms){ clearTimeout(reloj); restante = ms; inicio = Date.now(); if(!quieto && !pausado && descubiertos === 2) reloj = setTimeout(function(){ mostrar((idx+1)%slides.length) }, ms) }
+  function programar(ms){ clearTimeout(reloj); restante = ms; inicio = Date.now(); if(!quieto && !pausado) reloj = setTimeout(function(){ mostrar((idx+1)%slides.length) }, ms) }
   tabs.forEach(function(t,j){ t.onclick = function(){ mostrar(j) } });
   esc.style.setProperty("--dur", DUR+"ms");
   esc.addEventListener("pointerenter", function(){ pausado = true; esc.classList.add("pausa"); clearTimeout(reloj); restante -= Date.now()-inicio });
   esc.addEventListener("pointerleave", function(){ pausado = false; esc.classList.remove("pausa"); programar(Math.max(restante,400)); $("tarjeta").style.transform = "" });
-  esc.addEventListener("pointermove", function(e){ if(quieto || descubiertos < 2) return; var r = esc.getBoundingClientRect(), x = (e.clientX-r.left)/r.width-.5, y = (e.clientY-r.top)/r.height-.5; $("tarjeta").style.transform = "rotateY("+(x*10)+"deg) rotateX("+(-y*10)+"deg)" });
+  esc.addEventListener("pointermove", function(e){ if(quieto) return; var r = esc.getBoundingClientRect(), x = (e.clientX-r.left)/r.width-.5, y = (e.clientY-r.top)/r.height-.5; $("tarjeta").style.transform = "rotateY("+(x*10)+"deg) rotateX("+(-y*10)+"deg)" });
   programar(DUR);
 
   /* ---------- números que cuentan ---------- */
@@ -823,60 +846,6 @@ document.documentElement.classList.add("js");
   function actualizarAvance(){ $("quedan").textContent = QUEDAN.toLocaleString("es-CL"); $("pct").textContent = pctVendido() + "%"; $("pct-hero").textContent = pctVendido(); if(barra.style.width) barra.style.width = pctVendido() + "%" }
   if("IntersectionObserver" in window){ new IntersectionObserver(function(es,o){ if(es[0].isIntersecting){ barra.style.width = pctVendido() + "%"; o.disconnect() } }).observe(barra) } else barra.style.width = pctVendido() + "%";
 
-  var COLORES_RASPA = ["#AEB5BE","#EEF1F4","#A3AAB4","#E6E9ED","#959DA8"], TINTA_RASPA = "rgba(58,64,74,.82)", FUENTE_RASPA = "Unbounded, Arial Black, sans-serif";
-  function chispas(x,y,n){ confeti(x,y,n) }
-  function polvo(x,y){ confeti(x,y,3,{col:["#C9CED5","#E8EBEF","#9AA1AB"],v:2.2,tam:3,vida:45,sube:1}) }
-    /* ---------- raspa para descubrir premios ---------- */
-  function raspable(zona, colores, texto, alListo){
-    var capa = zona.querySelector("canvas"), cx = capa.getContext("2d", {willReadFrequently:true}), on = false, listo = false, prev = null, mov = 0, ancho = 0;
-    function cubrir(){
-      var d = devicePixelRatio||1, w = zona.offsetWidth, h = zona.offsetHeight; ancho = w;
-      capa.width = w*d; capa.height = h*d; cx.setTransform(d,0,0,d,0,0); cx.globalCompositeOperation = "source-over";
-      var g = cx.createLinearGradient(0,0,w,h); colores.forEach(function(c,i){ g.addColorStop(i/(colores.length-1), c) });
-      cx.fillStyle = g; cx.fillRect(0,0,w,h);
-      cx.strokeStyle = "rgba(255,255,255,.07)"; cx.lineWidth = 1;
-      for(var l=-h;l<w;l+=5){ cx.beginPath(); cx.moveTo(l,0); cx.lineTo(l+h,h); cx.stroke() }
-      for(var i=0;i<1400;i++){ cx.fillStyle = "rgba(" + (Math.random()<.5?"255,255,255":"40,46,56") + "," + (Math.random()*.18) + ")"; cx.fillRect(Math.random()*w, Math.random()*h, 1.2, 1.2) }
-      cx.textAlign = "center"; cx.textBaseline = "middle"; cx.font = "800 15px " + texto[3]; cx.fillStyle = "rgba(40,46,56,.07)";
-      for(var fy=24, fila=0; fy<h; fy+=44, fila++) for(var fx=(fila%2?46:22); fx<w; fx+=48) cx.fillText("?", fx, fy);
-      var tam = Math.max(22, w/9);
-      function grabado(txt, y){ cx.fillStyle = "rgba(255,255,255,.75)"; cx.fillText(txt, w/2+1, y+1.5); cx.fillStyle = texto[1]; cx.fillText(txt, w/2, y) }
-      cx.font = texto[2] + " " + tam + "px " + texto[3]; grabado(texto[0], h/2 - tam*.3);
-      cx.font = "700 " + Math.max(12, w/28) + "px system-ui, sans-serif"; grabado("Raspa para descubrir", h/2 + tam*.55);
-      capa.style.transition = "none"; capa.style.opacity = 1; capa.hidden = false;
-    }
-    function raspar(e){
-      if(!on || listo) return; zona.classList.add("tocada");
-      var r = capa.getBoundingClientRect(), x = e.clientX-r.left, y = e.clientY-r.top, rad = Math.max(18, r.width/13);
-      cx.globalCompositeOperation = "destination-out"; cx.strokeStyle = cx.fillStyle = "#000";
-      if(prev){ cx.lineWidth = rad*1.8; cx.lineCap = "round"; cx.beginPath(); cx.moveTo(prev[0],prev[1]); cx.lineTo(x,y); cx.stroke() } else { cx.beginPath(); cx.arc(x,y,rad*.9,0,7); cx.fill() }
-      prev = [x,y]; if(++mov % 2 === 0) polvo(e.clientX, e.clientY); if(mov % 4 === 0) medir();
-    }
-    function medir(){ var d = cx.getImageData(0,0,capa.width,capa.height).data, v = 0, t = 0; for(var i=3;i<d.length;i+=80){ t++; if(d[i]<40) v++ } if(v/t > .45) revelar() }
-    function revelar(){ listo = true; capa.style.transition = "opacity .5s"; capa.style.opacity = 0; setTimeout(function(){ capa.hidden = true }, 500); zona.classList.remove("tapada"); zona.classList.add("listo"); if(navigator.vibrate) try{ navigator.vibrate([25,40,70]) }catch(_){} alListo(zona) }
-    capa.addEventListener("pointerdown", function(e){ on = true; prev = null; try{ capa.setPointerCapture(e.pointerId) }catch(_){} raspar(e) });
-    capa.addEventListener("pointermove", raspar);
-    capa.addEventListener("pointerup", function(){ on = false; prev = null; if(!listo) medir() });
-    capa.addEventListener("pointercancel", function(){ on = false; prev = null });
-    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(cubrir);
-    addEventListener("resize", function(){ if(!listo && zona.offsetWidth !== ancho) cubrir() });
-    return function(){ if(!listo) revelar() };
-  }
-  var destapar = slides.map(function(sl,i){
-    return raspable(sl, COLORES_RASPA, ["PREMIO " + (i+1), TINTA_RASPA, "800", FUENTE_RASPA], function(z){
-      var r = z.getBoundingClientRect(); chispas(r.left+r.width/2, r.top+r.height/2, 80);
-      var et = tabs[i].querySelector("[data-nombre]"); et.textContent = et.dataset.nombre;
-      $("cambia").innerHTML = "<span>" + NOMBRES[i] + "</span>";
-      document.documentElement.style.setProperty("--tono", TONOS[i]);
-      descubiertos++;
-      if(descubiertos < 2){ setTimeout(function(){ var otro = i ? 0 : 1; if(idx === i && !slides[otro].classList.contains("listo")) mostrar(otro) }, 1400); return }
-      esc.classList.remove("tapado");
-      $("hero-lead").textContent = "Un ticket, dos premios: una Kawasaki Ninja 500 SE 0 km o un viaje todo incluido a Búzios para 4 personas. Si sale tu número, eliges con cuál te quedas.";
-      var f = $("rp-final"); f.hidden = false; f.style.display = "flex";
-      setTimeout(function(){ programar(DUR) }, 1400);
-    });
-  });
-  $("sin-raspar").onclick = function(){ destapar[idx](); var otro = idx ? 0 : 1; setTimeout(function(){ destapar[otro]() }, 300) };
 
 
   /* ---------- tablero de la cuenta regresiva ---------- */
@@ -924,7 +893,7 @@ document.documentElement.classList.add("js");
   function elegir(n){
     var i = elegidos.indexOf(n);
     if(i > -1){ elegidos.splice(i,1); msg("Quitaste el " + fmt(n) + ".") }
-    else if(elegidos.length >= cant){ msg("Ya elegiste tus " + cant + (cant===1?" número":" números") + ". Sube la cantidad de tickets para elegir más."); return false }
+    else if(elegidos.length >= cant){ msg((cant===1 ? "Ya elegiste tu número" : "Ya elegiste tus " + cant + " números") + ". Sube la cantidad de tickets para elegir más."); return false }
     else { elegidos.push(n); msg(""); var b = document.querySelector('.nb[data-n="'+n+'"]'); if(b){ var r = b.getBoundingClientRect(); confeti(r.left+r.width/2, r.top, 10) } }
     grilla(); chips(); return true;
   }
@@ -942,7 +911,7 @@ document.documentElement.classList.add("js");
     irA(cerca); msg("El " + fmt(n) + " ya se vendió. El libre más cercano es el " + fmt(cerca) + ".");
   });
   $("n-azar").onclick = function(){
-    if(elegidos.length >= cant){ msg("Ya elegiste tus " + cant + (cant===1?" número":" números") + ". Sube la cantidad de tickets para elegir más."); return }
+    if(elegidos.length >= cant){ msg((cant===1 ? "Ya elegiste tu número" : "Ya elegiste tus " + cant + " números") + ". Sube la cantidad de tickets para elegir más."); return }
     var n; do{ n = Math.floor(Math.random()*TOTAL)+1 }while(vendido(n) || elegidos.indexOf(n) > -1);
     irA(n); elegir(n); msg("Te tocó el " + fmt(n) + ".");
   };
@@ -956,6 +925,86 @@ document.documentElement.classList.add("js");
     return nums;
   }
   grilla(); chips();
+
+  /* ---------- tómbola del número de la suerte ---------- */
+  var tcv = $("tb-cv"), tx = tcv.getContext("2d"), TW = 0, bolas = [], girando = false, giroAng = 0, vivoTb = false, quietoHasta = 0, sacado = null;
+  var COL_BOLAS = ["#FF7A1A","#FF3D8B","#F7E14B","#45E3D3","#A3F046","#FFF6E8"];
+  function medirTb(){ var d = devicePixelRatio||1; TW = tcv.offsetWidth; tcv.width = TW*d; tcv.height = TW*d; tx.setTransform(d,0,0,d,0,0) }
+  function crearBolas(){
+    bolas = []; var R = TW*.42, rb = TW*.052;
+    for(var i=0;i<22;i++){ var a = Math.random()*Math.PI*2, r = Math.random()*(R-rb*1.5); bolas.push({x:TW/2+Math.cos(a)*r, y:TW/2+Math.sin(a)*r*.4+R*.45, vx:0, vy:0, r:rb, c:COL_BOLAS[i%COL_BOLAS.length], t:String(Math.floor(Math.random()*90)+10)}) }
+  }
+  function fisica(){
+    var cx0 = TW/2, cy0 = TW/2, R = TW*.42;
+    bolas.forEach(function(b){
+      if(girando){ var dx = b.x-cx0, dy = b.y-cy0, dd = Math.hypot(dx,dy)||1; b.vx += (-dy/dd)*.9 + (Math.random()-.5)*.8; b.vy += (dx/dd)*.9 + (Math.random()-.5)*.8 }
+      b.vy += .35; b.vx *= .985; b.vy *= .985; b.x += b.vx; b.y += b.vy;
+      var ex = b.x-cx0, ey = b.y-cy0, dist = Math.hypot(ex,ey), lim = R-b.r-3;
+      if(dist > lim){ var nx = ex/dist, ny = ey/dist, vn = b.vx*nx + b.vy*ny; if(vn > 0){ b.vx -= 1.75*vn*nx; b.vy -= 1.75*vn*ny } b.x = cx0+nx*lim; b.y = cy0+ny*lim }
+    });
+    for(var i=0;i<bolas.length;i++) for(var j=i+1;j<bolas.length;j++){
+      var a = bolas[i], b = bolas[j], dx = b.x-a.x, dy = b.y-a.y, d = Math.hypot(dx,dy), m = a.r+b.r;
+      if(d > 0 && d < m){ var o = (m-d)/2, ux = dx/d, uy = dy/d; a.x -= ux*o; a.y -= uy*o; b.x += ux*o; b.y += uy*o }
+    }
+  }
+  function dibujarTb(){
+    var c = TW/2, R = TW*.42; tx.clearRect(0,0,TW,TW);
+    var g = tx.createRadialGradient(c-R*.35, c-R*.4, R*.1, c, c, R); g.addColorStop(0,"rgba(255,255,255,.16)"); g.addColorStop(1,"rgba(255,255,255,.03)");
+    tx.fillStyle = g; tx.beginPath(); tx.arc(c,c,R,0,7); tx.fill();
+    tx.save(); tx.beginPath(); tx.arc(c,c,R,0,7); tx.clip();
+    bolas.forEach(function(b){
+      var gb = tx.createRadialGradient(b.x-b.r*.35, b.y-b.r*.4, b.r*.1, b.x, b.y, b.r); gb.addColorStop(0,"#fff"); gb.addColorStop(.35,b.c); gb.addColorStop(1,"rgba(0,0,0,.35)");
+      tx.fillStyle = b.c; tx.beginPath(); tx.arc(b.x,b.y,b.r,0,7); tx.fill(); tx.fillStyle = gb; tx.fill();
+      tx.fillStyle = "#fff"; tx.beginPath(); tx.arc(b.x,b.y,b.r*.5,0,7); tx.fill();
+      tx.fillStyle = "#062625"; tx.font = "800 " + (b.r*.52) + "px Unbounded, Arial Black, sans-serif"; tx.textAlign = "center"; tx.textBaseline = "middle"; tx.fillText(b.t, b.x, b.y+1);
+    });
+    tx.restore();
+    tx.save(); tx.translate(c,c); tx.rotate(giroAng); tx.strokeStyle = "rgba(255,246,232,.22)"; tx.lineWidth = 2;
+    for(var k=0;k<6;k++){ tx.rotate(Math.PI/6); tx.beginPath(); tx.ellipse(0,0,R,R*.32,0,0,7); tx.stroke() }
+    tx.restore();
+    tx.strokeStyle = "#FFF6E8"; tx.lineWidth = 5; tx.beginPath(); tx.arc(c,c,R,0,7); tx.stroke();
+    tx.strokeStyle = "rgba(255,255,255,.5)"; tx.lineWidth = 3; tx.lineCap = "round"; tx.beginPath(); tx.arc(c,c,R*.86,Math.PI*1.08,Math.PI*1.38); tx.stroke();
+    tx.fillStyle = "#FF7A1A"; tx.beginPath(); tx.arc(c,c,R*.07,0,7); tx.fill();
+  }
+  function bucleTb(){
+    fisica(); if(girando) giroAng += .09; dibujarTb();
+    if(girando || Date.now() < quietoHasta) requestAnimationFrame(bucleTb); else vivoTb = false;
+  }
+  function animarTb(ms){ quietoHasta = Math.max(quietoHasta, Date.now()+ms); if(!vivoTb){ vivoTb = true; requestAnimationFrame(bucleTb) } }
+  function libreAlAzar(){ var n; do{ n = Math.floor(Math.random()*TOTAL)+1 }while(vendido(n) || elegidos.indexOf(n) > -1); return n }
+  function tbMsg(t){ $("tb-msg").textContent = t }
+  $("tb-girar").onclick = function(){
+    if(girando) return;
+    var btn = this; btn.disabled = true; $("tb-quiero").hidden = true; tbMsg("");
+    $("tb-res").classList.remove("sale"); $("tb-sub").textContent = "Girando…"; $("tb-estado").textContent = "Mezclando las bolitas";
+    var rodar = setInterval(function(){ $("tb-num").textContent = fmt(Math.floor(Math.random()*TOTAL)+1) }, 70);
+    girando = true; animarTb(0);
+    setTimeout(function(){
+      girando = false; animarTb(1600);
+      setTimeout(function(){
+        clearInterval(rodar); sacado = libreAlAzar();
+        $("tb-num").textContent = fmt(sacado); $("tb-sub").textContent = "Tu número de la suerte";
+        $("tb-estado").textContent = "¡Está libre! Súmalo a tu compra.";
+        var res = $("tb-res"); res.classList.remove("sale"); void res.offsetWidth; res.classList.add("sale");
+        var q = $("tb-quiero"); q.hidden = false; q.disabled = false; q.textContent = "Lo quiero";
+        btn.disabled = false; btn.textContent = "Girar de nuevo";
+        var r = $("tb-bola").getBoundingClientRect(); confeti(r.left+r.width/2, r.top+r.height/2, 50);
+      }, quieto ? 0 : 700);
+    }, quieto ? 200 : 2200);
+  };
+  $("tb-quiero").onclick = function(){
+    if(sacado === null) return;
+    if(vendido(sacado)){ tbMsg("Ese número se acaba de vender. Gira de nuevo."); this.hidden = true; return }
+    if(elegidos.indexOf(sacado) > -1){ tbMsg("El " + fmt(sacado) + " ya está en tu compra."); return }
+    if(elegidos.length >= cant){ tbMsg((cant===1 ? "Ya elegiste tu número" : "Ya elegiste tus " + cant + " números") + ". Sube la cantidad en Tickets para sumar el " + fmt(sacado) + "."); return }
+    elegir(sacado); irA(sacado);
+    this.disabled = true; this.textContent = "Agregado ✓";
+    $("tb-estado").textContent = "Quedó en tu compra. Lo ves marcado en la grilla de Tickets.";
+    tbMsg(elegidos.length + " de " + cant + " números elegidos.");
+  };
+  function iniciarTb(){ medirTb(); crearBolas(); for(var i=0;i<120;i++) fisica(); dibujarTb() }
+  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(iniciarTb);
+  addEventListener("resize", function(){ if(tcv.offsetWidth !== TW){ var viejo = TW; medirTb(); var f = TW/(viejo||TW); bolas.forEach(function(b){ b.x *= f; b.y *= f; b.r *= f }); dibujarTb() } });
 
   /* ---------- galería: lupa de la moto ---------- */
   var lupa = $("lupa"), lente = lupa.querySelector(".lente"), ZOOM = 2.6;
