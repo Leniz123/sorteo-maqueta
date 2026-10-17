@@ -308,8 +308,12 @@ form.datos{display:grid;gap:12px}
 .mini small{font-family:var(--f-body);font-weight:700;font-size:.72rem;color:#6A5A40}
 
 /* raspa en la portada */
-.slide canvas{position:absolute;inset:0;z-index:4;width:100%;height:100%;cursor:crosshair;touch-action:none}
-.slide.tapada{touch-action:none;user-select:none}
+.slide canvas{position:absolute;inset:0;z-index:4;width:100%;height:100%;cursor:crosshair;touch-action:pan-y}
+.slide.tapada{user-select:none}
+.sin-raspar{justify-self:center;margin-top:12px;background:none;border:0;color:var(--tinta-2);font-weight:700;font-size:.85rem;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.sin-raspar:hover{color:var(--tinta)}
+.escenario:not(.tapado) .sin-raspar{display:none}
+.escenario{display:grid}
 .escenario.tapado .selector .prog i{animation:none}
 .escenario.tapado .estampa{display:none}
 .dedo{position:absolute;z-index:5;left:50%;top:66%;width:46px;height:46px;margin:-23px 0 0 -23px;pointer-events:none;animation:barre 2.4s ease-in-out infinite}
@@ -414,6 +418,7 @@ form.datos{display:grid;gap:12px}
         <button type="button" role="tab" aria-selected="true" data-i="0"><span data-nombre="Moto">Premio 1</span><span class="prog"><i></i></span></button>
         <button type="button" role="tab" aria-selected="false" data-i="1"><span data-nombre="Viaje">Premio 2</span><span class="prog"><i></i></span></button>
       </div>
+      <button type="button" class="sin-raspar" id="sin-raspar">Ver los premios sin raspar</button>
       <div class="rp-final" id="rp-final" hidden><div><b>¡Los dos pueden ser tuyos!</b><span>Con un ticket participas y, si ganas, eliges cuál te llevas.</span></div><a class="btn btn-m pulso" href="#tickets">Quiero participar</a></div>
     </div>
   </div>
@@ -453,7 +458,7 @@ form.datos{display:grid;gap:12px}
     </div>
     <div class="pagos"><span>Pago seguro</span><span>Webpay</span><span>Mercado Pago</span><span>Transferencia</span></div>
     <div class="avance">
-      <div class="row"><span>Tickets vendidos <span style="color:var(--tinta-2);font-weight:500">(ejemplo)</span> · quedan <b id="quedan" style="font-family:var(--f-display)">3.580</b></span><b id="pct">64%</b></div>
+      <div class="row"><span>Tickets vendidos <span style="color:var(--tinta-2);font-weight:500">(ejemplo)</span> · quedan <b id="quedan" style="font-family:var(--f-display)">3.600</b></span><b id="pct">64%</b></div>
       <div class="barra"><i id="barra"></i></div>
     </div>
   </div>
@@ -539,6 +544,8 @@ document.documentElement.classList.add("js");
   var $ = function(id){ return document.getElementById(id) };
 
   /* ---------- precios de ejemplo ---------- */
+  var TOTAL = 10000, QUEDAN = 3600;
+  function pctVendido(){ return Math.round((TOTAL-QUEDAN)/TOTAL*100) }
   var PRECIO = 2000, DESC = function(n){ return n>=25?.30:n>=10?.20:n>=5?.10:0 };
   var clp = function(v){ return "$" + Math.round(v).toLocaleString("es-CL") };
   var totalDe = function(n){ return Math.round(n*PRECIO*(1-DESC(n))/10)*10 };
@@ -576,13 +583,15 @@ document.documentElement.classList.add("js");
   /* ---------- portada: premios que rotan ---------- */
   var slides = [].slice.call(document.querySelectorAll(".slide")), tabs = [].slice.call(document.querySelectorAll(".selector button"));
   var TONOS = ["var(--lima)","var(--agua)"], NOMBRES = ["la moto","el viaje"], idx = 0, DUR = 5000, reloj = null, pausado = false, restante = DUR, inicio = 0;
-  var esc = $("escenario"), descubiertos = 0;
+  var esc = $("escenario"), descubiertos = 0, TONO_TAPADO = "var(--mandarina)";
+  document.documentElement.style.setProperty("--tono", TONO_TAPADO);
   function mostrar(i){
     idx = i;
     slides.forEach(function(s,j){ s.classList.toggle("on", j===i) });
     tabs.forEach(function(t,j){ t.setAttribute("aria-selected", j===i ? "true":"false"); var b = t.querySelector(".prog i"); b.style.animation = "none"; void b.offsetWidth; b.style.animation = "" });
-    document.documentElement.style.setProperty("--tono", TONOS[i]);
-    $("cambia").innerHTML = "<span>" + (slides[i].classList.contains("listo") ? NOMBRES[i] : "???") + "</span>";
+    var visto = slides[i].classList.contains("listo");
+    document.documentElement.style.setProperty("--tono", visto ? TONOS[i] : TONO_TAPADO);
+    $("cambia").innerHTML = "<span>" + (visto ? NOMBRES[i] : "???") + "</span>";
     programar(DUR);
   }
   function programar(ms){ clearTimeout(reloj); restante = ms; inicio = Date.now(); if(!quieto && !pausado && descubiertos === 2) reloj = setTimeout(function(){ mostrar((idx+1)%slides.length) }, ms) }
@@ -610,14 +619,13 @@ document.documentElement.classList.add("js");
 
   /* ---------- barra de avance ---------- */
   var barra = $("barra");
-  if("IntersectionObserver" in window){ new IntersectionObserver(function(es,o){ if(es[0].isIntersecting){ barra.style.width = "64%"; o.disconnect() } }).observe(barra) } else barra.style.width = "64%";
+  if("IntersectionObserver" in window){ new IntersectionObserver(function(es,o){ if(es[0].isIntersecting){ barra.style.width = pctVendido() + "%"; o.disconnect() } }).observe(barra) } else barra.style.width = pctVendido() + "%";
 
   var COLORES_RASPA = ["#FFB347","#FF7A1A","#FF3D8B","#B3247A"], TINTA_RASPA = "rgba(255,255,255,.92)", FUENTE_RASPA = "Unbounded, Arial Black, sans-serif";
   function chispas(x,y,n){ confeti(x,y,n) }
-  var QUEDAN = 3580;
-  /* ---------- raspa para descubrir premios ---------- */
+    /* ---------- raspa para descubrir premios ---------- */
   function raspable(zona, colores, texto, alListo){
-    var capa = zona.querySelector("canvas"), cx = capa.getContext("2d"), on = false, listo = false, prev = null, mov = 0, ancho = 0;
+    var capa = zona.querySelector("canvas"), cx = capa.getContext("2d", {willReadFrequently:true}), on = false, listo = false, prev = null, mov = 0, ancho = 0;
     function cubrir(){
       var d = devicePixelRatio||1, w = zona.offsetWidth, h = zona.offsetHeight; ancho = w;
       capa.width = w*d; capa.height = h*d; cx.setTransform(d,0,0,d,0,0); cx.globalCompositeOperation = "source-over";
@@ -645,32 +653,34 @@ document.documentElement.classList.add("js");
     capa.addEventListener("pointercancel", function(){ on = false; prev = null });
     (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(cubrir);
     addEventListener("resize", function(){ if(!listo && zona.offsetWidth !== ancho) cubrir() });
+    return function(){ if(!listo) revelar() };
   }
-  slides.forEach(function(sl,i){
-    raspable(sl, COLORES_RASPA, ["PREMIO " + (i+1), TINTA_RASPA, "800", FUENTE_RASPA], function(z){
+  var destapar = slides.map(function(sl,i){
+    return raspable(sl, COLORES_RASPA, ["PREMIO " + (i+1), TINTA_RASPA, "800", FUENTE_RASPA], function(z){
       var r = z.getBoundingClientRect(); chispas(r.left+r.width/2, r.top+r.height/2, 80);
       var et = tabs[i].querySelector("[data-nombre]"); et.textContent = et.dataset.nombre;
       $("cambia").innerHTML = "<span>" + NOMBRES[i] + "</span>";
       document.documentElement.style.setProperty("--tono", TONOS[i]);
       descubiertos++;
-      if(descubiertos < 2){ setTimeout(function(){ mostrar(i ? 0 : 1) }, 1400); return }
+      if(descubiertos < 2){ setTimeout(function(){ var otro = i ? 0 : 1; if(idx === i && !slides[otro].classList.contains("listo")) mostrar(otro) }, 1400); return }
       esc.classList.remove("tapado");
       $("hero-lead").textContent = "Un ticket, dos premios: una Kawasaki Ninja 500 SE 0 km o un viaje todo incluido a Búzios para 4 personas. Si sale tu número, eliges con cuál te quedas.";
       var f = $("rp-final"); f.hidden = false; f.style.display = "flex";
       setTimeout(function(){ programar(DUR) }, 1400);
     });
   });
+  $("sin-raspar").onclick = function(){ destapar[idx](); var otro = idx ? 0 : 1; setTimeout(function(){ destapar[otro]() }, 300) };
 
   var viendo = 37; setInterval(function(){ viendo = Math.max(18, Math.min(80, viendo + Math.round((Math.random()-.45)*4))); $("viendo").textContent = viendo }, 3500);
 
   /* ---------- avisos de compra (ejemplo) ---------- */
-  var COMPRAS = [["C","Camila de Viña del Mar","compró 10 tickets"],["M","Matías de Santiago","compró 5 tickets"],["J","Javiera de Concepción","compró 25 tickets"],["F","Felipe de La Serena","compró 1 ticket"],["V","Valentina de Rancagua","compró 10 tickets"]];
+  var COMPRAS = [["C","Camila de Viña del Mar","compró 10 tickets"],["M","Matías de Santiago","compró 5 tickets"],["J","Javiera de Concepción","compró 25 tickets"],["F","Felipe de La Serena","compró 1 ticket"],["V","Valentina de Rancagua","compró 10 tickets"],["B","Benjamín de Temuco","compró 5 tickets"],["A","Antonia de Antofagasta","compró 10 tickets"],["T","Tomás de Puerto Montt","compró 1 ticket"],["I","Isidora de Talca","compró 25 tickets"],["D","Diego de Iquique","compró 5 tickets"]];
   var ai = 0, aviso = $("aviso");
   function avisar(){
     if(!$("velo").hidden){ setTimeout(avisar, 4000); return }
     var c = COMPRAS[ai++ % COMPRAS.length];
-    QUEDAN = Math.max(50, QUEDAN - (+c[2].match(/\d+/)[0])); $("quedan").textContent = QUEDAN.toLocaleString("es-CL"); golpe($("quedan"));
-    $("av-ini").textContent = c[0]; $("av-txt").textContent = c[1] + " " + c[2]; $("av-sub").textContent = "Hace " + (2+ai%7) + " min · ejemplo";
+    QUEDAN = Math.max(50, QUEDAN - (+c[2].match(/\d+/)[0])); $("quedan").textContent = QUEDAN.toLocaleString("es-CL"); golpe($("quedan")); $("pct").textContent = pctVendido() + "%"; if(barra.style.width) barra.style.width = pctVendido() + "%";
+    $("av-ini").textContent = c[0]; $("av-txt").textContent = c[1] + " " + c[2]; $("av-sub").textContent = "Recién · ejemplo";
     aviso.classList.add("ver"); setTimeout(function(){ aviso.classList.remove("ver") }, 4200);
     setTimeout(avisar, 9000);
   }
@@ -695,7 +705,8 @@ document.documentElement.classList.add("js");
     if(!$("f-bases").checked){ err.textContent = "Para participar tienes que aceptar las bases legales."; err.hidden = false; return }
     err.hidden = true;
     var mis = $("mis"); mis.innerHTML = ""; var k = Math.min(cant,5);
-    for(var i=0;i<k;i++){ var n = String(Math.floor(Math.random()*900000)+100000); var d = document.createElement("div"); d.className = "mini"; d.style.animationDelay = (i*90)+"ms"; d.innerHTML = "<span>N° "+n.slice(0,3)+" "+n.slice(3)+"</span><small>SORTEO N°1</small>"; mis.appendChild(d) }
+    var usados = {};
+    for(var i=0;i<k;i++){ var n; do{ n = Math.floor(Math.random()*TOTAL)+1 }while(usados[n]); usados[n] = 1; var d = document.createElement("div"); d.className = "mini"; d.style.animationDelay = (i*90)+"ms"; d.innerHTML = "<span>N° "+String(n).padStart(5,"0")+"</span><small>SORTEO N°1</small>"; mis.appendChild(d) }
     if(cant>k){ var m = document.createElement("p"); m.style.cssText = "color:var(--tinta-2);font-size:.88rem"; m.textContent = "+ " + (cant-k) + " números más en tu correo."; mis.appendChild(m) }
     $("l-mail").textContent = mail; datos.hidden = true; datos.style.display = "none"; listo.hidden = false; listo.style.display = "grid";
     confeti(innerWidth/2, innerHeight*.3, 140);
